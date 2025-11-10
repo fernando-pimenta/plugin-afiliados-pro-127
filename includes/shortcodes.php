@@ -79,14 +79,26 @@ class Affiliate_Pro_Shortcodes {
     public function products_grid_shortcode($atts) {
         $settings = Affiliate_Pro_Settings::get_settings();
 
+        // Obter configurações do Template Builder para fallback
+        $builder_settings = Affiliate_Template_Builder::get_template_settings();
+
         $atts = shortcode_atts(array(
             'limit' => 6,
             'category' => '',
-            'layout' => $settings['default_layout'],
-            'columns' => $settings['default_columns'],
+            'layout' => '', // Vazio para permitir fallback
+            'columns' => '', // Vazio para permitir fallback
             'orderby' => 'date',
             'order' => 'DESC'
         ), $atts);
+
+        // Aplicar fallback do Template Builder se não especificado
+        if (empty($atts['layout'])) {
+            $atts['layout'] = !empty($builder_settings['layout_default']) ? $builder_settings['layout_default'] : $settings['default_layout'];
+        }
+
+        if (empty($atts['columns'])) {
+            $atts['columns'] = !empty($builder_settings['columns']) ? $builder_settings['columns'] : $settings['default_columns'];
+        }
 
         // Whitelist para orderby (prevenir SQL injection)
         $allowed_orderby = array('date', 'title', 'rand', 'menu_order', 'ID', 'modified');
