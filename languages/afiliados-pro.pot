@@ -1,0 +1,505 @@
+# Plugin Afiliados Pro - Translation Template
+# Copyright (C) 2025 Fernando Pimenta
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Plugin Afiliados Pro 1.2\n"
+"Report-Msgid-Bugs-To: https://fernandopimenta.blog.br\n"
+"POT-Creation-Date: 2025-01-08 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Plugin Afiliados Pro 1.2\n"
+
+#: afiliados-pro.php
+msgid "Plugin Afiliados Pro"
+msgstr ""
+
+msgid "Gerencie e exiba produtos afiliados com importação CSV, shortcodes personalizáveis e painel visual."
+msgstr ""
+
+#: includes/class-affiliate-products.php
+msgid "Produtos Afiliados"
+msgstr ""
+
+msgid "Produto Afiliado"
+msgstr ""
+
+msgid "Adicionar Novo"
+msgstr ""
+
+msgid "Adicionar Novo Produto"
+msgstr ""
+
+msgid "Editar Produto"
+msgstr ""
+
+msgid "Novo Produto"
+msgstr ""
+
+msgid "Ver Produto"
+msgstr ""
+
+msgid "Buscar Produtos"
+msgstr ""
+
+msgid "Nenhum produto encontrado"
+msgstr ""
+
+msgid "Nenhum produto na lixeira"
+msgstr ""
+
+msgid "Categorias de Afiliados"
+msgstr ""
+
+msgid "Categoria de Afiliado"
+msgstr ""
+
+msgid "Buscar Categorias"
+msgstr ""
+
+msgid "Todas as Categorias"
+msgstr ""
+
+msgid "Editar Categoria"
+msgstr ""
+
+msgid "Atualizar Categoria"
+msgstr ""
+
+msgid "Adicionar Nova Categoria"
+msgstr ""
+
+msgid "Nome da Nova Categoria"
+msgstr ""
+
+msgid "Categorias"
+msgstr ""
+
+msgid "Afiliados"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Gerenciar Produtos"
+msgstr ""
+
+msgid "Importar CSV"
+msgstr ""
+
+msgid "Aparência e Configurações"
+msgstr ""
+
+msgid "Total de Produtos"
+msgstr ""
+
+msgid "Produtos Afiliados - Dashboard"
+msgstr ""
+
+msgid "Ações Rápidas"
+msgstr ""
+
+msgid "Como usar os Shortcodes"
+msgstr ""
+
+msgid "Produto único:"
+msgstr ""
+
+msgid "Grade de produtos:"
+msgstr ""
+
+msgid "Detalhes do Produto Afiliado"
+msgstr ""
+
+msgid "Preço (R$)"
+msgstr ""
+
+msgid "Digite apenas o valor numérico (ex: 99.90)"
+msgstr ""
+
+msgid "Link de Afiliado"
+msgstr ""
+
+msgid "URL completa do link de afiliado"
+msgstr ""
+
+msgid "URL da Imagem"
+msgstr ""
+
+msgid "URL da imagem do produto (opcional se usar imagem destacada)"
+msgstr ""
+
+msgid "Erro de segurança"
+msgstr ""
+
+msgid "Erro ao duplicar produto"
+msgstr ""
+
+msgid "(Cópia)"
+msgstr ""
+
+#: includes/class-affiliate-settings.php
+msgid "Você não tem permissão para executar esta ação."
+msgstr ""
+
+msgid "Ver oferta"
+msgstr ""
+
+msgid "Indisponível"
+msgstr ""
+
+msgid "Consulte o preço"
+msgstr ""
+
+#: includes/csv-import.php
+msgid "Erro de segurança. Tente novamente."
+msgstr ""
+
+#: includes/shortcodes.php
+msgid "ID do produto não informado."
+msgstr ""
+
+msgid "Produto não encontrado."
+msgstr ""
+
+msgid "Nenhum produto encontrado."
+msgstr ""
+
+#: admin/admin-settings.php
+msgid "Configurações salvas com sucesso!"
+msgstr ""
+
+msgid "Configurações restauradas para os padrões!"
+msgstr ""
+
+msgid "Personalize a aparência dos cards de produtos afiliados e configure o comportamento do plugin."
+msgstr ""
+
+msgid "Identidade Visual dos Cards"
+msgstr ""
+
+msgid "Cor Primária"
+msgstr ""
+
+msgid "Cor principal do tema"
+msgstr ""
+
+msgid "Cor Secundária"
+msgstr ""
+
+msgid "Cor de Destaque"
+msgstr ""
+
+msgid "Usada para preços e elementos de destaque"
+msgstr ""
+
+msgid "Cor de Fundo do Card"
+msgstr ""
+
+msgid "Cor do Texto"
+msgstr ""
+
+msgid "Arredondamento das Bordas"
+msgstr ""
+
+msgid "0 = sem arredondamento, 30 = muito arredondado"
+msgstr ""
+
+msgid "Sombra nos Cards"
+msgstr ""
+
+msgid "Adiciona sombra aos cards para dar profundidade"
+msgstr ""
+
+msgid "Botão de Ação"
+msgstr ""
+
+msgid "Texto do Botão"
+msgstr ""
+
+msgid "Texto exibido no botão quando há link disponível"
+msgstr ""
+
+msgid "Cor Inicial do Gradiente"
+msgstr ""
+
+msgid "Cor Final do Gradiente"
+msgstr ""
+
+msgid "O botão terá um gradiente entre essas duas cores"
+msgstr ""
+
+msgid "Texto Quando Indisponível"
+msgstr ""
+
+msgid "Texto exibido quando não há link de afiliado"
+msgstr ""
+
+msgid "Layout da Grade"
+msgstr ""
+
+msgid "Layout Padrão"
+msgstr ""
+
+msgid "Grade"
+msgstr ""
+
+msgid "Lista"
+msgstr ""
+
+msgid "Como os produtos serão exibidos por padrão"
+msgstr ""
+
+msgid "Colunas Padrão"
+msgstr ""
+
+msgid "Número de colunas na grade (2-4)"
+msgstr ""
+
+msgid "Espaçamento entre Cards"
+msgstr ""
+
+msgid "Exibição de Preços"
+msgstr ""
+
+msgid "Formato do Preço"
+msgstr ""
+
+msgid "Use {valor} onde o preço deve aparecer. Exemplo: R$ {valor}"
+msgstr ""
+
+msgid "Texto Quando Sem Preço"
+msgstr ""
+
+msgid "Texto exibido quando o produto não tem preço definido"
+msgstr ""
+
+msgid "Outros Ajustes"
+msgstr ""
+
+msgid "Título Clicável"
+msgstr ""
+
+msgid "Permitir que o título do produto seja clicável"
+msgstr ""
+
+msgid "Abrir em Nova Aba"
+msgstr ""
+
+msgid "Links de afiliado abrem em nova aba"
+msgstr ""
+
+msgid "Mostrar Badge da Loja"
+msgstr ""
+
+msgid "Exibe o nome da loja (Shopee, Amazon, etc.) na imagem do produto"
+msgstr ""
+
+msgid "CSS Customizado"
+msgstr ""
+
+msgid "Adicione CSS personalizado para ajustes finos (opcional)"
+msgstr ""
+
+msgid "💾 Salvar Alterações"
+msgstr ""
+
+msgid "Tem certeza que deseja restaurar todas as configurações para os valores padrão?"
+msgstr ""
+
+msgid "🔄 Restaurar Padrões"
+msgstr ""
+
+#: admin/admin-import-csv.php
+msgid "Importar Produtos via CSV"
+msgstr ""
+
+msgid "Formato do CSV"
+msgstr ""
+
+msgid "O arquivo CSV deve conter as seguintes colunas na primeira linha:"
+msgstr ""
+
+msgid "Exemplo:"
+msgstr ""
+
+msgid "Observações:"
+msgstr ""
+
+msgid "A primeira linha do CSV deve conter os cabeçalhos (será ignorada na importação)"
+msgstr ""
+
+msgid "Use vírgula (,) como separador de campos"
+msgstr ""
+
+msgid "Campos com vírgulas ou quebras de linha devem estar entre aspas duplas"
+msgstr ""
+
+msgid "O preço deve usar ponto (.) como separador decimal"
+msgstr ""
+
+msgid "A categoria será criada automaticamente se não existir"
+msgstr ""
+
+msgid "Se a URL da imagem for válida, ela será baixada e definida como imagem destacada"
+msgstr ""
+
+msgid "Arquivo CSV"
+msgstr ""
+
+msgid "Selecione um arquivo CSV com os produtos para importar."
+msgstr ""
+
+msgid "Importar Produtos"
+msgstr ""
+
+msgid "%d produto importado com sucesso!"
+msgid_plural "%d produtos importados com sucesso!"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d produto com erro."
+msgid_plural "%d produtos com erros."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Erro ao fazer upload do arquivo. Tente novamente."
+msgstr ""
+
+#: admin/admin-manage-products.php
+msgid "%d produto(s) excluído(s) com sucesso!"
+msgstr ""
+
+msgid "%d produto(s) duplicado(s) com sucesso!"
+msgstr ""
+
+msgid "Gerenciar Produtos Afiliados"
+msgstr ""
+
+msgid "Preço Médio"
+msgstr ""
+
+msgid "Categoria Principal"
+msgstr ""
+
+msgid "Buscar produtos..."
+msgstr ""
+
+msgid "Todas as categorias"
+msgstr ""
+
+msgid "Todos os preços"
+msgstr ""
+
+msgid "Acima de R$ 500"
+msgstr ""
+
+msgid "Data"
+msgstr ""
+
+msgid "Título"
+msgstr ""
+
+msgid "Preço"
+msgstr ""
+
+msgid "Decrescente"
+msgstr ""
+
+msgid "Crescente"
+msgstr ""
+
+msgid "Filtrar"
+msgstr ""
+
+msgid "Limpar Filtros"
+msgstr ""
+
+msgid "Ações em lote"
+msgstr ""
+
+msgid "Excluir"
+msgstr ""
+
+msgid "Duplicar"
+msgstr ""
+
+msgid "Aplicar"
+msgstr ""
+
+msgid "%d itens"
+msgstr ""
+
+msgid "Imagem"
+msgstr ""
+
+msgid "Categoria"
+msgstr ""
+
+msgid "Status Link"
+msgstr ""
+
+msgid "Shortcode"
+msgstr ""
+
+msgid "Ações"
+msgstr ""
+
+msgid "Sem img"
+msgstr ""
+
+msgid "Ver página"
+msgstr ""
+
+msgid "Sem categoria"
+msgstr ""
+
+msgid "Sem link"
+msgstr ""
+
+msgid "Copiar shortcode"
+msgstr ""
+
+msgid "Editar"
+msgstr ""
+
+msgid "Tem certeza que deseja excluir este produto?"
+msgstr ""
+
+msgid "Tente ajustar os filtros ou"
+msgstr ""
+
+msgid "remover todos os filtros"
+msgstr ""
+
+msgid "Adicionar primeiro produto"
+msgstr ""
+
+msgid "‹ Anterior"
+msgstr ""
+
+msgid "Próximo ›"
+msgstr ""
+
+msgid "Nenhum link de afiliado configurado"
+msgstr ""
+
+msgid "URL inválida"
+msgstr ""
+
+msgid "O link não é uma URL válida"
+msgstr ""
+
+msgid "Link do %s configurado"
+msgstr ""
+
+msgid "Link genérico"
+msgstr ""
+
+msgid "Link configurado mas não identificado como marketplace conhecido"
+msgstr ""
