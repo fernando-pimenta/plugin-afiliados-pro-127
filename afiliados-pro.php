@@ -26,6 +26,20 @@ define('AFFILIATE_PRO_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('AFFILIATE_PRO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AFFILIATE_PRO_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
+// Modo debug (descomente a linha abaixo para ativar logs detalhados)
+// define('AFFILIATE_PRO_DEBUG', true);
+
+/**
+ * Função helper para logs condicionais
+ *
+ * @param string $message Mensagem para log
+ */
+function affiliate_pro_log($message) {
+    if (defined('AFFILIATE_PRO_DEBUG') && AFFILIATE_PRO_DEBUG) {
+        error_log('Affiliate Pro: ' . $message);
+    }
+}
+
 /**
  * Classe principal do Plugin Afiliados Pro
  *

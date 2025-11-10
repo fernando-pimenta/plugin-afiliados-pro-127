@@ -28,7 +28,9 @@ if (isset($_GET['error'])) {
     $error_messages = array(
         'upload' => __('Erro ao fazer upload do arquivo. Tente novamente.', 'afiliados-pro'),
         'invalid_format' => __('Formato do CSV inválido. Certifique-se de que o arquivo contém pelo menos 6 colunas: Título, Descrição, Preço, Link de Afiliado, URL da Imagem e Categoria.', 'afiliados-pro'),
-        'no_data' => __('Nenhum produto encontrado no arquivo CSV. Verifique se o arquivo contém dados além do cabeçalho.', 'afiliados-pro')
+        'no_data' => __('Nenhum produto encontrado no arquivo CSV. Verifique se o arquivo contém dados além do cabeçalho.', 'afiliados-pro'),
+        'invalid_extension' => __('Apenas arquivos .csv são permitidos. Por favor, selecione um arquivo CSV válido.', 'afiliados-pro'),
+        'invalid_mime' => __('Tipo de arquivo inválido. Por favor, envie apenas arquivos CSV.', 'afiliados-pro')
     );
 
     $error_message = isset($error_messages[$error_type]) ? $error_messages[$error_type] : $error_messages['upload'];

@@ -83,23 +83,55 @@ class Affiliate_Pro_Shortcodes {
             'limit' => 6,
             'category' => '',
             'layout' => $settings['default_layout'],
-            'columns' => $settings['default_columns']
+            'columns' => $settings['default_columns'],
+            'orderby' => 'date',
+            'order' => 'DESC'
         ), $atts);
+
+        // Whitelist para orderby (prevenir SQL injection)
+        $allowed_orderby = array('date', 'title', 'rand', 'menu_order', 'ID', 'modified');
+        if (!in_array($atts['orderby'], $allowed_orderby)) {
+            $atts['orderby'] = 'date';
+        }
+
+        // Whitelist para order
+        $allowed_order = array('ASC', 'DESC');
+        $atts['order'] = strtoupper($atts['order']);
+        if (!in_array($atts['order'], $allowed_order)) {
+            $atts['order'] = 'DESC';
+        }
 
         $args = array(
             'post_type' => 'affiliate_product',
             'posts_per_page' => intval($atts['limit']),
-            'post_status' => 'publish'
+            'post_status' => 'publish',
+            'orderby' => $atts['orderby'],
+            'order' => $atts['order']
         );
 
+        // Suporte a múltiplas categorias separadas por vírgula
         if (!empty($atts['category'])) {
-            $args['tax_query'] = array(
-                array(
-                    'taxonomy' => 'affiliate_category',
-                    'field' => 'slug',
-                    'terms' => sanitize_title($atts['category'])
-                )
-            );
+            $categories = array_map('trim', explode(',', $atts['category']));
+            $categories = array_map('sanitize_title', $categories);
+
+            // Verificar se as categorias existem
+            $valid_categories = array();
+            foreach ($categories as $category_slug) {
+                if (term_exists($category_slug, 'affiliate_category')) {
+                    $valid_categories[] = $category_slug;
+                }
+            }
+
+            // Só adicionar tax_query se houver categorias válidas
+            if (!empty($valid_categories)) {
+                $args['tax_query'] = array(
+                    array(
+                        'taxonomy' => 'affiliate_category',
+                        'field' => 'slug',
+                        'terms' => $valid_categories
+                    )
+                );
+            }
         }
 
         $query = new WP_Query($args);

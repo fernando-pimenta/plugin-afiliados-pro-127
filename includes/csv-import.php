@@ -66,6 +66,30 @@ class Affiliate_Pro_CSV_Import {
             exit;
         }
 
+        // Validar extensão do arquivo
+        $file_name = sanitize_file_name($_FILES['csv_file']['name']);
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+        if ($file_ext !== 'csv') {
+            wp_redirect(add_query_arg(
+                array('page' => 'affiliate-import-csv', 'error' => 'invalid_extension'),
+                admin_url('admin.php')
+            ));
+            exit;
+        }
+
+        // Validar MIME type
+        $allowed_mimes = array('text/csv', 'text/plain', 'application/csv', 'application/vnd.ms-excel');
+        $file_type = $_FILES['csv_file']['type'];
+
+        if (!in_array($file_type, $allowed_mimes)) {
+            wp_redirect(add_query_arg(
+                array('page' => 'affiliate-import-csv', 'error' => 'invalid_mime'),
+                admin_url('admin.php')
+            ));
+            exit;
+        }
+
         $file = $_FILES['csv_file']['tmp_name'];
 
         // Detectar e corrigir codificação do arquivo
@@ -259,6 +283,16 @@ class Affiliate_Pro_CSV_Import {
      * @param string $image_url
      */
     private function set_featured_image_from_url($post_id, $image_url) {
+        // Validar extensão do arquivo
+        $allowed_extensions = array('jpg', 'jpeg', 'png', 'gif', 'webp');
+        $image_extension = strtolower(pathinfo(parse_url($image_url, PHP_URL_PATH), PATHINFO_EXTENSION));
+
+        // Verificar se a extensão é permitida
+        if (!in_array($image_extension, $allowed_extensions)) {
+            error_log('Affiliate Pro: Extensão de imagem não permitida: ' . $image_extension);
+            return;
+        }
+
         require_once(ABSPATH . 'wp-admin/includes/media.php');
         require_once(ABSPATH . 'wp-admin/includes/file.php');
         require_once(ABSPATH . 'wp-admin/includes/image.php');
@@ -266,6 +300,17 @@ class Affiliate_Pro_CSV_Import {
         $attachment_id = media_sideload_image($image_url, $post_id, null, 'id');
 
         if (!is_wp_error($attachment_id)) {
+            // Validar MIME type do arquivo baixado
+            $mime_type = get_post_mime_type($attachment_id);
+            $allowed_mimes = array('image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp');
+
+            if (!in_array($mime_type, $allowed_mimes)) {
+                // Remover arquivo se MIME type inválido
+                wp_delete_attachment($attachment_id, true);
+                error_log('Affiliate Pro: MIME type inválido detectado: ' . $mime_type);
+                return;
+            }
+
             set_post_thumbnail($post_id, $attachment_id);
         }
     }

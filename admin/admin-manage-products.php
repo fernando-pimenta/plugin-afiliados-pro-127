@@ -170,16 +170,26 @@ global $wpdb;
 $products_count_obj = wp_count_posts('affiliate_product');
 $total_products = (is_object($products_count_obj) && isset($products_count_obj->publish)) ? $products_count_obj->publish : 0;
 
-$avg_price_result = $wpdb->get_var("
-    SELECT AVG(CAST(meta_value AS DECIMAL(10,2)))
-    FROM {$wpdb->postmeta} pm
-    INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
-    WHERE pm.meta_key = '_affiliate_price'
-    AND p.post_type = 'affiliate_product'
-    AND p.post_status = 'publish'
-    AND pm.meta_value != ''
-");
-$avg_price = $avg_price_result ? floatval($avg_price_result) : 0;
+// Tentar obter preço médio do cache
+$avg_price = get_transient('affiliate_pro_avg_price');
+
+if (false === $avg_price) {
+    // Cache não existe, calcular e armazenar
+    $avg_price_result = $wpdb->get_var($wpdb->prepare("
+        SELECT AVG(CAST(meta_value AS DECIMAL(10,2)))
+        FROM {$wpdb->postmeta} pm
+        INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+        WHERE pm.meta_key = %s
+        AND p.post_type = %s
+        AND p.post_status = %s
+        AND pm.meta_value != ''
+    ", '_affiliate_price', 'affiliate_product', 'publish'));
+
+    $avg_price = $avg_price_result ? floatval($avg_price_result) : 0;
+
+    // Armazenar no cache por 1 hora
+    set_transient('affiliate_pro_avg_price', $avg_price, HOUR_IN_SECONDS);
+}
 
 $top_categories_result = get_terms(array(
     'taxonomy' => 'affiliate_category',
