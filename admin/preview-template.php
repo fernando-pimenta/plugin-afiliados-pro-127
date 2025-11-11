@@ -281,10 +281,14 @@ body {
 
                 <?php if ($clickable_title): ?>
                     <h3 class="affiliate-title">
-                        <a href="#"<?php echo $link_target; ?>>Produto Exemplo <?php echo $i; ?></a>
+                        <a href="#"<?php echo $link_target; ?>
+                           data-aff-id="preview-<?php echo $i; ?>"
+                           data-source="title">Produto Exemplo <?php echo $i; ?></a>
                     </h3>
                 <?php else: ?>
-                    <h3 class="affiliate-title">
+                    <h3 class="affiliate-title"
+                        data-aff-id="preview-<?php echo $i; ?>"
+                        data-source="title">
                         Produto Exemplo <?php echo $i; ?>
                     </h3>
                 <?php endif; ?>
@@ -306,7 +310,9 @@ body {
                     </p>
                 <?php endif; ?>
 
-                <button class="affiliate-btn">
+                <button class="affiliate-btn"
+                        data-aff-id="preview-<?php echo $i; ?>"
+                        data-source="button">
                     <?php echo esc_html($button_text); ?>
                 </button>
             </div>

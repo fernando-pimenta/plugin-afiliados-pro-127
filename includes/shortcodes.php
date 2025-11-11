@@ -229,12 +229,18 @@ class Affiliate_Pro_Shortcodes {
             <div class="product-content">
                 <?php if ($settings['title_clickable'] && !empty($link)) : ?>
                     <h3 class="product-title">
-                        <a href="<?php echo esc_url($link); ?>"<?php echo $link_attrs; ?>>
+                        <a href="<?php echo esc_url($link); ?>"<?php echo $link_attrs; ?>
+                           data-aff-id="<?php echo esc_attr($post->ID); ?>"
+                           data-source="title">
                             <?php echo esc_html($post->post_title); ?>
                         </a>
                     </h3>
                 <?php else : ?>
-                    <h3 class="product-title"><?php echo esc_html($post->post_title); ?></h3>
+                    <h3 class="product-title"
+                        data-aff-id="<?php echo esc_attr($post->ID); ?>"
+                        data-source="title">
+                        <?php echo esc_html($post->post_title); ?>
+                    </h3>
                 <?php endif; ?>
 
                 <p class="product-price"><?php echo esc_html($price_formatted); ?></p>
@@ -244,7 +250,10 @@ class Affiliate_Pro_Shortcodes {
                 <?php endif; ?>
 
                 <?php if (!empty($link)) : ?>
-                    <a href="<?php echo esc_url($link); ?>" class="product-button"<?php echo $link_attrs; ?>>
+                    <a href="<?php echo esc_url($link); ?>"
+                       class="product-button"<?php echo $link_attrs; ?>
+                       data-aff-id="<?php echo esc_attr($post->ID); ?>"
+                       data-source="button">
                         <?php echo esc_html($button_text); ?>
                     </a>
                 <?php else : ?>
