@@ -202,6 +202,20 @@ class Affiliate_Template_Builder {
                                 <p class="description"><?php _e('Quantidade de colunas no layout de grade (entre 2 e 4).', 'afiliados-pro'); ?></p>
                             </td>
                         </tr>
+
+                        <!-- Forçar CSS do Template Builder -->
+                        <tr>
+                            <th scope="row">
+                                <label for="force_css"><?php _e('Forçar CSS do Template Builder', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" id="force_css" name="force_css" value="1" <?php checked($settings['force_css'], true); ?>>
+                                    <?php _e('Ativar esta opção para aplicar as cores e estilos do Template Builder com prioridade sobre o tema ativo.', 'afiliados-pro'); ?>
+                                </label>
+                                <p class="description"><?php _e('Se desativado, o plugin respeita o estilo visual do tema WordPress.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
 
@@ -211,7 +225,7 @@ class Affiliate_Template_Builder {
             <!-- Preview Section -->
             <div class="card" style="margin-top: 30px;">
                 <h2><?php _e('Pré-visualização', 'afiliados-pro'); ?></h2>
-                <p><?php _e('A pré-visualização ao vivo estará disponível na versão 1.3.1', 'afiliados-pro'); ?></p>
+                <p><?php _e('A pré-visualização ao vivo estará disponível em versões futuras', 'afiliados-pro'); ?></p>
                 <div style="padding: 20px; background: #f5f5f5; border-radius: 4px;">
                     <p style="color: #666; font-style: italic;"><?php _e('Em breve: visualização em tempo real das suas configurações', 'afiliados-pro'); ?></p>
                 </div>
@@ -271,6 +285,9 @@ class Affiliate_Template_Builder {
         $columns = isset($_POST['columns']) ? absint($_POST['columns']) : 3;
         $settings['columns'] = max(2, min(4, $columns)); // Entre 2 e 4
 
+        // Forçar CSS
+        $settings['force_css'] = isset($_POST['force_css']) ? boolval($_POST['force_css']) : false;
+
         // Salvar no banco de dados
         update_option($this->option_name, $settings);
 
@@ -300,6 +317,7 @@ class Affiliate_Template_Builder {
             'shadow' => true,
             'layout_default' => 'grid',
             'columns' => 3,
+            'force_css' => false,
         );
 
         $settings = get_option('affiliate_template_settings', array());
@@ -322,33 +340,44 @@ class Affiliate_Template_Builder {
 
         $border_radius = isset($radius_map[$settings['border_radius']]) ? $radius_map[$settings['border_radius']] : '8px';
 
+        // Determinar se deve forçar CSS
+        $important = !empty($settings['force_css']) ? ' !important' : '';
+
         // Gerar CSS dinâmico
         $css = "
-        /* Afiliados Pro - Template Builder v1.3.0 */
+        /* Afiliados Pro - Template Builder v1.3.1 */
+
         :root {
             --affiliate-template-primary: {$settings['primary_color']};
             --affiliate-template-button: {$settings['button_color']};
             --affiliate-template-radius: {$border_radius};
         }
 
-        /* Cards de Produtos */
+        /* Refinamento Visual - Cards de Produtos */
         .affiliate-product-card {
-            border-radius: var(--affiliate-template-radius);";
+            border: 1px solid #e0e0e0{$important};
+            padding: 12px{$important};
+            margin-bottom: 16px{$important};
+            border-radius: var(--affiliate-template-radius){$important};
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out{$important};
+            ";
 
-        // Adicionar sombra se ativada
-        if ($settings['shadow']) {
-            $css .= "
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);";
+        // Corrigir aplicação de sombra
+        if (!empty($settings['shadow'])) {
+            $css .= "box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1){$important};";
+        } else {
+            $css .= "box-shadow: none{$important};";
         }
 
         $css .= "
         }
 
-        .affiliate-product-card:hover {";
+        .affiliate-product-card:hover {
+            transform: translateY(-3px){$important};";
 
-        if ($settings['shadow']) {
+        if (!empty($settings['shadow'])) {
             $css .= "
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);";
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15){$important};";
         }
 
         $css .= "
@@ -357,30 +386,34 @@ class Affiliate_Template_Builder {
         /* Títulos dos produtos */
         .affiliate-product-card .product-title,
         .affiliate-product-card .product-title a {
-            color: var(--affiliate-template-primary);
+            color: var(--affiliate-template-primary){$important};
         }
 
-        /* Botões */
+        /* Botões - Cor corrigida */
         .affiliate-product-card .product-button,
         .affiliate-btn {
-            border-radius: var(--affiliate-template-radius);";
+            border-radius: var(--affiliate-template-radius){$important};
+            padding: 10px 20px{$important};
+            text-decoration: none{$important};
+            display: inline-block{$important};
+            transition: all 0.3s ease{$important};";
 
-        // Estilos de botão
+        // Estilos de botão com cor corrigida
         if ($settings['button_style'] === 'filled') {
             $css .= "
-            background-color: var(--affiliate-template-button);
-            border: 2px solid var(--affiliate-template-button);
-            color: #fff;";
+            background-color: {$settings['button_color']}{$important};
+            border: 2px solid {$settings['button_color']}{$important};
+            color: #fff{$important};";
         } elseif ($settings['button_style'] === 'outline') {
             $css .= "
-            background-color: transparent;
-            border: 2px solid var(--affiliate-template-button);
-            color: var(--affiliate-template-button);";
+            background-color: transparent{$important};
+            border: 2px solid {$settings['button_color']}{$important};
+            color: {$settings['button_color']}{$important};";
         } elseif ($settings['button_style'] === 'gradient') {
             $css .= "
-            background: linear-gradient(135deg, var(--affiliate-template-button) 0%, var(--affiliate-template-primary) 100%);
-            border: none;
-            color: #fff;";
+            background: linear-gradient(135deg, {$settings['button_color']} 0%, {$settings['primary_color']} 100%){$important};
+            border: none{$important};
+            color: #fff{$important};";
         }
 
         $css .= "
@@ -391,14 +424,16 @@ class Affiliate_Template_Builder {
 
         if ($settings['button_style'] === 'filled') {
             $css .= "
-            opacity: 0.9;";
+            opacity: 0.9{$important};
+            transform: translateY(-2px){$important};";
         } elseif ($settings['button_style'] === 'outline') {
             $css .= "
-            background-color: var(--affiliate-template-button);
-            color: #fff;";
+            background-color: {$settings['button_color']}{$important};
+            color: #fff{$important};";
         } elseif ($settings['button_style'] === 'gradient') {
             $css .= "
-            opacity: 0.95;";
+            opacity: 0.95{$important};
+            transform: translateY(-2px){$important};";
         }
 
         $css .= "
@@ -410,28 +445,27 @@ class Affiliate_Template_Builder {
         if ($settings['card_style'] === 'modern') {
             $css .= "
         .affiliate-product-card {
-            background: linear-gradient(to bottom, #fff 0%, #f8f9fa 100%);
-            border: 1px solid #e9ecef;
+            background: linear-gradient(to bottom, #fff 0%, #f8f9fa 100%){$important};
         }";
         } elseif ($settings['card_style'] === 'classic') {
             $css .= "
         .affiliate-product-card {
-            background: #fff;
-            border: 2px solid #dee2e6;
+            background: #fff{$important};
+            border-width: 2px{$important};
+            border-color: #dee2e6{$important};
         }";
         } elseif ($settings['card_style'] === 'minimal') {
             $css .= "
         .affiliate-product-card {
-            background: #fff;
-            border: none;
-            border-bottom: 3px solid var(--affiliate-template-primary);
+            background: #fff{$important};
+            border: none{$important};
+            border-bottom: 3px solid {$settings['primary_color']}{$important};
         }";
         } elseif ($settings['card_style'] === 'cards') {
             $css .= "
         .affiliate-product-card {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            padding: 20px;
+            background: #fff{$important};
+            padding: 20px{$important};
         }";
         }
 
