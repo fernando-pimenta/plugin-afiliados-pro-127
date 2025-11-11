@@ -116,6 +116,17 @@ class Affiliate_Template_Builder {
                             </td>
                         </tr>
 
+                        <!-- Cor Secundária (Gradiente) - v1.4.1 -->
+                        <tr>
+                            <th scope="row">
+                                <label for="gradient_color"><?php _e('Cor Secundária (Gradiente)', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <input type="color" id="gradient_color" name="gradient_color" value="<?php echo esc_attr($settings['gradient_color']); ?>" class="regular-text">
+                                <p class="description"><?php _e('Usada apenas quando o estilo de botão é "Gradiente".', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+
                         <!-- Estilo do Card -->
                         <tr>
                             <th scope="row">
@@ -287,6 +298,7 @@ class Affiliate_Template_Builder {
         // Cores
         $settings['primary_color'] = isset($_POST['primary_color']) ? sanitize_hex_color($_POST['primary_color']) : '#283593';
         $settings['button_color'] = isset($_POST['button_color']) ? sanitize_hex_color($_POST['button_color']) : '#ffa70a';
+        $settings['gradient_color'] = isset($_POST['gradient_color']) ? sanitize_hex_color($_POST['gradient_color']) : '#025C95'; // v1.4.1
 
         // Estilos
         $allowed_card_styles = array('modern', 'classic', 'minimal', 'cards');
@@ -348,6 +360,7 @@ class Affiliate_Template_Builder {
         $defaults = array(
             'primary_color' => '#283593',
             'button_color' => '#ffa70a',
+            'gradient_color' => '#025C95', // v1.4.1
             'card_style' => 'modern',
             'button_style' => 'filled',
             'border_radius' => 'medium',
@@ -480,8 +493,10 @@ class Affiliate_Template_Builder {
             border: 2px solid {$settings['button_color']}{$important};
             color: {$settings['button_color']}{$important};";
         } elseif ($settings['button_style'] === 'gradient') {
+            // v1.4.1: Use gradient_color as secondary, fallback to primary_color
+            $gradient_secondary = !empty($settings['gradient_color']) ? $settings['gradient_color'] : $settings['primary_color'];
             $css .= "
-            background: linear-gradient(135deg, {$settings['button_color']} 0%, {$settings['primary_color']} 100%){$important};
+            background: linear-gradient(135deg, {$settings['button_color']} 0%, {$gradient_secondary} 100%){$important};
             border: none{$important};
             color: #fff{$important};";
         }

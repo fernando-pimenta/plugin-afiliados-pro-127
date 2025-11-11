@@ -1,6 +1,6 @@
 /**
  * Afiliados Pro - Template Preview Handler
- * Version: 1.4.0
+ * Version: 1.4.1
  *
  * Handles live preview updates in the Template Builder admin page
  */
@@ -20,12 +20,16 @@
             return;
         }
 
+        // Set initial transition style (v1.4.1)
+        iframe.style.transition = 'opacity 0.3s ease-in-out';
+        iframe.style.opacity = '1';
+
         // Track if we're currently reloading to prevent multiple reloads
         let isReloading = false;
         let reloadTimeout = null;
 
         /**
-         * Reload preview iframe with debounce
+         * Reload preview iframe with debounce and loading effect (v1.4.1)
          */
         function reloadPreview() {
             if (isReloading) return;
@@ -38,6 +42,9 @@
             // Debounce reload by 500ms
             reloadTimeout = setTimeout(() => {
                 isReloading = true;
+
+                // Apply fade-out effect (v1.4.1)
+                iframe.style.opacity = '0.3';
 
                 // Get current settings from form
                 const formData = new FormData(form);
@@ -60,6 +67,13 @@
                 }, 300);
             }, 500);
         }
+
+        /**
+         * Restore opacity when iframe finishes loading (v1.4.1)
+         */
+        iframe.addEventListener('load', function() {
+            iframe.style.opacity = '1';
+        });
 
         /**
          * Attach change listeners to form elements
@@ -98,7 +112,7 @@
         attachListeners();
 
         // Log initialization
-        console.log('Afiliados Pro: Template preview initialized');
+        console.log('Afiliados Pro: Template preview initialized (v1.4.1)');
     }
 
     /**

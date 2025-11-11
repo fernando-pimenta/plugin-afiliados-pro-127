@@ -5,7 +5,7 @@
  * Handles AJAX preview rendering for Template Builder
  *
  * @package AfiliadorsPro
- * @version 1.4.0
+ * @version 1.4.1
  */
 
 if (!defined('ABSPATH')) {
@@ -31,7 +31,7 @@ class Affiliate_Preview_Handler {
     }
 
     /**
-     * Render preview template
+     * Render preview template (v1.4.1 - Fixed disappearing preview)
      *
      * Handles AJAX request and outputs preview HTML
      */
@@ -40,6 +40,9 @@ class Affiliate_Preview_Handler {
         if (!current_user_can('manage_options')) {
             wp_die(__('Você não tem permissão para visualizar esta página.', 'afiliados-pro'), 403);
         }
+
+        // Prevent caching to ensure fresh preview content (v1.4.1)
+        nocache_headers();
 
         // Get settings from query params (for real-time preview)
         // If not provided via query params, fall back to saved settings
@@ -55,7 +58,7 @@ class Affiliate_Preview_Handler {
             echo '<p style="color:red;">Erro: Template de preview não encontrado.</p>';
         }
 
-        wp_die(); // Terminate AJAX request properly
+        exit; // Exit cleanly without wp_die() to prevent redirection (v1.4.1)
     }
 
     /**
@@ -76,6 +79,9 @@ class Affiliate_Preview_Handler {
         }
         if (isset($_GET['button_color'])) {
             $preview_settings['button_color'] = sanitize_hex_color($_GET['button_color']);
+        }
+        if (isset($_GET['gradient_color'])) { // v1.4.1
+            $preview_settings['gradient_color'] = sanitize_hex_color($_GET['gradient_color']);
         }
 
         // Style settings
