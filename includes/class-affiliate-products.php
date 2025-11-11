@@ -193,15 +193,16 @@ class Affiliate_Pro_Products {
             'edit-tags.php?taxonomy=' . $this->taxonomy . '&post_type=' . $this->post_type
         );
 
+        // REMOVED (v1.4.5.1): Legacy menu - now handled by class-affiliate-template-builder.php
         // Submenu - Aparência e Configurações
-        add_submenu_page(
-            'affiliate-products',
-            __('Aparência e Configurações', 'afiliados-pro'),
-            __('Aparência e Configurações', 'afiliados-pro'),
-            'manage_options',
-            'affiliate-settings',
-            array($this, 'render_settings_page')
-        );
+        // add_submenu_page(
+        //     'affiliate-products',
+        //     __('Aparência e Configurações', 'afiliados-pro'),
+        //     __('Aparência e Configurações', 'afiliados-pro'),
+        //     'manage_options',
+        //     'affiliate-settings',
+        //     array($this, 'render_settings_page')
+        // );
     }
 
     /**
@@ -300,9 +301,11 @@ class Affiliate_Pro_Products {
     /**
      * Renderiza a página de Configurações
      */
-    public function render_settings_page() {
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'admin/admin-settings.php';
-    }
+    // REMOVED (v1.4.5.1): Legacy settings page method
+    // Now handled by Affiliate_Template_Builder::render_template_builder_page()
+    // public function render_settings_page() {
+    //     require_once AFFILIATE_PRO_PLUGIN_DIR . 'admin/admin-settings.php';
+    // }
 
     /**
      * Adiciona Meta Boxes
@@ -375,6 +378,8 @@ class Affiliate_Pro_Products {
             $price = sanitize_text_field($_POST['affiliate_price']);
             if (is_numeric($price) && $price >= 0) {
                 update_post_meta($post_id, '_affiliate_price', $price);
+                // Limpar cache de preço médio quando um preço for atualizado
+                delete_transient('affiliate_pro_avg_price');
             }
         }
 
@@ -395,12 +400,12 @@ class Affiliate_Pro_Products {
      * Duplica um produto via AJAX
      */
     public function ajax_duplicate_product() {
-        error_log('Affiliate Pro: ajax_duplicate_product() - Iniciando duplicação via AJAX');
-        error_log('Affiliate Pro: POST data: ' . print_r($_POST, true));
+        affiliate_pro_log('ajax_duplicate_product() - Iniciando duplicação via AJAX');
+        affiliate_pro_log('POST data: ' . print_r($_POST, true));
 
         // Verificar permissões
         if (!current_user_can('edit_posts')) {
-            error_log('Affiliate Pro: ajax_duplicate_product() - Permissão negada');
+            affiliate_pro_log('ajax_duplicate_product() - Permissão negada');
             wp_send_json_error(array(
                 'message' => __('Você não tem permissão para duplicar produtos', 'afiliados-pro')
             ));
@@ -409,7 +414,7 @@ class Affiliate_Pro_Products {
 
         // Verificar nonce
         if (!isset($_POST['nonce'])) {
-            error_log('Affiliate Pro: ajax_duplicate_product() - Nonce não enviado');
+            affiliate_pro_log('ajax_duplicate_product() - Nonce não enviado');
             wp_send_json_error(array(
                 'message' => __('Erro de segurança: nonce não enviado', 'afiliados-pro')
             ));
@@ -417,7 +422,7 @@ class Affiliate_Pro_Products {
         }
 
         if (!wp_verify_nonce($_POST['nonce'], 'affiliate_pro_admin_nonce')) {
-            error_log('Affiliate Pro: ajax_duplicate_product() - Nonce inválido');
+            affiliate_pro_log('ajax_duplicate_product() - Nonce inválido');
             wp_send_json_error(array(
                 'message' => __('Erro de segurança: nonce inválido', 'afiliados-pro')
             ));
@@ -426,7 +431,7 @@ class Affiliate_Pro_Products {
 
         // Verificar se product_id foi enviado e é válido
         if (!isset($_POST['product_id']) || empty($_POST['product_id'])) {
-            error_log('Affiliate Pro: ajax_duplicate_product() - product_id não enviado ou vazio');
+            affiliate_pro_log('ajax_duplicate_product() - product_id não enviado ou vazio');
             wp_send_json_error(array(
                 'message' => __('Nenhum produto foi selecionado para duplicação', 'afiliados-pro')
             ));
@@ -436,20 +441,20 @@ class Affiliate_Pro_Products {
         $product_id = intval($_POST['product_id']);
 
         if ($product_id <= 0) {
-            error_log('Affiliate Pro: ajax_duplicate_product() - product_id inválido: ' . $_POST['product_id']);
+            affiliate_pro_log('ajax_duplicate_product() - product_id inválido: ' . $_POST['product_id']);
             wp_send_json_error(array(
                 'message' => __('ID do produto inválido', 'afiliados-pro')
             ));
             return;
         }
 
-        error_log('Affiliate Pro: ajax_duplicate_product() - Verificando produto ID: ' . $product_id);
+        affiliate_pro_log('ajax_duplicate_product() - Verificando produto ID: ' . $product_id);
 
         // Verificar se o produto existe
         $product = get_post($product_id);
 
         if (!$product) {
-            error_log('Affiliate Pro: ajax_duplicate_product() - Produto não encontrado. ID: ' . $product_id);
+            affiliate_pro_log('ajax_duplicate_product() - Produto não encontrado. ID: ' . $product_id);
             wp_send_json_error(array(
                 'message' => __('Produto não encontrado (ID: ' . $product_id . ')', 'afiliados-pro')
             ));
@@ -457,7 +462,7 @@ class Affiliate_Pro_Products {
         }
 
         if (is_wp_error($product)) {
-            error_log('Affiliate Pro: ajax_duplicate_product() - Erro ao buscar produto: ' . $product->get_error_message());
+            affiliate_pro_log('ajax_duplicate_product() - Erro ao buscar produto: ' . $product->get_error_message());
             wp_send_json_error(array(
                 'message' => __('Erro ao buscar produto: ' . $product->get_error_message(), 'afiliados-pro')
             ));
@@ -465,21 +470,21 @@ class Affiliate_Pro_Products {
         }
 
         if ($product->post_type !== $this->post_type) {
-            error_log('Affiliate Pro: ajax_duplicate_product() - Post type incorreto. Esperado: ' . $this->post_type . ', Recebido: ' . $product->post_type);
+            affiliate_pro_log('ajax_duplicate_product() - Post type incorreto. Esperado: ' . $this->post_type . ', Recebido: ' . $product->post_type);
             wp_send_json_error(array(
                 'message' => __('O item selecionado não é um produto afiliado', 'afiliados-pro')
             ));
             return;
         }
 
-        error_log('Affiliate Pro: ajax_duplicate_product() - Produto válido. Iniciando duplicação...');
+        affiliate_pro_log('ajax_duplicate_product() - Produto válido. Iniciando duplicação...');
 
         // Tentar duplicar
         $new_product_id = $this->duplicate_product($product_id);
 
         // Verificar se houve erro (WP_Error)
         if (is_wp_error($new_product_id)) {
-            error_log('Affiliate Pro: ajax_duplicate_product() - Erro na duplicação: ' . $new_product_id->get_error_message());
+            affiliate_pro_log('ajax_duplicate_product() - Erro na duplicação: ' . $new_product_id->get_error_message());
             wp_send_json_error(array(
                 'message' => sprintf(__('Falha ao duplicar produto: %s', 'afiliados-pro'), $new_product_id->get_error_message())
             ));
@@ -488,7 +493,7 @@ class Affiliate_Pro_Products {
 
         // Verificar se o ID é válido
         if (!$new_product_id || !is_numeric($new_product_id) || $new_product_id <= 0) {
-            error_log('Affiliate Pro: ajax_duplicate_product() - ID inválido retornado: ' . print_r($new_product_id, true));
+            affiliate_pro_log('ajax_duplicate_product() - ID inválido retornado: ' . print_r($new_product_id, true));
             wp_send_json_error(array(
                 'message' => __('Falha ao duplicar produto: ID inválido retornado.', 'afiliados-pro')
             ));
@@ -498,7 +503,7 @@ class Affiliate_Pro_Products {
         // CRÍTICO: Verificar se o post realmente existe no banco de dados antes de retornar sucesso
         $check_new_post = get_post($new_product_id);
         if (!$check_new_post) {
-            error_log('Affiliate Pro: ajax_duplicate_product() - FALHA CRÍTICA: duplicate_product() retornou ID ' . $new_product_id . ', mas get_post() retornou null. O post não existe!');
+            affiliate_pro_log('ajax_duplicate_product() - FALHA CRÍTICA: duplicate_product() retornou ID ' . $new_product_id . ', mas get_post() retornou null. O post não existe!');
             wp_send_json_error(array(
                 'message' => sprintf(__('Falha ao duplicar produto: Post não encontrado após criação (ID: %d).', 'afiliados-pro'), $new_product_id)
             ));
@@ -507,7 +512,7 @@ class Affiliate_Pro_Products {
 
         // Verificar se o tipo do post está correto
         if ($check_new_post->post_type !== $this->post_type) {
-            error_log('Affiliate Pro: ajax_duplicate_product() - Post criado com tipo incorreto. Esperado: ' . $this->post_type . ', Encontrado: ' . $check_new_post->post_type);
+            affiliate_pro_log('ajax_duplicate_product() - Post criado com tipo incorreto. Esperado: ' . $this->post_type . ', Encontrado: ' . $check_new_post->post_type);
             wp_send_json_error(array(
                 'message' => __('Falha ao duplicar produto: Post criado com tipo incorreto.', 'afiliados-pro')
             ));
@@ -515,7 +520,7 @@ class Affiliate_Pro_Products {
         }
 
         // Tudo OK! Retornar sucesso
-        error_log('Affiliate Pro: ajax_duplicate_product() - Duplicação VERIFICADA e bem-sucedida. Novo ID: ' . $new_product_id . ', Título: ' . $check_new_post->post_title . ', Status: ' . $check_new_post->post_status);
+        affiliate_pro_log('ajax_duplicate_product() - Duplicação VERIFICADA e bem-sucedida. Novo ID: ' . $new_product_id . ', Título: ' . $check_new_post->post_title . ', Status: ' . $check_new_post->post_status);
         wp_send_json_success(array(
             'message' => sprintf(__('Produto duplicado com sucesso! Novo ID: %d', 'afiliados-pro'), $new_product_id),
             'new_id' => $new_product_id,
@@ -531,10 +536,10 @@ class Affiliate_Pro_Products {
      * @param int $original_id
      * @return int|WP_Error
      */
-    private function duplicate_product($original_id) {
+    public function duplicate_product($original_id) {
         // Validar ID
         if (empty($original_id) || !is_numeric($original_id)) {
-            error_log('Affiliate Pro: duplicate_product() - ID inválido: ' . print_r($original_id, true));
+            affiliate_pro_log('duplicate_product() - ID inválido: ' . print_r($original_id, true));
             return new WP_Error('invalid_id', 'ID do produto inválido.');
         }
 
@@ -544,18 +549,18 @@ class Affiliate_Pro_Products {
         $original_post = get_post($original_id);
 
         if (!$original_post) {
-            error_log('Affiliate Pro: duplicate_product() - Post não encontrado. ID: ' . $original_id);
+            affiliate_pro_log('duplicate_product() - Post não encontrado. ID: ' . $original_id);
             return new WP_Error('invalid_post', 'Produto original não encontrado.');
         }
 
         if (is_wp_error($original_post)) {
-            error_log('Affiliate Pro: duplicate_product() - Erro ao buscar post: ' . $original_post->get_error_message());
+            affiliate_pro_log('duplicate_product() - Erro ao buscar post: ' . $original_post->get_error_message());
             return $original_post;
         }
 
         // Verificar se é do tipo correto
         if ($original_post->post_type !== $this->post_type) {
-            error_log('Affiliate Pro: duplicate_product() - Post type incorreto. Esperado: ' . $this->post_type . ', Recebido: ' . $original_post->post_type);
+            affiliate_pro_log('duplicate_product() - Post type incorreto. Esperado: ' . $this->post_type . ', Recebido: ' . $original_post->post_type);
             return new WP_Error('invalid_post_type', 'O item selecionado não é um produto afiliado.');
         }
 
@@ -569,36 +574,36 @@ class Affiliate_Pro_Products {
             'post_author'   => get_current_user_id()
         );
 
-        error_log('Affiliate Pro: duplicate_product() - Tentando criar novo post com dados: ' . print_r($new_post_data, true));
+        affiliate_pro_log('duplicate_product() - Tentando criar novo post com dados: ' . print_r($new_post_data, true));
 
         // Criar novo post (true = retorna WP_Error se falhar)
         $new_post_id = wp_insert_post($new_post_data, true);
 
         // Verificar se houve erro na criação
         if (is_wp_error($new_post_id)) {
-            error_log('Affiliate Pro: duplicate_product() - Erro ao criar post (WP_Error): ' . $new_post_id->get_error_message());
+            affiliate_pro_log('duplicate_product() - Erro ao criar post (WP_Error): ' . $new_post_id->get_error_message());
             return new WP_Error('insert_failed', 'Falha ao criar o produto duplicado: ' . $new_post_id->get_error_message());
         }
 
         if (!$new_post_id || $new_post_id === 0) {
-            error_log('Affiliate Pro: duplicate_product() - wp_insert_post retornou ID inválido: ' . print_r($new_post_id, true));
+            affiliate_pro_log('duplicate_product() - wp_insert_post retornou ID inválido: ' . print_r($new_post_id, true));
             return new WP_Error('insert_failed', 'wp_insert_post retornou ID inválido.');
         }
 
         // CRÍTICO: Confirmar que o post foi realmente criado no banco de dados
         $check_post = get_post($new_post_id);
         if (!$check_post) {
-            error_log('Affiliate Pro: duplicate_product() - FALHA CRÍTICA: wp_insert_post retornou ID ' . $new_post_id . ', mas get_post() retornou null. O post não existe no banco de dados!');
+            affiliate_pro_log('duplicate_product() - FALHA CRÍTICA: wp_insert_post retornou ID ' . $new_post_id . ', mas get_post() retornou null. O post não existe no banco de dados!');
             return new WP_Error('missing_post', 'Post não foi criado de fato no banco de dados. ID retornado: ' . $new_post_id);
         }
 
         if ($check_post->post_type !== $this->post_type) {
-            error_log('Affiliate Pro: duplicate_product() - AVISO: Post criado com tipo incorreto. Esperado: ' . $this->post_type . ', Criado: ' . $check_post->post_type);
+            affiliate_pro_log('duplicate_product() - AVISO: Post criado com tipo incorreto. Esperado: ' . $this->post_type . ', Criado: ' . $check_post->post_type);
             return new WP_Error('wrong_post_type', 'Post criado com tipo incorreto.');
         }
 
         // Log de sucesso na criação
-        error_log('Affiliate Pro: duplicate_product() - Post criado e VERIFICADO com sucesso. ID original: ' . $original_id . ', Novo ID: ' . $new_post_id . ', Tipo: ' . $check_post->post_type . ', Status: ' . $check_post->post_status);
+        affiliate_pro_log('duplicate_product() - Post criado e VERIFICADO com sucesso. ID original: ' . $original_id . ', Novo ID: ' . $new_post_id . ', Tipo: ' . $check_post->post_type . ', Status: ' . $check_post->post_status);
 
         // Copiar meta fields
         $meta_fields = array('_affiliate_price', '_affiliate_link', '_affiliate_image_url');
@@ -606,7 +611,7 @@ class Affiliate_Pro_Products {
             $meta_value = get_post_meta($original_id, $meta_key, true);
             if ($meta_value !== '' && $meta_value !== false) {
                 $result = update_post_meta($new_post_id, $meta_key, $meta_value);
-                error_log('Affiliate Pro: Copiando meta ' . $meta_key . ' = ' . $meta_value . ' (resultado: ' . ($result ? 'OK' : 'FALHOU') . ')');
+                affiliate_pro_log('Copiando meta ' . $meta_key . ' = ' . $meta_value . ' (resultado: ' . ($result ? 'OK' : 'FALHOU') . ')');
             }
         }
 
@@ -618,9 +623,9 @@ class Affiliate_Pro_Products {
                 if (!is_wp_error($terms) && !empty($terms)) {
                     $result = wp_set_post_terms($new_post_id, $terms, $taxonomy);
                     if (is_wp_error($result)) {
-                        error_log('Affiliate Pro: Erro ao copiar termos da taxonomia ' . $taxonomy . ': ' . $result->get_error_message());
+                        affiliate_pro_log('Erro ao copiar termos da taxonomia ' . $taxonomy . ': ' . $result->get_error_message());
                     } else {
-                        error_log('Affiliate Pro: Copiando termos da taxonomia ' . $taxonomy . ': ' . implode(', ', $terms));
+                        affiliate_pro_log('Copiando termos da taxonomia ' . $taxonomy . ': ' . implode(', ', $terms));
                     }
                 }
             }
@@ -630,10 +635,10 @@ class Affiliate_Pro_Products {
         $thumbnail_id = get_post_thumbnail_id($original_id);
         if ($thumbnail_id) {
             $result = set_post_thumbnail($new_post_id, $thumbnail_id);
-            error_log('Affiliate Pro: Copiando thumbnail ID ' . $thumbnail_id . ' (resultado: ' . ($result ? 'OK' : 'FALHOU') . ')');
+            affiliate_pro_log('Copiando thumbnail ID ' . $thumbnail_id . ' (resultado: ' . ($result ? 'OK' : 'FALHOU') . ')');
         }
 
-        error_log('Affiliate Pro: duplicate_product() - Duplicação concluída com sucesso. Novo produto ID: ' . $new_post_id);
+        affiliate_pro_log('duplicate_product() - Duplicação concluída com sucesso. Novo produto ID: ' . $new_post_id);
 
         return $new_post_id;
     }

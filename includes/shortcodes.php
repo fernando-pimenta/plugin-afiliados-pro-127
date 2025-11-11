@@ -79,27 +79,71 @@ class Affiliate_Pro_Shortcodes {
     public function products_grid_shortcode($atts) {
         $settings = Affiliate_Pro_Settings::get_settings();
 
+        // Obter configurações do Template Builder para fallback
+        $builder_settings = Affiliate_Template_Builder::get_template_settings();
+
         $atts = shortcode_atts(array(
             'limit' => 6,
             'category' => '',
-            'layout' => $settings['default_layout'],
-            'columns' => $settings['default_columns']
+            'layout' => '', // Vazio para permitir fallback
+            'columns' => '', // Vazio para permitir fallback
+            'orderby' => 'date',
+            'order' => 'DESC'
         ), $atts);
+
+        // Aplicar fallback do Template Builder se não especificado
+        if (empty($atts['layout'])) {
+            $atts['layout'] = !empty($builder_settings['layout_default']) ? $builder_settings['layout_default'] : $settings['default_layout'];
+        }
+
+        if (empty($atts['columns'])) {
+            $atts['columns'] = !empty($builder_settings['columns']) ? $builder_settings['columns'] : $settings['default_columns'];
+        }
+
+        // Whitelist para orderby (prevenir SQL injection)
+        $allowed_orderby = array('date', 'title', 'rand', 'menu_order', 'ID', 'modified');
+        if (!in_array($atts['orderby'], $allowed_orderby)) {
+            $atts['orderby'] = 'date';
+        }
+
+        // Whitelist para order
+        $allowed_order = array('ASC', 'DESC');
+        $atts['order'] = strtoupper($atts['order']);
+        if (!in_array($atts['order'], $allowed_order)) {
+            $atts['order'] = 'DESC';
+        }
 
         $args = array(
             'post_type' => 'affiliate_product',
             'posts_per_page' => intval($atts['limit']),
-            'post_status' => 'publish'
+            'post_status' => 'publish',
+            'orderby' => $atts['orderby'],
+            'order' => $atts['order']
         );
 
+        // Suporte a múltiplas categorias separadas por vírgula
         if (!empty($atts['category'])) {
-            $args['tax_query'] = array(
-                array(
-                    'taxonomy' => 'affiliate_category',
-                    'field' => 'slug',
-                    'terms' => sanitize_title($atts['category'])
-                )
-            );
+            $categories = array_map('trim', explode(',', $atts['category']));
+            $categories = array_map('sanitize_title', $categories);
+
+            // Verificar se as categorias existem
+            $valid_categories = array();
+            foreach ($categories as $category_slug) {
+                if (term_exists($category_slug, 'affiliate_category')) {
+                    $valid_categories[] = $category_slug;
+                }
+            }
+
+            // Só adicionar tax_query se houver categorias válidas
+            if (!empty($valid_categories)) {
+                $args['tax_query'] = array(
+                    array(
+                        'taxonomy' => 'affiliate_category',
+                        'field' => 'slug',
+                        'terms' => $valid_categories
+                    )
+                );
+            }
         }
 
         $query = new WP_Query($args);
@@ -185,12 +229,18 @@ class Affiliate_Pro_Shortcodes {
             <div class="product-content">
                 <?php if ($settings['title_clickable'] && !empty($link)) : ?>
                     <h3 class="product-title">
-                        <a href="<?php echo esc_url($link); ?>"<?php echo $link_attrs; ?>>
+                        <a href="<?php echo esc_url($link); ?>"<?php echo $link_attrs; ?>
+                           data-aff-id="<?php echo esc_attr($post->ID); ?>"
+                           data-source="title">
                             <?php echo esc_html($post->post_title); ?>
                         </a>
                     </h3>
                 <?php else : ?>
-                    <h3 class="product-title"><?php echo esc_html($post->post_title); ?></h3>
+                    <h3 class="product-title"
+                        data-aff-id="<?php echo esc_attr($post->ID); ?>"
+                        data-source="title">
+                        <?php echo esc_html($post->post_title); ?>
+                    </h3>
                 <?php endif; ?>
 
                 <p class="product-price"><?php echo esc_html($price_formatted); ?></p>
@@ -200,7 +250,10 @@ class Affiliate_Pro_Shortcodes {
                 <?php endif; ?>
 
                 <?php if (!empty($link)) : ?>
-                    <a href="<?php echo esc_url($link); ?>" class="product-button"<?php echo $link_attrs; ?>>
+                    <a href="<?php echo esc_url($link); ?>"
+                       class="product-button"<?php echo $link_attrs; ?>
+                       data-aff-id="<?php echo esc_attr($post->ID); ?>"
+                       data-source="button">
                         <?php echo esc_html($button_text); ?>
                     </a>
                 <?php else : ?>

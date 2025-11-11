@@ -3,7 +3,7 @@
  * Plugin Name: Plugin Afiliados Pro
  * Plugin URI: https://fernandopimenta.blog.br
  * Description: Gerencie e exiba produtos afiliados com importação CSV, shortcodes personalizáveis e painel visual.
- * Version: 1.2.7
+ * Version: 1.4.9
  * Author: Fernando Pimenta
  * Author URI: https://fernandopimenta.blog.br
  * License: GPLv2 or later
@@ -21,10 +21,24 @@ if (!defined('ABSPATH')) {
 }
 
 // Definir constantes do plugin
-define('AFFILIATE_PRO_VERSION', '1.2.7');
+define('AFFILIATE_PRO_VERSION', '1.4.9');
 define('AFFILIATE_PRO_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('AFFILIATE_PRO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AFFILIATE_PRO_PLUGIN_BASENAME', plugin_basename(__FILE__));
+
+// Modo debug (descomente a linha abaixo para ativar logs detalhados)
+// define('AFFILIATE_PRO_DEBUG', true);
+
+/**
+ * Função helper para logs condicionais
+ *
+ * @param string $message Mensagem para log
+ */
+function affiliate_pro_log($message) {
+    if (defined('AFFILIATE_PRO_DEBUG') && AFFILIATE_PRO_DEBUG) {
+        error_log('Affiliate Pro: ' . $message);
+    }
+}
 
 /**
  * Classe principal do Plugin Afiliados Pro
@@ -67,6 +81,9 @@ class Affiliate_Pro_Plugin {
         // Core classes
         require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-affiliate-products.php';
         require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-affiliate-settings.php';
+        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-affiliate-template-builder.php';
+        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-affiliate-preview-handler.php'; // v1.4.0
+        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-affiliate-tracker.php'; // v1.4.7
         require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/csv-import.php';
         require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/shortcodes.php';
     }
@@ -111,8 +128,10 @@ class Affiliate_Pro_Plugin {
 
         // Agora inicializar outras classes
         Affiliate_Pro_Settings::get_instance();
+        Affiliate_Template_Builder::get_instance();
         Affiliate_Pro_CSV_Import::get_instance();
         Affiliate_Pro_Shortcodes::get_instance();
+        Affiliate_Pro_Tracker::get_instance(); // v1.4.7 - Click tracking
     }
 
     /**
@@ -129,7 +148,13 @@ class Affiliate_Pro_Plugin {
             add_option('affiliate_pro_settings', $default_settings);
         }
 
-        // Flush rewrite rules
+        // Register preview endpoint rules (v1.4.4)
+        Affiliate_Preview_Handler::register_preview_endpoint();
+
+        // Create click tracking table (v1.4.7)
+        Affiliate_Pro_Tracker::create_table();
+
+        // Flush rewrite rules to activate preview endpoint
         flush_rewrite_rules();
     }
 
