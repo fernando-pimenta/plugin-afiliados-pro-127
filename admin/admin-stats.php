@@ -23,8 +23,8 @@ if (isset($_POST['affiliate_clear_stats']) &&
 
     $wpdb->query("TRUNCATE TABLE {$table}");
 
-    echo '<div class="notice notice-success is-dismissible"><p>';
-    echo esc_html__('Todos os dados de cliques foram limpos com sucesso.', 'afiliados-pro');
+    echo '<div class="notice notice-success is-dismissible" role="status"><p>';
+    echo esc_html__('Todos os registros de cliques foram excluídos com sucesso.', 'afiliados-pro');
     echo '</p></div>';
 }
 
@@ -116,7 +116,7 @@ if ($results) {
         <form method="get" style="margin-bottom: 20px;">
             <input type="hidden" name="page" value="affiliate-stats">
             <label for="days"><strong><?php _e('Período:', 'afiliados-pro'); ?></strong></label>
-            <select name="days" id="days" onchange="this.form.submit()" style="margin-left: 10px;">
+            <select name="days" id="days" onchange="this.form.submit()" style="margin-left: 10px;" aria-label="<?php esc_attr_e('Selecionar período de análise', 'afiliados-pro'); ?>">
                 <option value="7" <?php selected($days, 7); ?>><?php _e('Últimos 7 dias', 'afiliados-pro'); ?></option>
                 <option value="30" <?php selected($days, 30); ?>><?php _e('Últimos 30 dias', 'afiliados-pro'); ?></option>
                 <option value="90" <?php selected($days, 90); ?>><?php _e('Últimos 90 dias', 'afiliados-pro'); ?></option>
@@ -192,8 +192,10 @@ if ($results) {
                             <td><strong><?php echo $product_display; ?></strong></td>
                             <td><?php echo $source_page_display; ?></td>
                             <td>
-                                <span style="font-size: 16px;"><?php echo $source_icon; ?></span>
-                                <?php echo $source_label; ?>
+                                <span class="affiliate-pro-source-tag">
+                                    <span style="font-size: 14px; margin-right: 3px;"><?php echo $source_icon; ?></span>
+                                    <?php echo $source_label; ?>
+                                </span>
                             </td>
                             <td>
                                 <strong style="color: #283593; font-size: 16px;">
@@ -227,6 +229,8 @@ if ($results) {
                        name="affiliate_clear_stats"
                        class="button button-secondary"
                        value="🧹 <?php esc_attr_e('Limpar Dados de Cliques', 'afiliados-pro'); ?>"
+                       aria-label="<?php esc_attr_e('Excluir permanentemente todos os registros de cliques', 'afiliados-pro'); ?>"
+                       title="<?php esc_attr_e('Remover todos os dados de cliques do banco de dados', 'afiliados-pro'); ?>"
                        onclick="return confirm('<?php esc_attr_e('Tem certeza que deseja excluir todos os registros de cliques? Esta ação não pode ser desfeita.', 'afiliados-pro'); ?>');">
             </form>
         </div>

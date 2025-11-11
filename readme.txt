@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,18 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.1 (2025-11-12) =
+* 💅 **POLIMENTO VISUAL**: Painéis e cards com bordas arredondadas (10-12px)
+* 💅 **POLIMENTO VISUAL**: Efeitos hover em painéis, tabelas e botões
+* 💅 **POLIMENTO VISUAL**: Sombras sutis e transições suaves
+* ♿ **ACESSIBILIDADE**: Atributos aria-label em botões e controles
+* ♿ **ACESSIBILIDADE**: Atributos title para melhor usabilidade
+* ♿ **ACESSIBILIDADE**: role="status" em mensagens de feedback
+* 🎨 **UX**: Tabelas com hover e cores alternadas para melhor legibilidade
+* 🎨 **UX**: Tags de origem com design moderno e hover
+* 🎨 **UX**: Mensagens de sucesso padronizadas e consistentes
+* 📱 **RESPONSIVO**: Melhorias em espaçamento e padding
 
 = 1.5.0 (2025-11-11) =
 * ✨ **NOVO**: Rastreamento de página de origem (source_page) nos cliques
