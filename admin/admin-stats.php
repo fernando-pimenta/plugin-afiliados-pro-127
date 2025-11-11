@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 global $wpdb;
 $table = $wpdb->prefix . 'affiliate_clicks';
 
-// Verificar se a tabela existe
-$table_exists = $wpdb->get_var("SHOW TABLES LIKE '$table'") === $table;
+// Verificar se a tabela existe (usando prepared statement)
+$table_exists = $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table)) === $table;
 
 // Período selecionado
 $days = isset($_GET['days']) ? intval($_GET['days']) : 30;

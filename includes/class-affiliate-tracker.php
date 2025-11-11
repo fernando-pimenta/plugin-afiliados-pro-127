@@ -100,7 +100,7 @@ class Affiliate_Pro_Tracker {
         register_rest_route('affiliate-pro/v1', '/track', array(
             'methods'  => 'POST',
             'callback' => array($this, 'record_click'),
-            'permission_callback' => '__return_true',
+            'permission_callback' => array($this, 'verify_track_permission'),
             'args' => array(
                 'product_id' => array(
                     'required' => true,
@@ -117,6 +117,63 @@ class Affiliate_Pro_Tracker {
         ));
 
         affiliate_pro_log('Affiliate Tracker: REST routes registered');
+    }
+
+    /**
+     * Verifica permissão para rastrear cliques
+     *
+     * @param WP_REST_Request $request
+     * @return bool
+     */
+    public function verify_track_permission($request) {
+        // Verificar nonce do WordPress REST API
+        $nonce = $request->get_header('X-WP-Nonce');
+        if (!$nonce || !wp_verify_nonce($nonce, 'wp_rest')) {
+            affiliate_pro_log('Affiliate Tracker: Nonce verification failed');
+            return false;
+        }
+
+        // Verificar rate limiting básico (máximo 10 requisições por minuto por IP)
+        $ip = $this->get_client_ip();
+        $transient_key = 'affiliate_track_rate_' . md5($ip);
+        $request_count = get_transient($transient_key);
+
+        if ($request_count !== false && $request_count >= 10) {
+            affiliate_pro_log('Affiliate Tracker: Rate limit exceeded for IP ' . $ip);
+            return false;
+        }
+
+        // Incrementar contador
+        if ($request_count === false) {
+            set_transient($transient_key, 1, 60); // 60 segundos
+        } else {
+            set_transient($transient_key, $request_count + 1, 60);
+        }
+
+        return true;
+    }
+
+    /**
+     * Obtém o IP do cliente de forma segura
+     *
+     * @return string
+     */
+    private function get_client_ip() {
+        $ip = '';
+
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            // Pegar apenas o primeiro IP da lista (o cliente real)
+            $ip_list = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            $ip = trim($ip_list[0]);
+        } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+
+        // Validar e sanitizar o IP
+        $ip = filter_var($ip, FILTER_VALIDATE_IP);
+        return $ip ? $ip : '0.0.0.0';
     }
 
     /**

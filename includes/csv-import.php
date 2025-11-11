@@ -78,19 +78,38 @@ class Affiliate_Pro_CSV_Import {
             exit;
         }
 
-        // Validar MIME type
-        $allowed_mimes = array('text/csv', 'text/plain', 'application/csv', 'application/vnd.ms-excel');
-        $file_type = $_FILES['csv_file']['type'];
-
-        if (!in_array($file_type, $allowed_mimes)) {
-            wp_redirect(add_query_arg(
-                array('page' => 'affiliate-import-csv', 'error' => 'invalid_mime'),
-                admin_url('admin.php')
-            ));
-            exit;
-        }
-
         $file = $_FILES['csv_file']['tmp_name'];
+
+        // Validar MIME type usando WordPress (mais seguro que confiar no navegador)
+        $wp_filetype = wp_check_filetype_and_ext($file, $file_name);
+        $allowed_mimes = array('text/csv', 'text/plain', 'application/csv', 'application/vnd.ms-excel');
+
+        // Verificar se o tipo foi detectado corretamente
+        if (!$wp_filetype['type'] || !in_array($wp_filetype['type'], $allowed_mimes)) {
+            // Validação adicional: verificar se o arquivo realmente parece ser CSV
+            $file_handle = fopen($file, 'r');
+            if ($file_handle) {
+                $first_line = fgets($file_handle);
+                fclose($file_handle);
+
+                // CSV deve ter delimitadores comuns
+                if (strpos($first_line, ',') === false &&
+                    strpos($first_line, ';') === false &&
+                    strpos($first_line, "\t") === false) {
+                    wp_redirect(add_query_arg(
+                        array('page' => 'affiliate-import-csv', 'error' => 'invalid_mime'),
+                        admin_url('admin.php')
+                    ));
+                    exit;
+                }
+            } else {
+                wp_redirect(add_query_arg(
+                    array('page' => 'affiliate-import-csv', 'error' => 'invalid_mime'),
+                    admin_url('admin.php')
+                ));
+                exit;
+            }
+        }
 
         // Detectar e corrigir codificação do arquivo
         $content = file_get_contents($file);

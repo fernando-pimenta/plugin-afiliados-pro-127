@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.2
+Stable tag: 1.4.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,15 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.4.10 (2025-11-11) =
+* 🔒 **SEGURANÇA CRÍTICA**: Adicionada autenticação ao endpoint REST API de rastreamento de cliques
+* 🔒 **SEGURANÇA**: Implementado rate limiting (10 requisições/minuto por IP) no tracker
+* 🔒 **SEGURANÇA**: Melhorada validação de MIME type no upload de CSV usando wp_check_filetype_and_ext()
+* 🔒 **SEGURANÇA**: Validação adicional de conteúdo CSV (verificação de delimitadores)
+* 🔒 **SEGURANÇA**: Corrigida query SQL no painel de estatísticas usando prepared statement
+* 🔒 **SEGURANÇA**: Adicionado método seguro para obtenção de IP do cliente
+* Recomendação: Atualização urgente para todos os usuários
 
 = 1.2 (2025-01-08) =
 * Nova: Estrutura modular completamente refatorada
