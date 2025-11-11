@@ -83,6 +83,27 @@ class Affiliate_Template_Builder {
             'affiliate-template-builder',
             array($this, 'render_template_builder_page')
         );
+
+        // Submenu Estatísticas (v1.4.8)
+        add_submenu_page(
+            'affiliate-products',
+            __('Estatísticas', 'afiliados-pro'),
+            __('Estatísticas', 'afiliados-pro'),
+            'manage_options',
+            'affiliate-stats',
+            array($this, 'render_stats_page')
+        );
+    }
+
+    /**
+     * Renderiza a página de Estatísticas (v1.4.8)
+     */
+    public function render_stats_page() {
+        if (!current_user_can('manage_options')) {
+            wp_die(__('Você não tem permissão para acessar esta página.', 'afiliados-pro'));
+        }
+
+        require_once AFFILIATE_PRO_PLUGIN_DIR . 'admin/admin-stats.php';
     }
 
     /**
