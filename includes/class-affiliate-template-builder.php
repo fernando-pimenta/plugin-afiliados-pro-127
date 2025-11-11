@@ -72,13 +72,13 @@ class Affiliate_Template_Builder {
     }
 
     /**
-     * Registra o menu Template Builder
+     * Registra o menu Template Builder (v1.4.4 - Tabbed Interface)
      */
     public function register_template_builder_menu() {
         add_submenu_page(
             'affiliate-products',
-            __('Aparência', 'afiliados-pro'),
-            __('Aparência', 'afiliados-pro'),
+            __('Aparência e Configurações', 'afiliados-pro'),
+            __('Aparência e Configurações', 'afiliados-pro'),
             'manage_options',
             'affiliate-template-builder',
             array($this, 'render_template_builder_page')
@@ -86,14 +86,15 @@ class Affiliate_Template_Builder {
     }
 
     /**
-     * Renderiza a página do Template Builder
+     * Renderiza a página do Template Builder (v1.4.4 - Tabbed Interface)
      */
     public function render_template_builder_page() {
         if (!current_user_can('manage_options')) {
             wp_die(__('Você não tem permissão para acessar esta página.', 'afiliados-pro'));
         }
 
-        $settings = self::get_template_settings();
+        // Get active tab
+        $active_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'appearance';
 
         // Mensagem de sucesso
         if (isset($_GET['settings-updated']) && $_GET['settings-updated'] === 'true') {
@@ -101,7 +102,37 @@ class Affiliate_Template_Builder {
         }
         ?>
         <div class="wrap">
-            <h1><?php _e('Template Builder - Aparência dos Produtos', 'afiliados-pro'); ?></h1>
+            <h1><?php _e('Afiliados Pro - Aparência e Configurações', 'afiliados-pro'); ?></h1>
+
+            <!-- Tab Navigation (v1.4.4) -->
+            <h2 class="nav-tab-wrapper">
+                <a href="?page=affiliate-template-builder&tab=appearance" class="nav-tab <?php echo $active_tab === 'appearance' ? 'nav-tab-active' : ''; ?>">
+                    <?php _e('Aparência', 'afiliados-pro'); ?>
+                </a>
+                <a href="?page=affiliate-template-builder&tab=settings" class="nav-tab <?php echo $active_tab === 'settings' ? 'nav-tab-active' : ''; ?>">
+                    <?php _e('Configurações', 'afiliados-pro'); ?>
+                </a>
+            </h2>
+
+            <?php
+            // Render active tab
+            if ($active_tab === 'appearance') {
+                $this->render_appearance_tab();
+            } else {
+                $this->render_settings_tab();
+            }
+            ?>
+        </div>
+        <?php
+    }
+
+    /**
+     * Render Appearance Tab (v1.4.4)
+     */
+    private function render_appearance_tab() {
+        $settings = self::get_template_settings();
+        ?>
+        <div class="tab-content">
             <p><?php _e('Personalize a aparência visual dos cards de produtos afiliados exibidos no front-end.', 'afiliados-pro'); ?></p>
 
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
@@ -277,11 +308,11 @@ class Affiliate_Template_Builder {
                 <?php submit_button(__('Salvar Configurações', 'afiliados-pro'), 'primary', 'submit'); ?>
             </form>
 
-            <!-- Preview Section (v1.4.3 - Manual Control) -->
+            <!-- Preview Section (v1.4.4 - Manual Load with Public Endpoint) -->
             <div class="card" style="margin-top: 30px;">
                 <h2><?php _e('Pré-visualização ao Vivo', 'afiliados-pro'); ?></h2>
                 <p class="description">
-                    <?php _e('As alterações são aplicadas automaticamente nesta visualização. Clique em <strong>Gerar Pré-visualização</strong> para atualizar a exibição conforme suas configurações.', 'afiliados-pro'); ?>
+                    <?php _e('Clique no botão abaixo para carregar a pré-visualização com as configurações atuais. O preview é totalmente isolado e não exibe o painel administrativo.', 'afiliados-pro'); ?>
                 </p>
 
                 <button id="generate-preview" class="button button-primary" type="button" style="margin-bottom: 10px; margin-top: 10px;">
@@ -290,12 +321,100 @@ class Affiliate_Template_Builder {
 
                 <div id="affiliate-preview-container" style="border: 1px solid #ddd; padding: 10px; background: #fff; border-radius: 4px;">
                     <iframe id="affiliate-preview-frame"
-                        src="<?php echo esc_url(admin_url('admin.php?page=affiliate-preview')); ?>"
-                        style="width: 100%; height: 500px; border: 0; display: block;"
+                        src="about:blank"
+                        data-preview-url="<?php echo esc_url(Affiliate_Preview_Handler::get_preview_url()); ?>"
+                        style="width: 100%; height: 500px; border: 0; display: block; background: #f7f7f7;"
                         title="<?php esc_attr_e('Pré-visualização do Template', 'afiliados-pro'); ?>">
                     </iframe>
                 </div>
             </div>
+        </div>
+        <?php
+    }
+
+    /**
+     * Render Settings Tab (v1.4.4)
+     */
+    private function render_settings_tab() {
+        $settings = self::get_template_settings();
+        ?>
+        <div class="tab-content">
+            <p><?php _e('Configure o comportamento e opções funcionais dos produtos afiliados.', 'afiliados-pro'); ?></p>
+
+            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                <?php wp_nonce_field('affiliate_template_save', 'affiliate_template_nonce'); ?>
+                <input type="hidden" name="action" value="affiliate_template_save">
+
+                <table class="form-table" role="presentation">
+                    <tbody>
+                        <!-- Texto do Botão -->
+                        <tr>
+                            <th scope="row">
+                                <label for="button_text"><?php _e('Texto do Botão', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <input type="text" id="button_text" name="button_text" value="<?php echo esc_attr($settings['button_text']); ?>" class="regular-text" placeholder="Ex: Ver Produto">
+                                <p class="description"><?php _e('Texto exibido no botão de ação dos cards de produtos.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+
+                        <!-- Exibir Preço -->
+                        <tr>
+                            <th scope="row">
+                                <label for="show_price"><?php _e('Exibir Preço', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" id="show_price" name="show_price" value="1" <?php checked($settings['show_price'], true); ?>>
+                                    <?php _e('Mostrar o preço nos cards de produtos', 'afiliados-pro'); ?>
+                                </label>
+                                <p class="description"><?php _e('Ativa ou desativa a exibição do preço do produto.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+
+                        <!-- Título Clicável -->
+                        <tr>
+                            <th scope="row">
+                                <label for="clickable_title"><?php _e('Título Clicável', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" id="clickable_title" name="clickable_title" value="1" <?php checked($settings['clickable_title'], true); ?>>
+                                    <?php _e('Tornar o título do produto clicável (link para a página do produto)', 'afiliados-pro'); ?>
+                                </label>
+                                <p class="description"><?php _e('Se ativo, o título será um link para a página individual do produto.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+
+                        <!-- Mostrar Badge da Loja -->
+                        <tr>
+                            <th scope="row">
+                                <label for="show_store_badge"><?php _e('Mostrar Badge da Loja', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" id="show_store_badge" name="show_store_badge" value="1" <?php checked($settings['show_store_badge'], true); ?>>
+                                    <?php _e('Exibir o selo/badge do marketplace (ex: Amazon, Mercado Livre)', 'afiliados-pro'); ?>
+                                </label>
+                                <p class="description"><?php _e('Mostra visualmente de qual loja o produto é proveniente.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+
+                        <!-- CSS Personalizado -->
+                        <tr>
+                            <th scope="row">
+                                <label for="custom_css"><?php _e('CSS Personalizado', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <textarea id="custom_css" name="custom_css" rows="8" style="width: 100%; font-family: monospace;" placeholder="/* Adicione seu CSS customizado aqui */"><?php echo esc_textarea($settings['custom_css']); ?></textarea>
+                                <p class="description"><?php _e('Adicione CSS personalizado para estilizar os cards de produtos de forma avançada.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <?php submit_button(__('Salvar Configurações', 'afiliados-pro'), 'primary', 'submit'); ?>
+            </form>
         </div>
         <?php
     }
@@ -360,6 +479,13 @@ class Affiliate_Template_Builder {
         // Forçar CSS
         $settings['force_css'] = isset($_POST['force_css']) ? boolval($_POST['force_css']) : false;
 
+        // Functional settings (v1.4.4 - Settings tab)
+        $settings['button_text'] = isset($_POST['button_text']) ? sanitize_text_field($_POST['button_text']) : 'Ver Produto';
+        $settings['show_price'] = isset($_POST['show_price']) ? boolval($_POST['show_price']) : true;
+        $settings['clickable_title'] = isset($_POST['clickable_title']) ? boolval($_POST['clickable_title']) : false;
+        $settings['show_store_badge'] = isset($_POST['show_store_badge']) ? boolval($_POST['show_store_badge']) : false;
+        $settings['custom_css'] = isset($_POST['custom_css']) ? wp_strip_all_tags($_POST['custom_css']) : '';
+
         // Salvar no banco de dados
         update_option($this->option_name, $settings);
 
@@ -381,6 +507,7 @@ class Affiliate_Template_Builder {
      */
     public static function get_template_settings() {
         $defaults = array(
+            // Appearance settings
             'primary_color' => '#283593',
             'button_color' => '#ffa70a',
             'gradient_color' => '#025C95', // v1.4.1
@@ -393,6 +520,12 @@ class Affiliate_Template_Builder {
             'columns' => 3,
             'card_gap' => 20, // v1.4.2
             'force_css' => false,
+            // Functional settings (v1.4.4)
+            'button_text' => 'Ver Produto',
+            'show_price' => true,
+            'clickable_title' => false,
+            'show_store_badge' => false,
+            'custom_css' => '',
         );
 
         $settings = get_option('affiliate_template_settings', array());

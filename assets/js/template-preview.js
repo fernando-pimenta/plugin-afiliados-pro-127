@@ -1,8 +1,8 @@
 /**
  * Afiliados Pro - Template Preview Handler
- * Version: 1.4.3
+ * Version: 1.4.4
  *
- * Manual preview control with button trigger
+ * Manual preview control with public endpoint loading
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,19 +17,27 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // Get preview URL from data attribute
+    const previewUrl = iframe.dataset.previewUrl;
+
+    if (!previewUrl) {
+        console.error('Afiliados Pro: Preview URL not found');
+        return;
+    }
+
     // Set initial transition style
     iframe.style.transition = 'opacity 0.3s ease-in-out';
     iframe.style.opacity = '1';
 
     /**
-     * Reload preview when button is clicked (v1.4.3)
+     * Load preview when button is clicked (v1.4.4)
      */
     btn.addEventListener('click', () => {
         // Apply fade-out effect
         iframe.style.opacity = '0.4';
 
-        // Simple reload - manually triggered
-        iframe.src = iframe.src;
+        // Load preview URL
+        iframe.src = previewUrl;
     });
 
     /**
@@ -40,5 +48,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Log initialization
-    console.log('Afiliados Pro: Manual preview control initialized (v1.4.3)');
+    console.log('Afiliados Pro: Manual preview control initialized (v1.4.4 - Public Endpoint)');
 });

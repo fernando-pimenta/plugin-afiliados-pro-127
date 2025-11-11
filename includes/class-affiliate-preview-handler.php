@@ -2,10 +2,10 @@
 /**
  * Afiliados Pro - Preview Handler
  *
- * Handles preview rendering for Template Builder using pure HTML approach
+ * Handles preview rendering via public endpoint
  *
  * @package AfiliadorsPro
- * @version 1.4.3
+ * @version 1.4.4
  */
 
 if (!defined('ABSPATH')) {
@@ -15,84 +15,82 @@ if (!defined('ABSPATH')) {
 /**
  * Class Affiliate_Preview_Handler
  *
- * Renders preview template via pure HTML without WP admin dependencies
+ * Renders preview template via public endpoint for completely isolated preview
  */
 class Affiliate_Preview_Handler {
 
     /**
-     * Initialize preview handler (v1.4.3 - Pure HTML approach)
+     * Initialize preview handler (v1.4.4 - Public endpoint approach)
      */
     public static function init() {
-        // Register hidden admin page for preview (v1.4.3)
-        add_action('admin_menu', [__CLASS__, 'register_preview_page']);
+        // Register public endpoint for preview (v1.4.4)
+        add_action('init', [__CLASS__, 'register_preview_endpoint']);
+
+        // Handle template redirect for preview
+        add_action('template_redirect', [__CLASS__, 'handle_preview_request']);
 
         // Log initialization if debug is enabled
-        affiliate_pro_log('Preview Handler: Initialized (v1.4.3 - Pure HTML)');
+        affiliate_pro_log('Preview Handler: Initialized (v1.4.4 - Public Endpoint)');
     }
 
     /**
-     * Register hidden admin page for preview (v1.4.3)
-     */
-    public static function register_preview_page() {
-        add_submenu_page(
-            null, // No parent menu (hidden page)
-            __('Pré-visualização Afiliados Pro', 'afiliados-pro'),
-            '',
-            'manage_options',
-            'affiliate-preview',
-            [__CLASS__, 'render_preview_page']
-        );
-    }
-
-    /**
-     * Render preview page (v1.4.3 - Pure HTML without WP admin header)
+     * Register public endpoint for preview (v1.4.4)
      *
-     * This outputs pure HTML without WordPress admin dependencies
+     * Creates public URL: /affiliate-preview/
      */
-    public static function render_preview_page() {
-        // Verify user capabilities
-        if (!current_user_can('manage_options')) {
-            wp_die(__('Você não tem permissão para visualizar esta página.', 'afiliados-pro'), 403);
+    public static function register_preview_endpoint() {
+        // Add rewrite rule for preview endpoint
+        add_rewrite_rule(
+            'affiliate-preview/?$',
+            'index.php?affiliate_preview=1',
+            'top'
+        );
+
+        // Add query var for preview
+        add_filter('query_vars', function($vars) {
+            $vars[] = 'affiliate_preview';
+            return $vars;
+        });
+
+        // Log registration
+        affiliate_pro_log('Preview Handler: Registered public endpoint /affiliate-preview/');
+    }
+
+    /**
+     * Handle preview request via template redirect (v1.4.4)
+     */
+    public static function handle_preview_request() {
+        // Check if this is a preview request
+        if (!get_query_var('affiliate_preview')) {
+            return;
         }
 
-        // Prevent caching to ensure fresh preview content
+        // Prevent caching
         nocache_headers();
 
         // Get settings from database
         $settings = Affiliate_Template_Builder::get_template_settings();
 
         // Log preview rendering
-        affiliate_pro_log('Preview Handler: Rendering pure HTML preview (v1.4.3)');
+        affiliate_pro_log('Preview Handler: Rendering public preview');
 
-        // Output pure HTML structure (v1.4.3)
-        echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">';
-        echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-        echo '<title>Pré-visualização - Afiliados Pro</title>';
-        echo '<style>
-            body {
-                margin: 0;
-                padding: 20px;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-                background: #f7f7f7;
-            }
-            .affiliate-container {
-                max-width: 900px;
-                margin: 0 auto;
-            }
-        </style>';
-        echo '</head><body>';
-        echo '<div class="affiliate-container">';
-
-        // Include preview template
+        // Include preview template (pure HTML)
         if (file_exists(AFFILIATE_PRO_PLUGIN_DIR . 'admin/preview-template.php')) {
             include AFFILIATE_PRO_PLUGIN_DIR . 'admin/preview-template.php';
         } else {
-            echo '<p style="color:red;">Erro: Template de preview não encontrado.</p>';
+            echo '<!DOCTYPE html><html><body><p style="color:red;">Erro: Template de preview não encontrado.</p></body></html>';
         }
 
-        echo '</div></body></html>';
+        exit; // Exit to prevent WordPress from loading
+    }
 
-        exit; // Exit cleanly to prevent any WordPress output
+    /**
+     * Get preview URL (v1.4.4)
+     *
+     * @return string Public preview URL
+     */
+    public static function get_preview_url() {
+        return home_url('/affiliate-preview/');
     }
 }
 
