@@ -139,6 +139,46 @@ class Affiliate_Template_Builder {
                 <?php wp_nonce_field('affiliate_template_save', 'affiliate_template_nonce'); ?>
                 <input type="hidden" name="action" value="affiliate_template_save">
 
+                <!-- Identidade Visual dos Cards (v1.4.5) -->
+                <h3 style="margin-top: 20px;">🎨 <?php _e('Identidade Visual dos Cards', 'afiliados-pro'); ?></h3>
+                <table class="form-table" role="presentation">
+                    <tbody>
+                        <!-- Cor de Destaque -->
+                        <tr>
+                            <th scope="row">
+                                <label for="highlight_color"><?php _e('Cor de Destaque', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <input type="color" id="highlight_color" name="highlight_color" value="<?php echo esc_attr($settings['highlight_color']); ?>" class="regular-text">
+                                <p class="description"><?php _e('Usada para preços e elementos de destaque.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+
+                        <!-- Cor de Fundo do Card -->
+                        <tr>
+                            <th scope="row">
+                                <label for="card_background_color"><?php _e('Cor de Fundo do Card', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <input type="color" id="card_background_color" name="card_background_color" value="<?php echo esc_attr($settings['card_background_color']); ?>" class="regular-text">
+                                <p class="description"><?php _e('Cor de fundo dos cards de produtos.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+
+                        <!-- Cor do Texto -->
+                        <tr>
+                            <th scope="row">
+                                <label for="text_color"><?php _e('Cor do Texto', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <input type="color" id="text_color" name="text_color" value="<?php echo esc_attr($settings['text_color']); ?>" class="regular-text">
+                                <p class="description"><?php _e('Cor do texto nos cards de produtos.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top: 30px;"><?php _e('Cores e Estilos', 'afiliados-pro'); ?></h3>
                 <table class="form-table" role="presentation">
                     <tbody>
                         <!-- Cor Primária -->
@@ -386,6 +426,20 @@ class Affiliate_Template_Builder {
                             </td>
                         </tr>
 
+                        <!-- Abrir em nova aba (v1.4.5) -->
+                        <tr>
+                            <th scope="row">
+                                <label for="open_in_new_tab"><?php _e('Abrir em nova aba', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" id="open_in_new_tab" name="open_in_new_tab" value="1" <?php checked($settings['open_in_new_tab'], true); ?>>
+                                    <?php _e('Abrir o link do produto em uma nova aba', 'afiliados-pro'); ?>
+                                </label>
+                                <p class="description"><?php _e('Quando ativo, os links dos produtos abrem em uma nova aba do navegador.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+
                         <!-- Mostrar Badge da Loja -->
                         <tr>
                             <th scope="row">
@@ -399,7 +453,40 @@ class Affiliate_Template_Builder {
                                 <p class="description"><?php _e('Mostra visualmente de qual loja o produto é proveniente.', 'afiliados-pro'); ?></p>
                             </td>
                         </tr>
+                    </tbody>
+                </table>
 
+                <!-- Exibição de Preços (v1.4.5) -->
+                <h3 style="margin-top: 30px;">💰 <?php _e('Exibição de Preços', 'afiliados-pro'); ?></h3>
+                <table class="form-table" role="presentation">
+                    <tbody>
+                        <!-- Formato do Preço -->
+                        <tr>
+                            <th scope="row">
+                                <label for="price_format"><?php _e('Formato do Preço', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <input type="text" id="price_format" name="price_format" value="<?php echo esc_attr($settings['price_format']); ?>" class="regular-text" placeholder="R$ {valor}">
+                                <p class="description"><?php _e('Use {valor} onde o preço deve aparecer. Exemplo: R$ {valor} ou USD {valor}', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+
+                        <!-- Texto Quando Sem Preço -->
+                        <tr>
+                            <th scope="row">
+                                <label for="price_text_empty"><?php _e('Texto Quando Sem Preço', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <input type="text" id="price_text_empty" name="price_text_empty" value="<?php echo esc_attr($settings['price_text_empty']); ?>" class="regular-text" placeholder="Consulte o preço">
+                                <p class="description"><?php _e('Texto exibido quando o produto não tem preço definido.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top: 30px;"><?php _e('Personalização Avançada', 'afiliados-pro'); ?></h3>
+                <table class="form-table" role="presentation">
+                    <tbody>
                         <!-- CSS Personalizado -->
                         <tr>
                             <th scope="row">
@@ -440,6 +527,11 @@ class Affiliate_Template_Builder {
         $settings['primary_color'] = isset($_POST['primary_color']) ? sanitize_hex_color($_POST['primary_color']) : '#283593';
         $settings['button_color'] = isset($_POST['button_color']) ? sanitize_hex_color($_POST['button_color']) : '#ffa70a';
         $settings['gradient_color'] = isset($_POST['gradient_color']) ? sanitize_hex_color($_POST['gradient_color']) : '#025C95'; // v1.4.1
+
+        // Visual identity colors (v1.4.5)
+        $settings['highlight_color'] = isset($_POST['highlight_color']) ? sanitize_hex_color($_POST['highlight_color']) : '#ff4081';
+        $settings['card_background_color'] = isset($_POST['card_background_color']) ? sanitize_hex_color($_POST['card_background_color']) : '#ffffff';
+        $settings['text_color'] = isset($_POST['text_color']) ? sanitize_hex_color($_POST['text_color']) : '#333333';
 
         // Estilos
         $allowed_card_styles = array('modern', 'classic', 'minimal', 'cards');
@@ -483,8 +575,13 @@ class Affiliate_Template_Builder {
         $settings['button_text'] = isset($_POST['button_text']) ? sanitize_text_field($_POST['button_text']) : 'Ver Produto';
         $settings['show_price'] = isset($_POST['show_price']) ? boolval($_POST['show_price']) : true;
         $settings['clickable_title'] = isset($_POST['clickable_title']) ? boolval($_POST['clickable_title']) : false;
+        $settings['open_in_new_tab'] = isset($_POST['open_in_new_tab']) ? boolval($_POST['open_in_new_tab']) : false; // v1.4.5
         $settings['show_store_badge'] = isset($_POST['show_store_badge']) ? boolval($_POST['show_store_badge']) : false;
         $settings['custom_css'] = isset($_POST['custom_css']) ? wp_strip_all_tags($_POST['custom_css']) : '';
+
+        // Price display settings (v1.4.5)
+        $settings['price_format'] = isset($_POST['price_format']) ? sanitize_text_field($_POST['price_format']) : 'R$ {valor}';
+        $settings['price_text_empty'] = isset($_POST['price_text_empty']) ? sanitize_text_field($_POST['price_text_empty']) : 'Consulte o preço';
 
         // Salvar no banco de dados
         update_option($this->option_name, $settings);
@@ -511,6 +608,9 @@ class Affiliate_Template_Builder {
             'primary_color' => '#283593',
             'button_color' => '#ffa70a',
             'gradient_color' => '#025C95', // v1.4.1
+            'highlight_color' => '#ff4081', // v1.4.5
+            'card_background_color' => '#ffffff', // v1.4.5
+            'text_color' => '#333333', // v1.4.5
             'card_style' => 'modern',
             'button_style' => 'filled',
             'border_radius' => 'medium',
@@ -524,8 +624,12 @@ class Affiliate_Template_Builder {
             'button_text' => 'Ver Produto',
             'show_price' => true,
             'clickable_title' => false,
+            'open_in_new_tab' => false, // v1.4.5
             'show_store_badge' => false,
             'custom_css' => '',
+            // Price display settings (v1.4.5)
+            'price_format' => 'R$ {valor}',
+            'price_text_empty' => 'Consulte o preço',
         );
 
         $settings = get_option('affiliate_template_settings', array());

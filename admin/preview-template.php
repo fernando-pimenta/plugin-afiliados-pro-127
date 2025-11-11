@@ -2,10 +2,10 @@
 /**
  * Afiliados Pro - Preview Template
  *
- * Completely standalone preview template without WP dependencies
+ * Completely standalone preview template with v1.4.5 enhancements
  *
  * @package AfiliadorsPro
- * @version 1.4.4
+ * @version 1.4.5
  */
 
 if (!defined('ABSPATH')) {
@@ -52,15 +52,24 @@ $show_price = !empty($settings['show_price']);
 $clickable_title = !empty($settings['clickable_title']);
 $show_store_badge = !empty($settings['show_store_badge']);
 
-// Placeholder image URL (online, reliable)
-$placeholder_img = 'https://via.placeholder.com/300x200?text=Produto+Exemplo';
+// New settings (v1.4.5)
+$open_in_new_tab = !empty($settings['open_in_new_tab']);
+$link_target = $open_in_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+$highlight_color = $settings['highlight_color'];
+$card_background_color = $settings['card_background_color'];
+$text_color = $settings['text_color'];
+$price_format = $settings['price_format'];
+$price_text_empty = $settings['price_text_empty'];
+
+// Local placeholder image (v1.4.5)
+$placeholder_img = AFFILIATE_PRO_PLUGIN_URL . 'assets/img/placeholder.svg';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preview - Afiliados Pro v1.4.4</title>
+<title>Preview - Afiliados Pro v1.4.5</title>
 <style>
 /* Reset básico */
 * {
@@ -87,7 +96,7 @@ body {
     font-weight: 500;
 }
 
-/* Container dos cards (v1.4.4 - dynamic gap) */
+/* Container dos cards (v1.4.5 - dynamic gap) */
 .preview-products-container {
     display: flex;
     gap: <?php echo $card_gap; ?>px;
@@ -100,7 +109,8 @@ body {
 .affiliate-product-card {
     flex: 1 1 calc(50% - <?php echo $card_gap / 2; ?>px);
     min-width: 280px;
-    background: #fff<?php echo $important; ?>;
+    background: <?php echo esc_attr($card_background_color); ?><?php echo $important; ?>;
+    color: <?php echo esc_attr($text_color); ?><?php echo $important; ?>;
     border: 1px solid #e0e0e0<?php echo $important; ?>;
     border-radius: <?php echo esc_attr($border_radius); ?><?php echo $important; ?>;
     padding: 16px<?php echo $important; ?>;
@@ -131,7 +141,7 @@ body {
     position: absolute<?php echo $important; ?>;
     top: 10px<?php echo $important; ?>;
     right: 10px<?php echo $important; ?>;
-    background: <?php echo esc_attr($settings['primary_color']); ?><?php echo $important; ?>;
+    background: <?php echo esc_attr($highlight_color); ?><?php echo $important; ?>;
     color: #fff<?php echo $important; ?>;
     padding: 4px 10px<?php echo $important; ?>;
     border-radius: 12px<?php echo $important; ?>;
@@ -168,17 +178,25 @@ body {
 
 /* Product Description */
 .affiliate-description {
-    color: #555<?php echo $important; ?>;
+    color: <?php echo esc_attr($text_color); ?><?php echo $important; ?>;
     font-size: 0.9em<?php echo $important; ?>;
     line-height: 1.5<?php echo $important; ?>;
     margin-bottom: 12px<?php echo $important; ?>;
 }
 
-/* Product Price */
+/* Product Price (v1.4.5) */
 .affiliate-price {
     font-size: 1.4em<?php echo $important; ?>;
     font-weight: 700<?php echo $important; ?>;
-    color: #2c3e50<?php echo $important; ?>;
+    color: <?php echo esc_attr($highlight_color); ?><?php echo $important; ?>;
+    margin-bottom: 12px<?php echo $important; ?>;
+}
+
+/* Price Empty Text (v1.4.5) */
+.price-empty {
+    font-size: 0.95em<?php echo $important; ?>;
+    font-style: italic<?php echo $important; ?>;
+    color: #888<?php echo $important; ?>;
     margin-bottom: 12px<?php echo $important; ?>;
 }
 
@@ -247,7 +265,7 @@ body {
 </head>
 <body>
     <div class="preview-header">
-        📱 Pré-visualização ao Vivo - v1.4.4 (Endpoint Público)
+        📱 Pré-visualização ao Vivo - v1.4.5 (Otimizado com Cache)
     </div>
 
     <div class="preview-products-container">
@@ -263,7 +281,7 @@ body {
 
                 <?php if ($clickable_title): ?>
                     <h3 class="affiliate-title">
-                        <a href="#">Produto Exemplo <?php echo $i; ?></a>
+                        <a href="#"<?php echo $link_target; ?>>Produto Exemplo <?php echo $i; ?></a>
                     </h3>
                 <?php else: ?>
                     <h3 class="affiliate-title">
@@ -277,7 +295,14 @@ body {
 
                 <?php if ($show_price): ?>
                     <p class="affiliate-price">
-                        R$ <?php echo ($i === 1) ? '199,90' : '349,90'; ?>
+                        <?php
+                        $price_value = ($i === 1) ? '199,90' : '349,90';
+                        echo str_replace('{valor}', $price_value, esc_html($price_format));
+                        ?>
+                    </p>
+                <?php else: ?>
+                    <p class="price-empty">
+                        <?php echo esc_html($price_text_empty); ?>
                     </p>
                 <?php endif; ?>
 

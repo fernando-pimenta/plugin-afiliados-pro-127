@@ -3,7 +3,7 @@
  * Plugin Name: Plugin Afiliados Pro
  * Plugin URI: https://fernandopimenta.blog.br
  * Description: Gerencie e exiba produtos afiliados com importação CSV, shortcodes personalizáveis e painel visual.
- * Version: 1.4.4
+ * Version: 1.4.5
  * Author: Fernando Pimenta
  * Author URI: https://fernandopimenta.blog.br
  * License: GPLv2 or later
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Definir constantes do plugin
-define('AFFILIATE_PRO_VERSION', '1.4.4');
+define('AFFILIATE_PRO_VERSION', '1.4.5');
 define('AFFILIATE_PRO_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('AFFILIATE_PRO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AFFILIATE_PRO_PLUGIN_BASENAME', plugin_basename(__FILE__));
