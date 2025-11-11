@@ -5,7 +5,7 @@
  * Template displayed in the iframe for live preview
  *
  * @package AfiliadorsPro
- * @version 1.4.1
+ * @version 1.4.2
  */
 
 if (!defined('ABSPATH')) {
@@ -37,14 +37,17 @@ $gradient_secondary = !empty($settings['gradient_color'])
 // Determine if CSS should be forced
 $important = !empty($settings['force_css']) ? ' !important' : '';
 
-// Card shadow (v1.4.0)
-$use_card_shadow = isset($settings['shadow_card']) ? $settings['shadow_card'] : $settings['shadow'];
+// Card shadow (v1.4.2 - removed legacy fallback)
+$use_card_shadow = !empty($settings['shadow_card']);
 
 // Button shadow (v1.4.0)
-$use_button_shadow = isset($settings['shadow_button']) ? $settings['shadow_button'] : false;
+$use_button_shadow = !empty($settings['shadow_button']);
 
-// Placeholder image URL
-$placeholder_img = 'https://via.placeholder.com/300x200/cccccc/666666?text=Produto+Exemplo';
+// Gap between cards (v1.4.2)
+$card_gap = isset($settings['card_gap']) ? absint($settings['card_gap']) : 20;
+
+// Placeholder image URL (online, reliable)
+$placeholder_img = 'https://via.placeholder.com/300x200?text=Produto+Exemplo';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -66,10 +69,10 @@ $placeholder_img = 'https://via.placeholder.com/300x200/cccccc/666666?text=Produ
             background: #f7f7f7;
         }
 
-        /* Container dos cards */
+        /* Container dos cards (v1.4.2 - dynamic gap) */
         .preview-container {
             display: flex;
-            gap: 20px;
+            gap: <?php echo $card_gap; ?>px;
             flex-wrap: wrap;
             max-width: 900px;
             margin: 0 auto;
@@ -77,7 +80,7 @@ $placeholder_img = 'https://via.placeholder.com/300x200/cccccc/666666?text=Produ
 
         /* Product Card */
         .affiliate-product-card {
-            flex: 1 1 calc(50% - 10px);
+            flex: 1 1 calc(50% - <?php echo $card_gap / 2; ?>px);
             min-width: 280px;
             background: #fff<?php echo $important; ?>;
             border: 1px solid #e0e0e0<?php echo $important; ?>;
@@ -87,7 +90,7 @@ $placeholder_img = 'https://via.placeholder.com/300x200/cccccc/666666?text=Produ
 
             <?php
             // Apply card shadow
-            if (!empty($use_card_shadow)) {
+            if ($use_card_shadow) {
                 echo "box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1){$important};";
             } else {
                 echo "box-shadow: none{$important};";
@@ -98,7 +101,7 @@ $placeholder_img = 'https://via.placeholder.com/300x200/cccccc/666666?text=Produ
         .affiliate-product-card:hover {
             transform: translateY(-3px)<?php echo $important; ?>;
             <?php
-            if (!empty($use_card_shadow)) {
+            if ($use_card_shadow) {
                 echo "box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15){$important};";
             }
             ?>
@@ -168,7 +171,7 @@ $placeholder_img = 'https://via.placeholder.com/300x200/cccccc/666666?text=Produ
             }
 
             // Apply button shadow
-            if (!empty($use_button_shadow)) {
+            if ($use_button_shadow) {
                 echo "box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15){$important};";
             } else {
                 echo "box-shadow: none{$important};";
@@ -190,7 +193,7 @@ $placeholder_img = 'https://via.placeholder.com/300x200/cccccc/666666?text=Produ
             }
 
             // Enhanced shadow on hover
-            if (!empty($use_button_shadow)) {
+            if ($use_button_shadow) {
                 echo "box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2){$important};";
             }
             ?>
@@ -218,7 +221,7 @@ $placeholder_img = 'https://via.placeholder.com/300x200/cccccc/666666?text=Produ
 </head>
 <body>
     <div class="preview-label">
-        📱 Pré-visualização ao Vivo - v1.4.1
+        📱 Pré-visualização ao Vivo - v1.4.2
     </div>
 
     <div class="preview-container">

@@ -2,10 +2,10 @@
 /**
  * Afiliados Pro - Preview Handler
  *
- * Handles AJAX preview rendering for Template Builder
+ * Handles preview rendering for Template Builder using admin page approach
  *
  * @package AfiliadorsPro
- * @version 1.4.1
+ * @version 1.4.2
  */
 
 if (!defined('ABSPATH')) {
@@ -15,41 +15,54 @@ if (!defined('ABSPATH')) {
 /**
  * Class Affiliate_Preview_Handler
  *
- * Renders preview template via AJAX for live preview functionality
+ * Renders preview template via admin page for stable live preview functionality
  */
 class Affiliate_Preview_Handler {
 
     /**
-     * Initialize preview handler
+     * Initialize preview handler (v1.4.2 - Admin page approach)
      */
     public static function init() {
-        // Register AJAX actions for both logged-in users
-        add_action('wp_ajax_affiliate_preview_template', [__CLASS__, 'render_preview']);
+        // Register hidden admin page for preview (v1.4.2)
+        add_action('admin_menu', [__CLASS__, 'register_preview_page']);
 
         // Log initialization if debug is enabled
-        affiliate_pro_log('Preview Handler: Initialized');
+        affiliate_pro_log('Preview Handler: Initialized (v1.4.2 - Admin Page)');
     }
 
     /**
-     * Render preview template (v1.4.1 - Fixed disappearing preview)
-     *
-     * Handles AJAX request and outputs preview HTML
+     * Register hidden admin page for preview (v1.4.2)
      */
-    public static function render_preview() {
+    public static function register_preview_page() {
+        add_submenu_page(
+            null, // No parent menu (hidden page)
+            __('Affiliate Preview', 'afiliados-pro'),
+            __('Affiliate Preview', 'afiliados-pro'),
+            'manage_options',
+            'affiliate-preview',
+            [__CLASS__, 'render_preview_page']
+        );
+    }
+
+    /**
+     * Render preview page (v1.4.2 - Stable admin page approach)
+     *
+     * This is a permanent admin page that doesn't expire or disappear
+     */
+    public static function render_preview_page() {
         // Verify user capabilities
         if (!current_user_can('manage_options')) {
             wp_die(__('Você não tem permissão para visualizar esta página.', 'afiliados-pro'), 403);
         }
 
-        // Prevent caching to ensure fresh preview content (v1.4.1)
+        // Prevent caching to ensure fresh preview content
         nocache_headers();
 
-        // Get settings from query params (for real-time preview)
-        // If not provided via query params, fall back to saved settings
-        $settings = self::get_preview_settings();
+        // Get settings from database
+        $settings = Affiliate_Template_Builder::get_template_settings();
 
         // Log preview rendering
-        affiliate_pro_log('Preview Handler: Rendering preview with settings: ' . json_encode($settings));
+        affiliate_pro_log('Preview Handler: Rendering preview page');
 
         // Include preview template
         if (file_exists(AFFILIATE_PRO_PLUGIN_DIR . 'admin/preview-template.php')) {
@@ -58,85 +71,7 @@ class Affiliate_Preview_Handler {
             echo '<p style="color:red;">Erro: Template de preview não encontrado.</p>';
         }
 
-        exit; // Exit cleanly without wp_die() to prevent redirection (v1.4.1)
-    }
-
-    /**
-     * Get preview settings from query params or database
-     *
-     * @return array Preview settings
-     */
-    private static function get_preview_settings() {
-        // Get saved settings as base
-        $saved_settings = Affiliate_Template_Builder::get_template_settings();
-
-        // Override with query params if present (for live preview)
-        $preview_settings = $saved_settings;
-
-        // Color settings
-        if (isset($_GET['primary_color'])) {
-            $preview_settings['primary_color'] = sanitize_hex_color($_GET['primary_color']);
-        }
-        if (isset($_GET['button_color'])) {
-            $preview_settings['button_color'] = sanitize_hex_color($_GET['button_color']);
-        }
-        if (isset($_GET['gradient_color'])) { // v1.4.1
-            $preview_settings['gradient_color'] = sanitize_hex_color($_GET['gradient_color']);
-        }
-
-        // Style settings
-        if (isset($_GET['card_style'])) {
-            $allowed_styles = ['modern', 'classic', 'minimal'];
-            if (in_array($_GET['card_style'], $allowed_styles)) {
-                $preview_settings['card_style'] = sanitize_text_field($_GET['card_style']);
-            }
-        }
-
-        if (isset($_GET['button_style'])) {
-            $allowed_button_styles = ['filled', 'outline', 'gradient'];
-            if (in_array($_GET['button_style'], $allowed_button_styles)) {
-                $preview_settings['button_style'] = sanitize_text_field($_GET['button_style']);
-            }
-        }
-
-        // Border radius
-        if (isset($_GET['border_radius'])) {
-            $allowed_radius = ['none', 'small', 'medium', 'large'];
-            if (in_array($_GET['border_radius'], $allowed_radius)) {
-                $preview_settings['border_radius'] = sanitize_text_field($_GET['border_radius']);
-            }
-        }
-
-        // Shadow settings (v1.4.0)
-        if (isset($_GET['shadow'])) {
-            $preview_settings['shadow'] = (bool) $_GET['shadow'];
-        }
-        if (isset($_GET['shadow_card'])) {
-            $preview_settings['shadow_card'] = (bool) $_GET['shadow_card'];
-        }
-        if (isset($_GET['shadow_button'])) {
-            $preview_settings['shadow_button'] = (bool) $_GET['shadow_button'];
-        }
-
-        // Layout settings
-        if (isset($_GET['layout_default'])) {
-            $allowed_layouts = ['grid', 'list'];
-            if (in_array($_GET['layout_default'], $allowed_layouts)) {
-                $preview_settings['layout_default'] = sanitize_text_field($_GET['layout_default']);
-            }
-        }
-
-        if (isset($_GET['columns'])) {
-            $columns = absint($_GET['columns']);
-            $preview_settings['columns'] = max(2, min(4, $columns));
-        }
-
-        // Force CSS setting
-        if (isset($_GET['force_css'])) {
-            $preview_settings['force_css'] = (bool) $_GET['force_css'];
-        }
-
-        return $preview_settings;
+        exit; // Exit cleanly to prevent admin footer
     }
 }
 

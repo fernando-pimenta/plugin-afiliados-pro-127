@@ -43,6 +43,22 @@ class Affiliate_Template_Builder {
      */
     private function __construct() {
         $this->init_hooks();
+        $this->migrate_legacy_settings(); // v1.4.2
+    }
+
+    /**
+     * Migra configurações legacy para novos campos (v1.4.2)
+     */
+    private function migrate_legacy_settings() {
+        $settings = get_option($this->option_name, array());
+
+        // Migrar campo 'shadow' legado para 'shadow_card'
+        if (isset($settings['shadow']) && !isset($settings['shadow_card'])) {
+            $settings['shadow_card'] = $settings['shadow'];
+            unset($settings['shadow']);
+            update_option($this->option_name, $settings);
+            affiliate_pro_log('Template Builder: Migrated legacy shadow to shadow_card');
+        }
     }
 
     /**
@@ -174,20 +190,6 @@ class Affiliate_Template_Builder {
                             </td>
                         </tr>
 
-                        <!-- Sombra (legado - mantido para compatibilidade) -->
-                        <tr>
-                            <th scope="row">
-                                <label for="shadow"><?php _e('Sombra', 'afiliados-pro'); ?></label>
-                            </th>
-                            <td>
-                                <label>
-                                    <input type="checkbox" id="shadow" name="shadow" value="1" <?php checked($settings['shadow'], true); ?>>
-                                    <?php _e('Ativar sombra nos cards', 'afiliados-pro'); ?>
-                                </label>
-                                <p class="description"><?php _e('Adiciona efeito de sombra aos cards para destaque visual.', 'afiliados-pro'); ?></p>
-                            </td>
-                        </tr>
-
                         <!-- Sombra do Card (v1.4.0) -->
                         <tr>
                             <th scope="row">
@@ -243,6 +245,17 @@ class Affiliate_Template_Builder {
                             </td>
                         </tr>
 
+                        <!-- Espaçamento entre Cards (v1.4.2) -->
+                        <tr>
+                            <th scope="row">
+                                <label for="card_gap"><?php _e('Espaçamento entre Cards', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <input type="number" id="card_gap" name="card_gap" min="0" max="100" value="<?php echo esc_attr($settings['card_gap']); ?>" class="small-text"> px
+                                <p class="description"><?php _e('Define o espaço horizontal e vertical entre os cards de produtos.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+
                         <!-- Forçar CSS do Template Builder -->
                         <tr>
                             <th scope="row">
@@ -253,7 +266,9 @@ class Affiliate_Template_Builder {
                                     <input type="checkbox" id="force_css" name="force_css" value="1" <?php checked($settings['force_css'], true); ?>>
                                     <?php _e('Ativar esta opção para aplicar as cores e estilos do Template Builder com prioridade sobre o tema ativo.', 'afiliados-pro'); ?>
                                 </label>
-                                <p class="description"><?php _e('Se desativado, o plugin respeita o estilo visual do tema WordPress.', 'afiliados-pro'); ?></p>
+                                <p class="description" style="color: #d63638; font-weight: 500;">
+                                    ⚠️ <?php _e('Use esta opção apenas se o tema estiver sobrescrevendo as cores do Template Builder.', 'afiliados-pro'); ?>
+                                </p>
                             </td>
                         </tr>
                     </tbody>
@@ -262,13 +277,13 @@ class Affiliate_Template_Builder {
                 <?php submit_button(__('Salvar Configurações', 'afiliados-pro'), 'primary', 'submit'); ?>
             </form>
 
-            <!-- Preview Section (v1.4.0) -->
+            <!-- Preview Section (v1.4.2 - Admin Page) -->
             <div class="card" style="margin-top: 30px;">
                 <h2><?php _e('Pré-visualização ao Vivo', 'afiliados-pro'); ?></h2>
                 <p class="description"><?php _e('As alterações são aplicadas automaticamente nesta visualização. Clique em "Salvar Configurações" para aplicar no site.', 'afiliados-pro'); ?></p>
                 <div id="affiliate-preview-container" style="border: 1px solid #ddd; padding: 10px; background: #fff; border-radius: 4px; margin-top: 15px;">
                     <iframe id="affiliate-preview-frame"
-                        src="<?php echo esc_url(admin_url('admin-ajax.php?action=affiliate_preview_template')); ?>"
+                        src="<?php echo esc_url(admin_url('admin.php?page=affiliate-preview')); ?>"
                         style="width: 100%; height: 520px; border: 0; display: block;"
                         title="<?php esc_attr_e('Pré-visualização do Template', 'afiliados-pro'); ?>">
                     </iframe>
@@ -317,9 +332,6 @@ class Affiliate_Template_Builder {
             ? sanitize_text_field($_POST['border_radius'])
             : 'medium';
 
-        // Sombra (legado)
-        $settings['shadow'] = isset($_POST['shadow']) ? boolval($_POST['shadow']) : false;
-
         // Sombra separada para card e botão (v1.4.0)
         $settings['shadow_card'] = isset($_POST['shadow_card']) ? boolval($_POST['shadow_card']) : false;
         $settings['shadow_button'] = isset($_POST['shadow_button']) ? boolval($_POST['shadow_button']) : false;
@@ -333,6 +345,10 @@ class Affiliate_Template_Builder {
         // Colunas
         $columns = isset($_POST['columns']) ? absint($_POST['columns']) : 3;
         $settings['columns'] = max(2, min(4, $columns)); // Entre 2 e 4
+
+        // Gap entre cards (v1.4.2)
+        $card_gap = isset($_POST['card_gap']) ? absint($_POST['card_gap']) : 20;
+        $settings['card_gap'] = max(0, min(100, $card_gap)); // Entre 0 e 100
 
         // Forçar CSS
         $settings['force_css'] = isset($_POST['force_css']) ? boolval($_POST['force_css']) : false;
@@ -364,11 +380,11 @@ class Affiliate_Template_Builder {
             'card_style' => 'modern',
             'button_style' => 'filled',
             'border_radius' => 'medium',
-            'shadow' => true, // Legado
             'shadow_card' => true, // v1.4.0
             'shadow_button' => true, // v1.4.0
             'layout_default' => 'grid',
             'columns' => 3,
+            'card_gap' => 20, // v1.4.2
             'force_css' => false,
         );
 
@@ -444,9 +460,9 @@ class Affiliate_Template_Builder {
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out{$important};
             ";
 
-        // Aplicar sombra do card (v1.4.0 - usa shadow_card ou fallback para shadow)
-        $use_card_shadow = isset($settings['shadow_card']) ? $settings['shadow_card'] : $settings['shadow'];
-        if (!empty($use_card_shadow)) {
+        // Aplicar sombra do card (v1.4.2 - usa apenas shadow_card)
+        $use_card_shadow = !empty($settings['shadow_card']);
+        if ($use_card_shadow) {
             $css .= "box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1){$important};";
         } else {
             $css .= "box-shadow: none{$important};";
