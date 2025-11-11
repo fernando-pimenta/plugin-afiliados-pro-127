@@ -3,7 +3,7 @@
  * Classe responsável pelo Template Builder
  *
  * @package Affiliate_Pro
- * @since 1.3.0
+ * @since 1.4.0
  */
 
 if (!defined('ABSPATH')) {
@@ -52,6 +52,7 @@ class Affiliate_Template_Builder {
         add_action('admin_menu', array($this, 'register_template_builder_menu'));
         add_action('admin_post_affiliate_template_save', array($this, 'save_template_settings'));
         add_action('wp_head', array($this, 'apply_template_styles'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
     }
 
     /**
@@ -162,7 +163,7 @@ class Affiliate_Template_Builder {
                             </td>
                         </tr>
 
-                        <!-- Sombra -->
+                        <!-- Sombra (legado - mantido para compatibilidade) -->
                         <tr>
                             <th scope="row">
                                 <label for="shadow"><?php _e('Sombra', 'afiliados-pro'); ?></label>
@@ -173,6 +174,34 @@ class Affiliate_Template_Builder {
                                     <?php _e('Ativar sombra nos cards', 'afiliados-pro'); ?>
                                 </label>
                                 <p class="description"><?php _e('Adiciona efeito de sombra aos cards para destaque visual.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+
+                        <!-- Sombra do Card (v1.4.0) -->
+                        <tr>
+                            <th scope="row">
+                                <label for="shadow_card"><?php _e('Sombra do Card', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" id="shadow_card" name="shadow_card" value="1" <?php checked($settings['shadow_card'], true); ?>>
+                                    <?php _e('Ativar sombra nos cards de produtos', 'afiliados-pro'); ?>
+                                </label>
+                                <p class="description"><?php _e('Ativa ou desativa sombra no card do produto independentemente.', 'afiliados-pro'); ?></p>
+                            </td>
+                        </tr>
+
+                        <!-- Sombra do Botão (v1.4.0) -->
+                        <tr>
+                            <th scope="row">
+                                <label for="shadow_button"><?php _e('Sombra do Botão', 'afiliados-pro'); ?></label>
+                            </th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" id="shadow_button" name="shadow_button" value="1" <?php checked($settings['shadow_button'], true); ?>>
+                                    <?php _e('Ativar sombra nos botões "Ver Produto"', 'afiliados-pro'); ?>
+                                </label>
+                                <p class="description"><?php _e('Ativa ou desativa sombra no botão "Ver Produto" independentemente.', 'afiliados-pro'); ?></p>
                             </td>
                         </tr>
 
@@ -222,12 +251,16 @@ class Affiliate_Template_Builder {
                 <?php submit_button(__('Salvar Configurações', 'afiliados-pro'), 'primary', 'submit'); ?>
             </form>
 
-            <!-- Preview Section -->
+            <!-- Preview Section (v1.4.0) -->
             <div class="card" style="margin-top: 30px;">
-                <h2><?php _e('Pré-visualização', 'afiliados-pro'); ?></h2>
-                <p><?php _e('A pré-visualização ao vivo estará disponível em versões futuras', 'afiliados-pro'); ?></p>
-                <div style="padding: 20px; background: #f5f5f5; border-radius: 4px;">
-                    <p style="color: #666; font-style: italic;"><?php _e('Em breve: visualização em tempo real das suas configurações', 'afiliados-pro'); ?></p>
+                <h2><?php _e('Pré-visualização ao Vivo', 'afiliados-pro'); ?></h2>
+                <p class="description"><?php _e('As alterações são aplicadas automaticamente nesta visualização. Clique em "Salvar Configurações" para aplicar no site.', 'afiliados-pro'); ?></p>
+                <div id="affiliate-preview-container" style="border: 1px solid #ddd; padding: 10px; background: #fff; border-radius: 4px; margin-top: 15px;">
+                    <iframe id="affiliate-preview-frame"
+                        src="<?php echo esc_url(admin_url('admin-ajax.php?action=affiliate_preview_template')); ?>"
+                        style="width: 100%; height: 520px; border: 0; display: block;"
+                        title="<?php esc_attr_e('Pré-visualização do Template', 'afiliados-pro'); ?>">
+                    </iframe>
                 </div>
             </div>
         </div>
@@ -272,8 +305,12 @@ class Affiliate_Template_Builder {
             ? sanitize_text_field($_POST['border_radius'])
             : 'medium';
 
-        // Sombra
+        // Sombra (legado)
         $settings['shadow'] = isset($_POST['shadow']) ? boolval($_POST['shadow']) : false;
+
+        // Sombra separada para card e botão (v1.4.0)
+        $settings['shadow_card'] = isset($_POST['shadow_card']) ? boolval($_POST['shadow_card']) : false;
+        $settings['shadow_button'] = isset($_POST['shadow_button']) ? boolval($_POST['shadow_button']) : false;
 
         // Layout
         $allowed_layouts = array('grid', 'list', 'carousel', 'masonry');
@@ -314,7 +351,9 @@ class Affiliate_Template_Builder {
             'card_style' => 'modern',
             'button_style' => 'filled',
             'border_radius' => 'medium',
-            'shadow' => true,
+            'shadow' => true, // Legado
+            'shadow_card' => true, // v1.4.0
+            'shadow_button' => true, // v1.4.0
             'layout_default' => 'grid',
             'columns' => 3,
             'force_css' => false,
@@ -322,6 +361,36 @@ class Affiliate_Template_Builder {
 
         $settings = get_option('affiliate_template_settings', array());
         return wp_parse_args($settings, $defaults);
+    }
+
+    /**
+     * Enfileira assets CSS e JS (v1.4.0)
+     */
+    public function enqueue_assets($hook) {
+        // Only load on Template Builder page
+        if ($hook !== 'afiliados_page_affiliate-template-builder') {
+            return;
+        }
+
+        // Enqueue CSS
+        wp_enqueue_style(
+            'affiliate-template-css',
+            AFFILIATE_PRO_PLUGIN_URL . 'assets/css/affiliate-template.css',
+            array(),
+            AFFILIATE_PRO_VERSION
+        );
+
+        // Enqueue JS with jQuery dependency
+        wp_enqueue_script(
+            'affiliate-preview-js',
+            AFFILIATE_PRO_PLUGIN_URL . 'assets/js/template-preview.js',
+            array('jquery'),
+            AFFILIATE_PRO_VERSION,
+            true
+        );
+
+        // Log asset loading
+        affiliate_pro_log('Template Builder: Assets enqueued for page ' . $hook);
     }
 
     /**
@@ -345,7 +414,7 @@ class Affiliate_Template_Builder {
 
         // Gerar CSS dinâmico
         $css = "
-        /* Afiliados Pro - Template Builder v1.3.1 */
+        /* Afiliados Pro - Template Builder v1.4.0 */
 
         :root {
             --affiliate-template-primary: {$settings['primary_color']};
@@ -362,8 +431,9 @@ class Affiliate_Template_Builder {
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out{$important};
             ";
 
-        // Corrigir aplicação de sombra
-        if (!empty($settings['shadow'])) {
+        // Aplicar sombra do card (v1.4.0 - usa shadow_card ou fallback para shadow)
+        $use_card_shadow = isset($settings['shadow_card']) ? $settings['shadow_card'] : $settings['shadow'];
+        if (!empty($use_card_shadow)) {
             $css .= "box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1){$important};";
         } else {
             $css .= "box-shadow: none{$important};";
@@ -375,7 +445,7 @@ class Affiliate_Template_Builder {
         .affiliate-product-card:hover {
             transform: translateY(-3px){$important};";
 
-        if (!empty($settings['shadow'])) {
+        if (!empty($use_card_shadow)) {
             $css .= "
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15){$important};";
         }
@@ -416,6 +486,16 @@ class Affiliate_Template_Builder {
             color: #fff{$important};";
         }
 
+        // Aplicar sombra do botão (v1.4.0)
+        $use_button_shadow = isset($settings['shadow_button']) ? $settings['shadow_button'] : false;
+        if (!empty($use_button_shadow)) {
+            $css .= "
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15){$important};";
+        } else {
+            $css .= "
+            box-shadow: none{$important};";
+        }
+
         $css .= "
         }
 
@@ -434,6 +514,12 @@ class Affiliate_Template_Builder {
             $css .= "
             opacity: 0.95{$important};
             transform: translateY(-2px){$important};";
+        }
+
+        // Sombra intensificada no hover (v1.4.0)
+        if (!empty($use_button_shadow)) {
+            $css .= "
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2){$important};";
         }
 
         $css .= "
