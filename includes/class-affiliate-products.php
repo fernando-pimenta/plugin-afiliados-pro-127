@@ -193,15 +193,16 @@ class Affiliate_Pro_Products {
             'edit-tags.php?taxonomy=' . $this->taxonomy . '&post_type=' . $this->post_type
         );
 
+        // REMOVED (v1.4.5.1): Legacy menu - now handled by class-affiliate-template-builder.php
         // Submenu - Aparência e Configurações
-        add_submenu_page(
-            'affiliate-products',
-            __('Aparência e Configurações', 'afiliados-pro'),
-            __('Aparência e Configurações', 'afiliados-pro'),
-            'manage_options',
-            'affiliate-settings',
-            array($this, 'render_settings_page')
-        );
+        // add_submenu_page(
+        //     'affiliate-products',
+        //     __('Aparência e Configurações', 'afiliados-pro'),
+        //     __('Aparência e Configurações', 'afiliados-pro'),
+        //     'manage_options',
+        //     'affiliate-settings',
+        //     array($this, 'render_settings_page')
+        // );
     }
 
     /**
@@ -300,9 +301,11 @@ class Affiliate_Pro_Products {
     /**
      * Renderiza a página de Configurações
      */
-    public function render_settings_page() {
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'admin/admin-settings.php';
-    }
+    // REMOVED (v1.4.5.1): Legacy settings page method
+    // Now handled by Affiliate_Template_Builder::render_template_builder_page()
+    // public function render_settings_page() {
+    //     require_once AFFILIATE_PRO_PLUGIN_DIR . 'admin/admin-settings.php';
+    // }
 
     /**
      * Adiciona Meta Boxes
