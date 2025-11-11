@@ -36,7 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: JSON.stringify({
                 product_id: productId,
-                source: source || 'button'
+                source: source || 'button',
+                source_page: document.location.pathname
             })
         }).catch(error => {
             // Silent fail - tracking should never break user experience

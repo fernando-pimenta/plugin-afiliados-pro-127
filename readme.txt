@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.4.10
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,18 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.0 (2025-11-11) =
+* ✨ **NOVO**: Rastreamento de página de origem (source_page) nos cliques
+* ✨ **NOVO**: Painel de estatísticas mostra nome do produto (JOIN com wp_posts)
+* ✨ **NOVO**: Coluna "Página de Origem" na tabela de estatísticas
+* ✨ **NOVO**: Ícones visuais para origem do clique (🎯 Botão, 📝 Título, 🖼️ Imagem)
+* ✨ **NOVO**: Botão "Limpar Dados de Cliques" no painel de estatísticas
+* 📊 **MELHORIA**: Gráfico agora usa nomes de produtos ao invés de IDs
+* 📊 **MELHORIA**: Estatísticas com informações mais detalhadas e úteis
+* 🔧 **MELHORIA**: Labels truncados para melhor legibilidade nos gráficos
+* 🔄 **MELHORIA**: Migração automática da tabela para adicionar coluna source_page
+* 📱 **MELHORIA**: JavaScript de tracking captura automaticamente a URL da página
 
 = 1.4.10 (2025-11-11) =
 * 🔒 **SEGURANÇA CRÍTICA**: Adicionada autenticação ao endpoint REST API de rastreamento de cliques

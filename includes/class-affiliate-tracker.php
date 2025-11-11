@@ -57,6 +57,7 @@ class Affiliate_Pro_Tracker {
             id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             product_id VARCHAR(100) NOT NULL,
             source VARCHAR(100) DEFAULT 'button',
+            source_page VARCHAR(255) DEFAULT NULL,
             clicked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             INDEX idx_product_id (product_id),
             INDEX idx_clicked_at (clicked_at)
@@ -65,7 +66,30 @@ class Affiliate_Pro_Tracker {
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
 
+        // Migração: adicionar coluna source_page se não existir
+        self::upgrade_table();
+
         affiliate_pro_log('Affiliate Tracker: Table created successfully');
+    }
+
+    /**
+     * Faz upgrade da tabela para versões antigas (adiciona source_page se necessário)
+     */
+    public static function upgrade_table() {
+        global $wpdb;
+        $table = $wpdb->prefix . 'affiliate_clicks';
+
+        // Verificar se a coluna source_page existe
+        $column_exists = $wpdb->get_results($wpdb->prepare(
+            "SHOW COLUMNS FROM `{$table}` LIKE %s",
+            'source_page'
+        ));
+
+        // Se não existir, adicionar
+        if (empty($column_exists)) {
+            $wpdb->query("ALTER TABLE `{$table}` ADD COLUMN source_page VARCHAR(255) DEFAULT NULL AFTER source");
+            affiliate_pro_log('Affiliate Tracker: Column source_page added to table');
+        }
     }
 
     /**
@@ -111,6 +135,12 @@ class Affiliate_Pro_Tracker {
                     'required' => false,
                     'type' => 'string',
                     'default' => 'button',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'source_page' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => '',
                     'sanitize_callback' => 'sanitize_text_field',
                 ),
             ),
@@ -186,10 +216,17 @@ class Affiliate_Pro_Tracker {
         global $wpdb;
         $table = $wpdb->prefix . 'affiliate_clicks';
 
+        $source_page = $request->get_param('source_page');
+
         $data = array(
             'product_id' => sanitize_text_field($request->get_param('product_id')),
             'source'     => sanitize_text_field($request->get_param('source')),
         );
+
+        // Adicionar source_page se fornecido
+        if (!empty($source_page)) {
+            $data['source_page'] = sanitize_text_field($source_page);
+        }
 
         $result = $wpdb->insert($table, $data);
 
@@ -202,9 +239,10 @@ class Affiliate_Pro_Tracker {
         }
 
         affiliate_pro_log(sprintf(
-            'Affiliate Tracker: Click recorded - Product: %s, Source: %s',
+            'Affiliate Tracker: Click recorded - Product: %s, Source: %s, Page: %s',
             $data['product_id'],
-            $data['source']
+            $data['source'],
+            isset($data['source_page']) ? $data['source_page'] : 'N/A'
         ));
 
         return rest_ensure_response(array(
