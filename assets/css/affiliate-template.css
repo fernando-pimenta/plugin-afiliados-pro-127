@@ -1,9 +1,70 @@
 /**
  * Afiliados Pro - Template Builder Styles
- * Version: 1.4.3
+ * Version: 1.4.6
  *
  * Global CSS for affiliate product cards and buttons
  */
+
+/* Split Layout Container (v1.4.6) */
+.affiliate-builder-container {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.affiliate-preview-pane {
+    flex: 1 1 60%;
+    min-width: 480px;
+}
+
+.affiliate-controls-pane {
+    flex: 0 0 35%;
+    min-width: 300px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.affiliate-controls-pane fieldset {
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 10px 12px;
+}
+
+.affiliate-controls-pane legend {
+    padding: 0 6px;
+    font-weight: 600;
+    color: #444;
+}
+
+.affiliate-controls-pane p {
+    margin: 8px 0;
+}
+
+.affiliate-controls-pane .description {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+/* Responsive Split Layout */
+@media (max-width: 1200px) {
+    .affiliate-builder-container {
+        flex-direction: column;
+    }
+
+    .affiliate-preview-pane,
+    .affiliate-controls-pane {
+        flex: 1 1 100%;
+        min-width: 100%;
+    }
+}
 
 /* Preview Container Styles (v1.4.3) */
 #affiliate-preview-container {

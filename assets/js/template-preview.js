@@ -1,8 +1,8 @@
 /**
  * Afiliados Pro - Template Preview Handler
- * Version: 1.4.4
+ * Version: 1.4.6
  *
- * Manual preview control with public endpoint loading
+ * Manual preview control with public endpoint loading and dynamic height
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -30,6 +30,18 @@ document.addEventListener('DOMContentLoaded', () => {
     iframe.style.opacity = '1';
 
     /**
+     * Dynamic height adjustment (v1.4.6)
+     */
+    const adjustHeight = () => {
+        const height = Math.max(window.innerHeight * 0.8, 600);
+        iframe.style.height = height + 'px';
+    };
+
+    // Adjust height on load and resize
+    adjustHeight();
+    window.addEventListener('resize', adjustHeight);
+
+    /**
      * Load preview when button is clicked (v1.4.4)
      */
     btn.addEventListener('click', () => {
@@ -48,5 +60,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Log initialization
-    console.log('Afiliados Pro: Manual preview control initialized (v1.4.4 - Public Endpoint)');
+    console.log('Afiliados Pro: Manual preview control initialized (v1.4.6 - Split Layout with Dynamic Height)');
 });
