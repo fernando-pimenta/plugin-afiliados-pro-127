@@ -126,7 +126,7 @@ class Affiliate_Pro_Plugin {
 
         // Agora inicializar outras classes
         Affiliate_Pro_Settings::get_instance();
-        Affiliate_Pro_Template_Builder::get_instance();
+        Affiliate_Template_Builder::get_instance();
         Affiliate_Pro_CSV_Import::get_instance();
         Affiliate_Pro_Shortcodes::get_instance();
     }
