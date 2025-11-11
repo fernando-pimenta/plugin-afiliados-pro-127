@@ -1,9 +1,25 @@
 /**
  * Afiliados Pro - Template Builder Styles
- * Version: 1.4.0
+ * Version: 1.4.3
  *
  * Global CSS for affiliate product cards and buttons
  */
+
+/* Preview Container Styles (v1.4.3) */
+#affiliate-preview-container {
+    border-radius: 6px;
+    background: #fff;
+    overflow: hidden;
+}
+
+#generate-preview {
+    margin-bottom: 8px;
+}
+
+#generate-preview:hover {
+    background: #135e96;
+    border-color: #135e96;
+}
 
 /* Card Styling */
 .affiliate-product-card {
@@ -65,7 +81,8 @@
 
 .affiliate-btn:hover,
 .affiliate-product-card .product-button:hover {
-    opacity: 0.85;
+    opacity: 0.9;
+    transform: scale(1.02);
 }
 
 /* Grid Layout */

@@ -1,83 +1,44 @@
 /**
  * Afiliados Pro - Template Preview Handler
- * Version: 1.4.2
+ * Version: 1.4.3
  *
- * Simplified live preview with admin page approach
+ * Manual preview control with button trigger
  */
 
-(function($) {
+document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
-    /**
-     * Initialize preview functionality (v1.4.2 - Simplified)
-     */
-    function initPreview() {
-        const form = document.querySelector('form');
-        const iframe = document.getElementById('affiliate-preview-frame');
+    const iframe = document.getElementById('affiliate-preview-frame');
+    const btn = document.getElementById('generate-preview');
 
-        if (!form || !iframe) {
-            console.warn('Afiliados Pro: Preview elements not found');
-            return;
-        }
-
-        // Set initial transition style
-        iframe.style.transition = 'opacity 0.3s ease-in-out';
-        iframe.style.opacity = '1';
-
-        /**
-         * Reload preview iframe with fade effect (v1.4.2 - Simplified)
-         */
-        function reloadPreview() {
-            // Apply fade-out effect
-            iframe.style.opacity = '0.3';
-
-            // Simple reload - the admin page approach makes this stable
-            iframe.src = iframe.src;
-        }
-
-        /**
-         * Restore opacity when iframe finishes loading
-         */
-        iframe.addEventListener('load', function() {
-            iframe.style.opacity = '1';
-        });
-
-        /**
-         * Attach change listeners to form elements
-         */
-        function attachListeners() {
-            // Listen to all input, select, and checkbox changes
-            const formElements = form.querySelectorAll('input, select, textarea');
-
-            formElements.forEach(element => {
-                // Skip submit button and nonce field
-                if (element.type === 'submit' || element.name === 'affiliate_template_nonce') {
-                    return;
-                }
-
-                // Attach change listener to all form elements
-                element.addEventListener('change', reloadPreview);
-
-                // Real-time for color inputs
-                if (element.type === 'color') {
-                    element.addEventListener('input', reloadPreview);
-                }
-            });
-        }
-
-        // Initialize listeners
-        attachListeners();
-
-        // Log initialization
-        console.log('Afiliados Pro: Template preview initialized (v1.4.2 - Stable Admin Page)');
+    // Check if elements exist
+    if (!iframe || !btn) {
+        console.warn('Afiliados Pro: Preview elements not found');
+        return;
     }
 
+    // Set initial transition style
+    iframe.style.transition = 'opacity 0.3s ease-in-out';
+    iframe.style.opacity = '1';
+
     /**
-     * DOM ready handler
+     * Reload preview when button is clicked (v1.4.3)
      */
-    $(document).ready(function() {
-        // Wait for iframe to be available
-        setTimeout(initPreview, 100);
+    btn.addEventListener('click', () => {
+        // Apply fade-out effect
+        iframe.style.opacity = '0.4';
+
+        // Simple reload - manually triggered
+        iframe.src = iframe.src;
     });
 
-})(jQuery);
+    /**
+     * Restore opacity when iframe finishes loading
+     */
+    iframe.addEventListener('load', () => {
+        iframe.style.opacity = '1';
+    });
+
+    // Log initialization
+    console.log('Afiliados Pro: Manual preview control initialized (v1.4.3)');
+});

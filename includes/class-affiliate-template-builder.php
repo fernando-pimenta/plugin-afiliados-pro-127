@@ -277,14 +277,21 @@ class Affiliate_Template_Builder {
                 <?php submit_button(__('Salvar Configurações', 'afiliados-pro'), 'primary', 'submit'); ?>
             </form>
 
-            <!-- Preview Section (v1.4.2 - Admin Page) -->
+            <!-- Preview Section (v1.4.3 - Manual Control) -->
             <div class="card" style="margin-top: 30px;">
                 <h2><?php _e('Pré-visualização ao Vivo', 'afiliados-pro'); ?></h2>
-                <p class="description"><?php _e('As alterações são aplicadas automaticamente nesta visualização. Clique em "Salvar Configurações" para aplicar no site.', 'afiliados-pro'); ?></p>
-                <div id="affiliate-preview-container" style="border: 1px solid #ddd; padding: 10px; background: #fff; border-radius: 4px; margin-top: 15px;">
+                <p class="description">
+                    <?php _e('As alterações são aplicadas automaticamente nesta visualização. Clique em <strong>Gerar Pré-visualização</strong> para atualizar a exibição conforme suas configurações.', 'afiliados-pro'); ?>
+                </p>
+
+                <button id="generate-preview" class="button button-primary" type="button" style="margin-bottom: 10px; margin-top: 10px;">
+                    <?php _e('Gerar Pré-visualização', 'afiliados-pro'); ?>
+                </button>
+
+                <div id="affiliate-preview-container" style="border: 1px solid #ddd; padding: 10px; background: #fff; border-radius: 4px;">
                     <iframe id="affiliate-preview-frame"
                         src="<?php echo esc_url(admin_url('admin.php?page=affiliate-preview')); ?>"
-                        style="width: 100%; height: 520px; border: 0; display: block;"
+                        style="width: 100%; height: 500px; border: 0; display: block;"
                         title="<?php esc_attr_e('Pré-visualização do Template', 'afiliados-pro'); ?>">
                     </iframe>
                 </div>
