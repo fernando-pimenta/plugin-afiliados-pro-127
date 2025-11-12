@@ -677,13 +677,16 @@ class Affiliate_Template_Builder {
         }
 
         // Mapear sombra (v1.6.4: checkboxes da aba Aparência)
-        if ($current_tab === 'appearance') {
-            // Salvando da aba Aparência: aplicar lógica de checkbox (ausente = false)
-            $settings['card_shadow'] = isset($_POST['shadow_card']) ? boolval($_POST['shadow_card']) : false;
-            $settings['shadow_button'] = isset($_POST['shadow_button']) ? boolval($_POST['shadow_button']) : false;
-            $settings['force_css'] = isset($_POST['force_css']) ? boolval($_POST['force_css']) : false;
+        if ($current_tab === 'appearance' || empty($current_tab)) {
+            // Salvando da aba Aparência OU sem identificação de aba (compatibilidade)
+            // Só atualiza se os campos estiverem presentes no POST
+            if (isset($_POST['shadow_card']) || isset($_POST['shadow_button']) || isset($_POST['force_css'])) {
+                $settings['card_shadow'] = isset($_POST['shadow_card']) ? boolval($_POST['shadow_card']) : false;
+                $settings['shadow_button'] = isset($_POST['shadow_button']) ? boolval($_POST['shadow_button']) : false;
+                $settings['force_css'] = isset($_POST['force_css']) ? boolval($_POST['force_css']) : false;
+            }
         }
-        // Se salvando da aba Configurações, manter valores atuais (já estão em $settings)
+        // Se salvando APENAS da aba Configurações, manter valores atuais (já estão em $settings)
 
         // Mapear layout
         if (isset($_POST['layout_default'])) {
@@ -707,25 +710,31 @@ class Affiliate_Template_Builder {
         }
 
         // Mapear configurações funcionais (v1.6.4: checkboxes da aba Configurações)
-        if ($current_tab === 'settings') {
-            // Salvando da aba Configurações: atualizar todos os campos dessa aba
-            if (isset($_POST['button_text'])) {
-                $settings['button_text'] = sanitize_text_field($_POST['button_text']);
-            }
-            // Checkboxes: aplicar lógica padrão (ausente = false)
-            $settings['title_clickable'] = isset($_POST['clickable_title']) ? boolval($_POST['clickable_title']) : false;
-            $settings['open_in_new_tab'] = isset($_POST['open_in_new_tab']) ? boolval($_POST['open_in_new_tab']) : false;
-            $settings['show_store_badge'] = isset($_POST['show_store_badge']) ? boolval($_POST['show_store_badge']) : false;
-            $settings['show_price'] = isset($_POST['show_price']) ? boolval($_POST['show_price']) : false;
+        if ($current_tab === 'settings' || empty($current_tab)) {
+            // Salvando da aba Configurações OU sem identificação de aba (compatibilidade)
+            // Só atualiza se os campos estiverem presentes no POST
+            if (isset($_POST['button_text']) || isset($_POST['clickable_title']) || isset($_POST['open_in_new_tab']) ||
+                isset($_POST['show_store_badge']) || isset($_POST['show_price']) || isset($_POST['custom_css'])) {
 
-            if (isset($_POST['custom_css'])) {
-                $settings['custom_css'] = wp_strip_all_tags($_POST['custom_css']);
+                if (isset($_POST['button_text'])) {
+                    $settings['button_text'] = sanitize_text_field($_POST['button_text']);
+                }
+
+                // Checkboxes: aplicar lógica padrão (ausente = false)
+                $settings['title_clickable'] = isset($_POST['clickable_title']) ? boolval($_POST['clickable_title']) : false;
+                $settings['open_in_new_tab'] = isset($_POST['open_in_new_tab']) ? boolval($_POST['open_in_new_tab']) : false;
+                $settings['show_store_badge'] = isset($_POST['show_store_badge']) ? boolval($_POST['show_store_badge']) : false;
+                $settings['show_price'] = isset($_POST['show_price']) ? boolval($_POST['show_price']) : false;
+
+                if (isset($_POST['custom_css'])) {
+                    $settings['custom_css'] = wp_strip_all_tags($_POST['custom_css']);
+                }
             }
         }
-        // Se salvando da aba Aparência, manter valores atuais (já estão em $settings)
+        // Se salvando APENAS da aba Aparência, manter valores atuais (já estão em $settings)
 
         // Mapear formato de preço (campos da aba Configurações)
-        if ($current_tab === 'settings') {
+        if ($current_tab === 'settings' || empty($current_tab)) {
             if (isset($_POST['price_format'])) {
                 $settings['price_format'] = sanitize_text_field($_POST['price_format']);
             }
@@ -836,8 +845,12 @@ class Affiliate_Template_Builder {
             'card_style' => 'modern',
             'button_style' => 'gradient',
             'shadow_button' => false,
+            'shadow_card' => false,
             'force_css' => false,
             'show_price' => true,
+            'clickable_title' => false,
+            'open_in_new_tab' => true,
+            'show_store_badge' => false,
         ));
 
         return $settings;
