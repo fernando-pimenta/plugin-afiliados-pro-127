@@ -219,6 +219,12 @@ class Affiliate_Template_Builder {
                                 <input type="color" id="gradient_color" name="gradient_color" value="<?php echo esc_attr($settings['gradient_color']); ?>" style="width:60px;height:40px;">
                                 <span class="description"><?php _e('Para botões com gradiente', 'afiliados-pro'); ?></span>
                             </p>
+
+                            <p>
+                                <label for="accent_color"><?php _e('Cor de Destaque (Badge)', 'afiliados-pro'); ?></label><br>
+                                <input type="color" id="accent_color" name="accent_color" value="<?php echo esc_attr($settings['accent_color']); ?>" style="width:60px;height:40px;">
+                                <span class="description"><?php _e('Usada em badges, preços e destaques', 'afiliados-pro'); ?></span>
+                            </p>
                         </fieldset>
 
                         <!-- Group 2: Card Structure -->
@@ -477,8 +483,17 @@ class Affiliate_Template_Builder {
         if (isset($_POST['text_color'])) {
             $settings['text_color'] = sanitize_hex_color($_POST['text_color']);
         }
+        // v1.5.7: Corrigido - salvar button_color como button_color_start (não como accent_color)
         if (isset($_POST['button_color'])) {
-            $settings['accent_color'] = sanitize_hex_color($_POST['button_color']);
+            $settings['button_color_start'] = sanitize_hex_color($_POST['button_color']);
+        }
+        // v1.5.7: Salvar gradient_color como button_color_end
+        if (isset($_POST['gradient_color'])) {
+            $settings['button_color_end'] = sanitize_hex_color($_POST['gradient_color']);
+        }
+        // v1.5.7: Salvar accent_color (cor de destaque/badge)
+        if (isset($_POST['accent_color'])) {
+            $settings['accent_color'] = sanitize_hex_color($_POST['accent_color']);
         }
 
         // Mapear bordas (converter de texto para número)

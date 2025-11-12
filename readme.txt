@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.6.1
+Stable tag: 1.5.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,15 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.7 (2025-11-19) =
+* 🎨 **CORREÇÃO CRÍTICA**: Cores de botão e destaque agora salvam e persistem corretamente
+* 🧩 **CORREÇÃO**: Template Builder não salva mais `button_color` como `accent_color`
+* 💾 **NOVO**: Adicionado salvamento de `gradient_color` como `button_color_end`
+* 🧱 **NOVO**: Campo "Cor de Destaque (Badge)" adicionado ao Template Builder
+* ✅ **CORREÇÃO**: Separação completa entre button_color_start e accent_color
+* 🔄 **MELHORIA**: Preview e front-end 100% sincronizados com valores salvos
+* 📊 **MELHORIA**: Todas as cores agora persistem corretamente após reload
 
 = 1.5.6.1 (2025-11-18) =
 * 🛠️ **HOTFIX**: Corrigido erro fatal de sintaxe (concatenação PHP incorreta em class-affiliate-settings.php linha 267)
