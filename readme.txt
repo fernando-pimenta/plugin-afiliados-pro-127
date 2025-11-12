@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,16 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.2 (2025-11-13) =
+* 🛠️ **CORREÇÃO CRÍTICA**: Sincronização total entre painel admin e front-end
+* 🔄 **CORREÇÃO**: Template Builder agora salva em affiliate_pro_settings (sistema unificado)
+* 🔄 **CORREÇÃO**: Shortcodes agora leem configurações do sistema correto
+* ✅ **CORREÇÃO**: Configurações de aparência agora persistem corretamente no front-end
+* 📊 **MELHORIA**: Removida duplicação de sistemas de configuração
+* 🔧 **MELHORIA**: Mapeamento automático de campos legados para novos
+* 💾 **MELHORIA**: Feedback visual aprimorado ao salvar configurações
+* ♻️ **OTIMIZAÇÃO**: Removido CSS duplicado do Template Builder
 
 = 1.5.1 (2025-11-12) =
 * 💅 **POLIMENTO VISUAL**: Painéis e cards com bordas arredondadas (10-12px)
