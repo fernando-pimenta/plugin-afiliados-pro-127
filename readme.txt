@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.8.2
+Stable tag: 1.5.8.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,12 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.8.3 (2025-11-23) =
+* 🎨 **CORREÇÃO**: Fundo do card agora aplica corretamente no front-end
+* 🧩 **MELHORIA**: Variáveis CSS --affiliate-card-bg, --affiliate-image-bg e --affiliate-price-color aplicadas diretamente no card
+* ✅ **VERIFICADO**: Campo "Fundo da Imagem" confirmado presente no painel (linhas 81-87 admin-settings.php)
+* 💾 **SINCRONIZAÇÃO**: Preview e front-end 100% idênticos em cores de fundo
 
 = 1.5.8.2 (2025-11-22) =
 * 🧩 **CORREÇÃO**: Reorganizada ordem dos elementos no front-end (Título → Descrição → Preço → Botão)

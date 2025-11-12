@@ -227,18 +227,26 @@ class Affiliate_Pro_Shortcodes {
         $button_text_color = $settings['button_text_color'] ?? '#ffffff';
         $price_color = $settings['price_color'] ?? '#111111';
         $card_image_background = $settings['card_image_background'] ?? '#f9f9f9';
+        $card_bg_color = $settings['card_bg_color'] ?? '#ffffff';
+
+        // v1.5.8.3: Variáveis CSS para card e botão
+        $card_inline_style = sprintf(
+            'style="--affiliate-card-bg: %s; --affiliate-image-bg: %s; --affiliate-price-color: %s;"',
+            esc_attr($card_bg_color),
+            esc_attr($card_image_background),
+            esc_attr($price_color)
+        );
+
         $button_inline_style = sprintf(
-            'style="--button-color-start: %s; --button-color-end: %s; --button-text-color: %s; --price-color: %s; --image-bg: %s;"',
+            'style="--button-color-start: %s; --button-color-end: %s; --button-text-color: %s;"',
             esc_attr($button_color_start),
             esc_attr($button_color_end),
-            esc_attr($button_text_color),
-            esc_attr($price_color),
-            esc_attr($card_image_background)
+            esc_attr($button_text_color)
         );
 
         ob_start();
         ?>
-        <div class="affiliate-product-card">
+        <div class="affiliate-product-card" <?php echo $card_inline_style; ?>>
             <?php if ($image) : ?>
                 <div class="product-image">
                     <?php echo $image; ?>
