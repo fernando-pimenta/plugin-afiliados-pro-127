@@ -184,53 +184,69 @@ class Affiliate_Template_Builder {
                         <fieldset>
                             <legend><strong><?php _e('Identidade Visual', 'afiliados-pro'); ?></strong></legend>
 
-                            <p>
-                                <label for="card_background_color"><?php _e('Fundo do Card', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="card_background_color" name="card_background_color" value="<?php echo esc_attr($settings['card_background_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Cor de fundo dos cards', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="card_background_color" name="card_background_color" value="<?php echo esc_attr($settings['card_background_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="card_background_color"><?php _e('Fundo do Card', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Cor de fundo dos cards', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
 
-                            <p>
-                                <label for="card_image_background"><?php _e('Fundo da Área da Imagem', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="card_image_background" name="card_image_background" value="<?php echo esc_attr($settings['card_image_background']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Cor de fundo atrás da imagem do produto', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="card_image_background" name="card_image_background" value="<?php echo esc_attr($settings['card_image_background']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="card_image_background"><?php _e('Fundo da Área da Imagem', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Cor de fundo atrás da imagem do produto', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
 
-                            <p>
-                                <label for="text_color"><?php _e('Cor do Texto', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="text_color" name="text_color" value="<?php echo esc_attr($settings['text_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Texto nos cards', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="text_color" name="text_color" value="<?php echo esc_attr($settings['text_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="text_color"><?php _e('Cor do Texto', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Texto nos cards', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
 
-                            <p>
-                                <label for="price_color"><?php _e('Cor do Preço', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="price_color" name="price_color" value="<?php echo esc_attr($settings['price_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Cor do valor do produto', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="price_color" name="price_color" value="<?php echo esc_attr($settings['price_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="price_color"><?php _e('Cor do Preço', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Cor do valor do produto', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
 
-                            <p>
-                                <label for="primary_color"><?php _e('Cor Primária', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="primary_color" name="primary_color" value="<?php echo esc_attr($settings['primary_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Títulos e elementos destacados', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="primary_color" name="primary_color" value="<?php echo esc_attr($settings['primary_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="primary_color"><?php _e('Cor Primária', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Títulos e elementos destacados', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
 
-                            <p>
-                                <label for="button_color"><?php _e('Cor do Botão', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="button_color" name="button_color" value="<?php echo esc_attr($settings['button_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Cor dos botões de ação', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="button_color" name="button_color" value="<?php echo esc_attr($settings['button_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="button_color"><?php _e('Cor do Botão', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Cor dos botões de ação', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
 
-                            <p>
-                                <label for="gradient_color"><?php _e('Cor Secundária (Gradiente)', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="gradient_color" name="gradient_color" value="<?php echo esc_attr($settings['gradient_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Para botões com gradiente', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="gradient_color" name="gradient_color" value="<?php echo esc_attr($settings['gradient_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="gradient_color"><?php _e('Cor Secundária (Gradiente)', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Para botões com gradiente', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
 
-                            <p>
-                                <label for="accent_color"><?php _e('Cor de Destaque (Badge)', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="accent_color" name="accent_color" value="<?php echo esc_attr($settings['accent_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Usada em badges, preços e destaques', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="accent_color" name="accent_color" value="<?php echo esc_attr($settings['accent_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="accent_color"><?php _e('Cor de Destaque (Badge)', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Usada em badges, preços e destaques', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
                         </fieldset>
 
                         <!-- Group 2: Card Structure -->

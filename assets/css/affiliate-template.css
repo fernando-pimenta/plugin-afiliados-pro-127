@@ -1,6 +1,6 @@
 /**
  * Afiliados Pro - Template Builder Styles
- * Version: 1.5.9.3
+ * Version: 1.5.9.7
  *
  * Global CSS for affiliate product cards and buttons
  */
@@ -95,6 +95,61 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     cursor: pointer;
+}
+
+/* v1.5.9.7: Compact color field layout */
+.color-field-compact {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.color-field-compact:last-child {
+    margin-bottom: 0;
+}
+
+.color-field-compact input[type="color"] {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.2s ease;
+}
+
+.color-field-compact input[type="color"]:hover {
+    border-color: #999;
+}
+
+.color-field-compact input[type="color"]:focus {
+    outline: none;
+    border-color: #0073aa;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+.color-field-labels {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.color-field-labels label {
+    font-weight: 500;
+    font-size: 13px;
+    color: #333;
+    margin: 0;
+    cursor: pointer;
+}
+
+.color-field-labels .description {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.3;
+    margin: 0;
 }
 
 /* Responsive Split Layout (v1.5.9.3 - Breakpoint 1024px) */

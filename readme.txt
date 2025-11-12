@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.9.6
+Stable tag: 1.5.9.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,15 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.9.7 (2025-11-28) =
+* 🎨 **UX MELHORADA**: Layout compacto dos campos de cor na seção Identidade Visual
+* 🔄 **REORGANIZAÇÃO**: Color picker à esquerda, labels e descrições à direita
+* 📏 **ESPAÇAMENTO**: Redução do espaçamento vertical para layout mais denso
+* 🎯 **ALINHAMENTO**: Textos alinhados verticalmente ao centro do color picker
+* ✨ **VISUAL**: Color pickers maiores (50x50px) com bordas arredondadas e hover effects
+* 📱 **RESPONSIVO**: Layout mantém funcionalidade em todas as resoluções
+* ⚡ **USABILIDADE**: Interface mais intuitiva e organizada para seleção de cores
 
 = 1.5.9.6 (2025-11-28) =
 * 🔧 **FIX**: Corrigido salvamento de checkboxes shadow_card (Sombra nos cards)
