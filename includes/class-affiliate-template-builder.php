@@ -188,18 +188,11 @@ class Affiliate_Template_Builder {
                     <div class="affiliate-controls-pane">
                         <h3>🎨 <?php _e('Personalização dos Cards', 'afiliados-pro'); ?></h3>
 
-                        <!-- Group 1: Visual Identity Colors -->
+                        <!-- Group 1: Visual Identity Colors (v1.6.2: Reordenado conforme hierarquia visual) -->
                         <fieldset>
                             <legend><strong><?php _e('Identidade Visual', 'afiliados-pro'); ?></strong></legend>
 
-                            <div class="color-field-compact">
-                                <input type="color" id="card_background_color" name="card_background_color" value="<?php echo esc_attr($settings['card_background_color']); ?>">
-                                <div class="color-field-labels">
-                                    <label for="card_background_color"><?php _e('Fundo do Card', 'afiliados-pro'); ?></label>
-                                    <span class="description"><?php _e('Cor de fundo dos cards', 'afiliados-pro'); ?></span>
-                                </div>
-                            </div>
-
+                            <!-- 1. Fundo da Área da Imagem -->
                             <div class="color-field-compact">
                                 <input type="color" id="card_image_background" name="card_image_background" value="<?php echo esc_attr($settings['card_image_background']); ?>">
                                 <div class="color-field-labels">
@@ -208,22 +201,16 @@ class Affiliate_Template_Builder {
                                 </div>
                             </div>
 
+                            <!-- 2. Fundo do Card -->
                             <div class="color-field-compact">
-                                <input type="color" id="text_color" name="text_color" value="<?php echo esc_attr($settings['text_color']); ?>">
+                                <input type="color" id="card_background_color" name="card_background_color" value="<?php echo esc_attr($settings['card_background_color']); ?>">
                                 <div class="color-field-labels">
-                                    <label for="text_color"><?php _e('Cor do Texto', 'afiliados-pro'); ?></label>
-                                    <span class="description"><?php _e('Texto nos cards', 'afiliados-pro'); ?></span>
+                                    <label for="card_background_color"><?php _e('Fundo do Card', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Cor de fundo dos cards', 'afiliados-pro'); ?></span>
                                 </div>
                             </div>
 
-                            <div class="color-field-compact">
-                                <input type="color" id="price_color" name="price_color" value="<?php echo esc_attr($settings['price_color']); ?>">
-                                <div class="color-field-labels">
-                                    <label for="price_color"><?php _e('Cor do Preço', 'afiliados-pro'); ?></label>
-                                    <span class="description"><?php _e('Cor do valor do produto', 'afiliados-pro'); ?></span>
-                                </div>
-                            </div>
-
+                            <!-- 3. Cor Primária -->
                             <div class="color-field-compact">
                                 <input type="color" id="primary_color" name="primary_color" value="<?php echo esc_attr($settings['primary_color']); ?>">
                                 <div class="color-field-labels">
@@ -232,6 +219,25 @@ class Affiliate_Template_Builder {
                                 </div>
                             </div>
 
+                            <!-- 4. Cor do Texto -->
+                            <div class="color-field-compact">
+                                <input type="color" id="text_color" name="text_color" value="<?php echo esc_attr($settings['text_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="text_color"><?php _e('Cor do Texto', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Texto nos cards', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
+
+                            <!-- 5. Cor do Preço -->
+                            <div class="color-field-compact">
+                                <input type="color" id="price_color" name="price_color" value="<?php echo esc_attr($settings['price_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="price_color"><?php _e('Cor do Preço', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Cor do valor do produto', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
+
+                            <!-- 6. Cor do Botão -->
                             <div class="color-field-compact">
                                 <input type="color" id="button_color" name="button_color" value="<?php echo esc_attr($settings['button_color']); ?>">
                                 <div class="color-field-labels">
@@ -240,6 +246,7 @@ class Affiliate_Template_Builder {
                                 </div>
                             </div>
 
+                            <!-- 7. Cor Secundária (Gradiente) -->
                             <div class="color-field-compact">
                                 <input type="color" id="gradient_color" name="gradient_color" value="<?php echo esc_attr($settings['gradient_color']); ?>">
                                 <div class="color-field-labels">
@@ -248,6 +255,7 @@ class Affiliate_Template_Builder {
                                 </div>
                             </div>
 
+                            <!-- 8. Cor de Destaque (Badge) -->
                             <div class="color-field-compact">
                                 <input type="color" id="accent_color" name="accent_color" value="<?php echo esc_attr($settings['accent_color']); ?>">
                                 <div class="color-field-labels">

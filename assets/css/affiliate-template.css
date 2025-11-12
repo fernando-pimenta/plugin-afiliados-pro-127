@@ -1,6 +1,6 @@
 /**
  * Afiliados Pro - Template Builder Styles
- * Version: 1.5.9.7
+ * Version: 1.6.2
  *
  * Global CSS for affiliate product cards and buttons
  */
@@ -97,12 +97,12 @@
     cursor: pointer;
 }
 
-/* v1.5.9.7: Compact color field layout */
+/* v1.6.2: Refined compact color field layout - reduced spacing */
 .color-field-compact {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .color-field-compact:last-child {
@@ -110,8 +110,8 @@
 }
 
 .color-field-compact input[type="color"] {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 35px;
     border: 2px solid #ddd;
     border-radius: 6px;
     cursor: pointer;
@@ -191,20 +191,39 @@
     border-color: #135e96;
 }
 
-/* Card Styling */
+/* Card Styling (v1.6.2: Refined padding and proportions) */
 .affiliate-product-card {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    padding: 16px;
+    padding: 0;
     margin: 10px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     background: #fff;
     position: relative;
+    min-height: 360px;
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
 }
 
 .affiliate-product-card:hover {
     transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.affiliate-product-card .product-content {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.affiliate-product-card .product-image {
+    padding: 0;
+    margin: 0;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
 }
 
 /* Card Title */
