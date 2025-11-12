@@ -168,6 +168,7 @@ class Affiliate_Template_Builder {
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                 <?php wp_nonce_field('affiliate_template_save', 'affiliate_template_nonce'); ?>
                 <input type="hidden" name="action" value="affiliate_template_save">
+                <input type="hidden" name="current_tab" value="appearance">
 
                 <!-- v1.4.6: Split Layout Container -->
                 <div class="affiliate-builder-container">
@@ -368,6 +369,7 @@ class Affiliate_Template_Builder {
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                 <?php wp_nonce_field('affiliate_template_save', 'affiliate_template_nonce'); ?>
                 <input type="hidden" name="action" value="affiliate_template_save">
+                <input type="hidden" name="current_tab" value="settings">
 
                 <table class="form-table" role="presentation">
                     <tbody>
@@ -608,6 +610,7 @@ class Affiliate_Template_Builder {
     /**
      * Salva as configurações do template
      * v1.5.2: Migrado para usar affiliate_pro_settings para persistência correta
+     * v1.6.4: Corrigido reset de checkboxes entre abas - só atualiza campos presentes no POST
      */
     public function save_template_settings() {
         // Verificar permissões
@@ -619,6 +622,9 @@ class Affiliate_Template_Builder {
         if (!isset($_POST['affiliate_template_nonce']) || !wp_verify_nonce($_POST['affiliate_template_nonce'], 'affiliate_template_save')) {
             wp_die(__('Erro de segurança. Tente novamente.', 'afiliados-pro'));
         }
+
+        // v1.6.4: Identificar qual aba está sendo salva
+        $current_tab = isset($_POST['current_tab']) ? sanitize_text_field($_POST['current_tab']) : '';
 
         // v1.5.2: Obter configurações atuais do sistema unificado
         $current_settings = Affiliate_Pro_Settings::get_settings();
@@ -670,22 +676,14 @@ class Affiliate_Template_Builder {
             }
         }
 
-        // Mapear sombra
-        if (isset($_POST['shadow_card'])) {
-            $settings['card_shadow'] = boolval($_POST['shadow_card']);
-        } else {
-            $settings['card_shadow'] = false;
+        // Mapear sombra (v1.6.4: checkboxes da aba Aparência)
+        if ($current_tab === 'appearance') {
+            // Salvando da aba Aparência: aplicar lógica de checkbox (ausente = false)
+            $settings['card_shadow'] = isset($_POST['shadow_card']) ? boolval($_POST['shadow_card']) : false;
+            $settings['shadow_button'] = isset($_POST['shadow_button']) ? boolval($_POST['shadow_button']) : false;
+            $settings['force_css'] = isset($_POST['force_css']) ? boolval($_POST['force_css']) : false;
         }
-        if (isset($_POST['shadow_button'])) {
-            $settings['shadow_button'] = boolval($_POST['shadow_button']);
-        } else {
-            $settings['shadow_button'] = false;
-        }
-        if (isset($_POST['force_css'])) {
-            $settings['force_css'] = boolval($_POST['force_css']);
-        } else {
-            $settings['force_css'] = false;
-        }
+        // Se salvando da aba Configurações, manter valores atuais (já estão em $settings)
 
         // Mapear layout
         if (isset($_POST['layout_default'])) {
@@ -708,40 +706,32 @@ class Affiliate_Template_Builder {
             $settings['card_gap'] = max(0, min(100, $card_gap));
         }
 
-        // Mapear configurações funcionais
-        if (isset($_POST['button_text'])) {
-            $settings['button_text'] = sanitize_text_field($_POST['button_text']);
-        }
-        if (isset($_POST['clickable_title'])) {
-            $settings['title_clickable'] = boolval($_POST['clickable_title']);
-        } else {
-            $settings['title_clickable'] = false;
-        }
-        if (isset($_POST['open_in_new_tab'])) {
-            $settings['open_in_new_tab'] = boolval($_POST['open_in_new_tab']);
-        } else {
-            $settings['open_in_new_tab'] = false;
-        }
-        if (isset($_POST['show_store_badge'])) {
-            $settings['show_store_badge'] = boolval($_POST['show_store_badge']);
-        } else {
-            $settings['show_store_badge'] = false;
-        }
-        if (isset($_POST['show_price'])) {
-            $settings['show_price'] = boolval($_POST['show_price']);
-        } else {
-            $settings['show_price'] = false;
-        }
-        if (isset($_POST['custom_css'])) {
-            $settings['custom_css'] = wp_strip_all_tags($_POST['custom_css']);
-        }
+        // Mapear configurações funcionais (v1.6.4: checkboxes da aba Configurações)
+        if ($current_tab === 'settings') {
+            // Salvando da aba Configurações: atualizar todos os campos dessa aba
+            if (isset($_POST['button_text'])) {
+                $settings['button_text'] = sanitize_text_field($_POST['button_text']);
+            }
+            // Checkboxes: aplicar lógica padrão (ausente = false)
+            $settings['title_clickable'] = isset($_POST['clickable_title']) ? boolval($_POST['clickable_title']) : false;
+            $settings['open_in_new_tab'] = isset($_POST['open_in_new_tab']) ? boolval($_POST['open_in_new_tab']) : false;
+            $settings['show_store_badge'] = isset($_POST['show_store_badge']) ? boolval($_POST['show_store_badge']) : false;
+            $settings['show_price'] = isset($_POST['show_price']) ? boolval($_POST['show_price']) : false;
 
-        // Mapear formato de preço
-        if (isset($_POST['price_format'])) {
-            $settings['price_format'] = sanitize_text_field($_POST['price_format']);
+            if (isset($_POST['custom_css'])) {
+                $settings['custom_css'] = wp_strip_all_tags($_POST['custom_css']);
+            }
         }
-        if (isset($_POST['price_text_empty'])) {
-            $settings['price_placeholder'] = sanitize_text_field($_POST['price_text_empty']);
+        // Se salvando da aba Aparência, manter valores atuais (já estão em $settings)
+
+        // Mapear formato de preço (campos da aba Configurações)
+        if ($current_tab === 'settings') {
+            if (isset($_POST['price_format'])) {
+                $settings['price_format'] = sanitize_text_field($_POST['price_format']);
+            }
+            if (isset($_POST['price_text_empty'])) {
+                $settings['price_placeholder'] = sanitize_text_field($_POST['price_text_empty']);
+            }
         }
 
         // v1.5.2: Salvar no sistema unificado affiliate_pro_settings
