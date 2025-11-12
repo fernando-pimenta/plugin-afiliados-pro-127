@@ -278,67 +278,65 @@ class Affiliate_Pro_Settings {
             color: var(--affiliate-accent-color);
         }
 
-        /* Botões base */
-        .affiliate-product-card .product-button {
+        /* Botões base (v1.5.5) */
+        .affiliate-product-card .product-button,
+        .affiliate-product-card .affiliate-btn-flat,
+        .affiliate-product-card .affiliate-btn-outline,
+        .affiliate-product-card .affiliate-btn-gradient {
             width: auto;
             min-width: 120px;
             max-width: 90%;
             text-align: center;
             display: inline-block;
             transition: all 0.3s ease;
-            border: 2px solid transparent;
+            padding: 10px 18px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 6px;
         }
-        ";
 
-        // Estilos específicos por tipo de botão (v1.5.4)
-        $button_style = $settings['button_style'] ?? 'gradient';
-
-        if ($button_style === 'gradient') {
-            $css .= "
-        /* Estilo: Gradiente */
-        .affiliate-product-card .product-button {
-            background: linear-gradient(135deg, var(--affiliate-button-start) 0%, var(--affiliate-button-end) 100%);
+        /* Estilo: Preenchido (Flat) - v1.5.5 */
+        .affiliate-product-card .affiliate-btn-flat {
+            background: var(--button-color-start, var(--affiliate-button-start));
             color: #fff;
-            border-color: transparent;
+            border: 2px solid var(--button-color-start, var(--affiliate-button-start));
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
-        .affiliate-product-card .product-button:hover {
-            filter: brightness(1.1);
-            transform: translateY(-2px);
-        }
-            ";
-        } elseif ($button_style === 'flat') {
-            $css .= "
-        /* Estilo: Preenchido */
-        .affiliate-product-card .product-button {
-            background: var(--affiliate-button-start);
-            color: #fff;
-            border-color: var(--affiliate-button-start);
-        }
-
-        .affiliate-product-card .product-button:hover {
+        .affiliate-product-card .affiliate-btn-flat:hover {
             opacity: 0.9;
             transform: translateY(-2px);
-        }
-            ";
-        } elseif ($button_style === 'outline') {
-            $css .= "
-        /* Estilo: Contorno */
-        .affiliate-product-card .product-button {
-            background: transparent;
-            color: var(--affiliate-button-start);
-            border-color: var(--affiliate-button-start);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .affiliate-product-card .product-button:hover {
-            background: var(--affiliate-button-start);
+        /* Estilo: Contorno (Outline) - v1.5.5 */
+        .affiliate-product-card .affiliate-btn-outline {
+            background: transparent;
+            color: var(--button-color-start, var(--affiliate-button-start));
+            border: 2px solid var(--button-color-start, var(--affiliate-button-start));
+            box-shadow: none;
+        }
+
+        .affiliate-product-card .affiliate-btn-outline:hover {
+            background: var(--button-color-start, var(--affiliate-button-start));
             color: #fff;
             transform: translateY(-2px);
-        }
-            ";
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
-        $css .= "
+        /* Estilo: Gradiente - v1.5.5 */
+        .affiliate-product-card .affiliate-btn-gradient {
+            background: linear-gradient(135deg, var(--button-color-start, var(--affiliate-button-start)) 0%, var(--button-color-end, var(--affiliate-button-end)) 100%);
+            color: #fff;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .affiliate-product-card .affiliate-btn-gradient:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
         ";
 
         // Título clicável (condicional)

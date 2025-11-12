@@ -217,6 +217,19 @@ class Affiliate_Pro_Shortcodes {
         // Texto do botão
         $button_text = !empty($link) ? $settings['button_text'] : $settings['button_text_disabled'];
 
+        // v1.5.5: Determinar classe do botão baseada no estilo
+        $button_style = $settings['button_style'] ?? 'gradient';
+        $button_class = 'product-button affiliate-btn-' . esc_attr($button_style);
+
+        // v1.5.5: Variáveis CSS inline para cores do botão
+        $button_color_start = $settings['button_color_start'] ?? '#6a82fb';
+        $button_color_end = $settings['button_color_end'] ?? '#fc5c7d';
+        $button_inline_style = sprintf(
+            'style="--button-color-start: %s; --button-color-end: %s;"',
+            esc_attr($button_color_start),
+            esc_attr($button_color_end)
+        );
+
         ob_start();
         ?>
         <div class="affiliate-product-card">
@@ -251,13 +264,14 @@ class Affiliate_Pro_Shortcodes {
 
                 <?php if (!empty($link)) : ?>
                     <a href="<?php echo esc_url($link); ?>"
-                       class="product-button"<?php echo $link_attrs; ?>
+                       class="<?php echo esc_attr($button_class); ?>"<?php echo $link_attrs; ?>
+                       <?php echo $button_inline_style; ?>
                        data-aff-id="<?php echo esc_attr($post->ID); ?>"
                        data-source="button">
                         <?php echo esc_html($button_text); ?>
                     </a>
                 <?php else : ?>
-                    <span class="product-button product-button-disabled">
+                    <span class="<?php echo esc_attr($button_class); ?> product-button-disabled" <?php echo $button_inline_style; ?>>
                         <?php echo esc_html($button_text); ?>
                     </span>
                 <?php endif; ?>

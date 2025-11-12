@@ -2,10 +2,10 @@
 /**
  * Afiliados Pro - Preview Template
  *
- * Completely standalone preview template with v1.5.4 button style support
+ * Completely standalone preview template with v1.5.5 real button style application
  *
  * @package AfiliadorsPro
- * @version 1.5.4
+ * @version 1.5.5
  */
 
 if (!defined('ABSPATH')) {
@@ -68,7 +68,7 @@ $placeholder_img = AFFILIATE_PRO_PLUGIN_URL . 'assets/img/placeholder.svg';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preview - Afiliados Pro v1.5.4</title>
+<title>Preview - Afiliados Pro v1.5.5</title>
 <style>
 /* Reset básico */
 * {
@@ -193,7 +193,7 @@ body {
     margin-bottom: 12px;
 }
 
-/* Product Button - Base (v1.5.4) */
+/* Product Button - Base (v1.5.5) */
 .affiliate-btn {
     display: inline-block;
     margin-top: 10px;
@@ -204,49 +204,50 @@ body {
     text-decoration: none;
     font-weight: 500;
     font-size: 0.95em;
-    <?php if ($button_style === 'gradient'): ?>
-    /* Estilo: Gradiente */
-    background: linear-gradient(135deg, <?php echo esc_attr($button_color); ?>, <?php echo esc_attr($gradient_color); ?>);
-    color: #fff;
     border: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    <?php elseif ($button_style === 'flat'): ?>
-    /* Estilo: Preenchido */
-    background: <?php echo esc_attr($button_color); ?>;
-    color: #fff;
-    border: 2px solid <?php echo esc_attr($button_color); ?>;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    <?php elseif ($button_style === 'outline'): ?>
-    /* Estilo: Contorno */
-    background: transparent;
-    color: <?php echo esc_attr($button_color); ?>;
-    border: 2px solid <?php echo esc_attr($button_color); ?>;
-    box-shadow: none;
-    <?php else: ?>
-    /* Fallback para gradiente */
-    background: linear-gradient(135deg, <?php echo esc_attr($button_color); ?>, <?php echo esc_attr($gradient_color); ?>);
-    color: #fff;
-    border: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    <?php endif; ?>
 }
 
-.affiliate-btn:hover {
-    transform: scale(1.02);
-    <?php if ($button_style === 'gradient'): ?>
-    filter: brightness(1.1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    <?php elseif ($button_style === 'flat'): ?>
-    opacity: 0.9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    <?php elseif ($button_style === 'outline'): ?>
-    background: <?php echo esc_attr($button_color); ?>;
+/* Estilo: Preenchido (Flat) */
+.affiliate-btn-flat {
+    background: var(--button-color-start, <?php echo esc_attr($button_color); ?>);
     color: #fff;
+    border: 2px solid var(--button-color-start, <?php echo esc_attr($button_color); ?>);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    <?php else: ?>
-    filter: brightness(1.1);
+}
+
+.affiliate-btn-flat:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    <?php endif; ?>
+}
+
+/* Estilo: Contorno (Outline) */
+.affiliate-btn-outline {
+    background: transparent;
+    color: var(--button-color-start, <?php echo esc_attr($button_color); ?>);
+    border: 2px solid var(--button-color-start, <?php echo esc_attr($button_color); ?>);
+    box-shadow: none;
+}
+
+.affiliate-btn-outline:hover {
+    background: var(--button-color-start, <?php echo esc_attr($button_color); ?>);
+    color: #fff;
+    transform: scale(1.02);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo: Gradiente */
+.affiliate-btn-gradient {
+    background: linear-gradient(135deg, var(--button-color-start, <?php echo esc_attr($button_color); ?>), var(--button-color-end, <?php echo esc_attr($gradient_color); ?>));
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.affiliate-btn-gradient:hover {
+    filter: brightness(1.1);
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Responsive */
@@ -264,7 +265,7 @@ body {
 </head>
 <body>
     <div class="preview-header">
-        📱 Pré-visualização ao Vivo - v1.5.4 (Sincronizado com affiliate_pro_settings + button_style)
+        📱 Pré-visualização ao Vivo - v1.5.5 (Aplicação real de estilos de botão)
     </div>
 
     <div class="preview-products-container">
@@ -309,7 +310,8 @@ body {
                     </p>
                 <?php endif; ?>
 
-                <button class="affiliate-btn"
+                <button class="affiliate-btn affiliate-btn-<?php echo esc_attr($button_style); ?>"
+                        style="--button-color-start: <?php echo esc_attr($button_color); ?>; --button-color-end: <?php echo esc_attr($gradient_color); ?>;"
                         data-aff-id="preview-<?php echo $i; ?>"
                         data-source="button">
                     <?php echo esc_html($button_text); ?>
