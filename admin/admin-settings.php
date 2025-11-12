@@ -52,22 +52,38 @@ if (isset($_GET['reset']) && $_GET['reset'] === 'success') {
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e('Cor de Destaque', 'afiliados-pro'); ?></th>
+                        <th scope="row"><?php _e('Cor de Destaque (Badge)', 'afiliados-pro'); ?></th>
                         <td>
                             <input type="text" name="affiliate_pro_settings[accent_color]" value="<?php echo esc_attr($settings['accent_color']); ?>" class="color-picker" data-default-color="#ffa70a">
-                            <p class="description"><?php _e('Usada para preços e elementos de destaque', 'afiliados-pro'); ?></p>
+                            <p class="description"><?php _e('Usada para badges da loja, preços e elementos de destaque (não afeta o botão)', 'afiliados-pro'); ?></p>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><?php _e('Cor de Fundo do Card', 'afiliados-pro'); ?></th>
                         <td>
                             <input type="text" name="affiliate_pro_settings[card_bg_color]" value="<?php echo esc_attr($settings['card_bg_color']); ?>" class="color-picker" data-default-color="#ffffff">
+                            <p class="description"><?php _e('Cor de fundo do card completo', 'afiliados-pro'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e('Fundo da Área da Imagem', 'afiliados-pro'); ?></th>
+                        <td>
+                            <input type="text" name="affiliate_pro_settings[card_image_background]" value="<?php echo esc_attr($settings['card_image_background']); ?>" class="color-picker" data-default-color="#f9f9f9">
+                            <p class="description"><?php _e('Cor de fundo atrás da imagem do produto (útil para imagens com transparência)', 'afiliados-pro'); ?></p>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><?php _e('Cor do Texto', 'afiliados-pro'); ?></th>
                         <td>
                             <input type="text" name="affiliate_pro_settings[text_color]" value="<?php echo esc_attr($settings['text_color']); ?>" class="color-picker" data-default-color="#1a1a1a">
+                            <p class="description"><?php _e('Cor do texto nos cards de produtos', 'afiliados-pro'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e('Cor do Preço', 'afiliados-pro'); ?></th>
+                        <td>
+                            <input type="text" name="affiliate_pro_settings[price_color]" value="<?php echo esc_attr($settings['price_color'] ?? '#111111'); ?>" class="color-picker" data-default-color="#111111">
+                            <p class="description"><?php _e('Define a cor do valor do produto exibido nos cards', 'afiliados-pro'); ?></p>
                         </td>
                     </tr>
                     <tr>
@@ -109,13 +125,32 @@ if (isset($_GET['reset']) && $_GET['reset'] === 'success') {
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e('Cor Inicial do Gradiente', 'afiliados-pro'); ?></th>
+                        <th scope="row"><?php _e('Estilo do Botão', 'afiliados-pro'); ?></th>
                         <td>
-                            <input type="text" name="affiliate_pro_settings[button_color_start]" value="<?php echo esc_attr($settings['button_color_start']); ?>" class="color-picker" data-default-color="#6a82fb">
+                            <select name="affiliate_pro_settings[button_style]">
+                                <option value="gradient" <?php selected($settings['button_style'] ?? 'gradient', 'gradient'); ?>><?php _e('Gradiente', 'afiliados-pro'); ?></option>
+                                <option value="flat" <?php selected($settings['button_style'] ?? 'gradient', 'flat'); ?>><?php _e('Preenchido', 'afiliados-pro'); ?></option>
+                                <option value="outline" <?php selected($settings['button_style'] ?? 'gradient', 'outline'); ?>><?php _e('Contorno', 'afiliados-pro'); ?></option>
+                            </select>
+                            <p class="description"><?php _e('Define o estilo visual do botão principal nos cards de produto', 'afiliados-pro'); ?></p>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e('Cor Final do Gradiente', 'afiliados-pro'); ?></th>
+                        <th scope="row"><?php _e('Cor do Botão', 'afiliados-pro'); ?></th>
+                        <td>
+                            <input type="text" name="affiliate_pro_settings[button_color_start]" value="<?php echo esc_attr($settings['button_color_start']); ?>" class="color-picker" data-default-color="#6a82fb">
+                            <p class="description"><?php _e('Cor principal do botão (usada em todos os estilos)', 'afiliados-pro'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e('Cor do Texto do Botão', 'afiliados-pro'); ?></th>
+                        <td>
+                            <input type="text" name="affiliate_pro_settings[button_text_color]" value="<?php echo esc_attr($settings['button_text_color'] ?? '#ffffff'); ?>" class="color-picker" data-default-color="#ffffff">
+                            <p class="description"><?php _e('Cor do texto dentro do botão', 'afiliados-pro'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e('Cor Secundária do Gradiente', 'afiliados-pro'); ?></th>
                         <td>
                             <input type="text" name="affiliate_pro_settings[button_color_end]" value="<?php echo esc_attr($settings['button_color_end']); ?>" class="color-picker" data-default-color="#fc5c7d">
                             <p class="description"><?php _e('O botão terá um gradiente entre essas duas cores', 'afiliados-pro'); ?></p>

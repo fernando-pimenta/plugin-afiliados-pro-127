@@ -67,7 +67,8 @@ class Affiliate_Template_Builder {
     private function init_hooks() {
         add_action('admin_menu', array($this, 'register_template_builder_menu'));
         add_action('admin_post_affiliate_template_save', array($this, 'save_template_settings'));
-        add_action('wp_head', array($this, 'apply_template_styles'));
+        // v1.5.2: Removido apply_template_styles - agora usa Affiliate_Pro_Settings::get_dynamic_css()
+        // add_action('wp_head', array($this, 'apply_template_styles'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
     }
 
@@ -168,7 +169,7 @@ class Affiliate_Template_Builder {
                         <iframe id="affiliate-preview-frame"
                             src="about:blank"
                             data-preview-url="<?php echo esc_url(Affiliate_Preview_Handler::get_preview_url()); ?>"
-                            style="width:100%;height:800px;border:1px solid #ccc;border-radius:8px;background:#fff;">
+                            style="width:100%;height:500px;border:1px solid #ccc;border-radius:8px;background:#fff;">
                         </iframe>
                         <button id="generate-preview" class="button button-primary" type="button" style="margin-top:10px;">
                             <?php _e('Gerar Pré-visualização', 'afiliados-pro'); ?>
@@ -183,41 +184,69 @@ class Affiliate_Template_Builder {
                         <fieldset>
                             <legend><strong><?php _e('Identidade Visual', 'afiliados-pro'); ?></strong></legend>
 
-                            <p>
-                                <label for="highlight_color"><?php _e('Cor de Destaque', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="highlight_color" name="highlight_color" value="<?php echo esc_attr($settings['highlight_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Preços e elementos de destaque', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="card_background_color" name="card_background_color" value="<?php echo esc_attr($settings['card_background_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="card_background_color"><?php _e('Fundo do Card', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Cor de fundo dos cards', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
 
-                            <p>
-                                <label for="card_background_color"><?php _e('Fundo do Card', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="card_background_color" name="card_background_color" value="<?php echo esc_attr($settings['card_background_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Cor de fundo dos cards', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="card_image_background" name="card_image_background" value="<?php echo esc_attr($settings['card_image_background']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="card_image_background"><?php _e('Fundo da Área da Imagem', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Cor de fundo atrás da imagem do produto', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
 
-                            <p>
-                                <label for="text_color"><?php _e('Cor do Texto', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="text_color" name="text_color" value="<?php echo esc_attr($settings['text_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Texto nos cards', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="text_color" name="text_color" value="<?php echo esc_attr($settings['text_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="text_color"><?php _e('Cor do Texto', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Texto nos cards', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
 
-                            <p>
-                                <label for="primary_color"><?php _e('Cor Primária', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="primary_color" name="primary_color" value="<?php echo esc_attr($settings['primary_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Títulos e elementos destacados', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="price_color" name="price_color" value="<?php echo esc_attr($settings['price_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="price_color"><?php _e('Cor do Preço', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Cor do valor do produto', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
 
-                            <p>
-                                <label for="button_color"><?php _e('Cor do Botão', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="button_color" name="button_color" value="<?php echo esc_attr($settings['button_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Cor dos botões de ação', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="primary_color" name="primary_color" value="<?php echo esc_attr($settings['primary_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="primary_color"><?php _e('Cor Primária', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Títulos e elementos destacados', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
 
-                            <p>
-                                <label for="gradient_color"><?php _e('Cor Secundária (Gradiente)', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="gradient_color" name="gradient_color" value="<?php echo esc_attr($settings['gradient_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Para botões com gradiente', 'afiliados-pro'); ?></span>
-                            </p>
+                            <div class="color-field-compact">
+                                <input type="color" id="button_color" name="button_color" value="<?php echo esc_attr($settings['button_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="button_color"><?php _e('Cor do Botão', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Cor dos botões de ação', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
+
+                            <div class="color-field-compact">
+                                <input type="color" id="gradient_color" name="gradient_color" value="<?php echo esc_attr($settings['gradient_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="gradient_color"><?php _e('Cor Secundária (Gradiente)', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Para botões com gradiente', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
+
+                            <div class="color-field-compact">
+                                <input type="color" id="accent_color" name="accent_color" value="<?php echo esc_attr($settings['accent_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="accent_color"><?php _e('Cor de Destaque (Badge)', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Usada em badges, preços e destaques', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
                         </fieldset>
 
                         <!-- Group 2: Card Structure -->
@@ -447,6 +476,7 @@ class Affiliate_Template_Builder {
 
     /**
      * Salva as configurações do template
+     * v1.5.2: Migrado para usar affiliate_pro_settings para persistência correta
      */
     public function save_template_settings() {
         // Verificar permissões
@@ -459,74 +489,135 @@ class Affiliate_Template_Builder {
             wp_die(__('Erro de segurança. Tente novamente.', 'afiliados-pro'));
         }
 
-        // Sanitizar e validar dados
-        $settings = array();
+        // v1.5.2: Obter configurações atuais do sistema unificado
+        $current_settings = Affiliate_Pro_Settings::get_settings();
 
-        // Cores
-        $settings['primary_color'] = isset($_POST['primary_color']) ? sanitize_hex_color($_POST['primary_color']) : '#283593';
-        $settings['button_color'] = isset($_POST['button_color']) ? sanitize_hex_color($_POST['button_color']) : '#ffa70a';
-        $settings['gradient_color'] = isset($_POST['gradient_color']) ? sanitize_hex_color($_POST['gradient_color']) : '#025C95'; // v1.4.1
+        // Mapear campos do Template Builder para Affiliate_Pro_Settings
+        $settings = $current_settings;
 
-        // Visual identity colors (v1.4.5)
-        $settings['highlight_color'] = isset($_POST['highlight_color']) ? sanitize_hex_color($_POST['highlight_color']) : '#ff4081';
-        $settings['card_background_color'] = isset($_POST['card_background_color']) ? sanitize_hex_color($_POST['card_background_color']) : '#ffffff';
-        $settings['text_color'] = isset($_POST['text_color']) ? sanitize_hex_color($_POST['text_color']) : '#333333';
+        // Mapear cores
+        if (isset($_POST['primary_color'])) {
+            $settings['primary_color'] = sanitize_hex_color($_POST['primary_color']);
+        }
+        if (isset($_POST['card_background_color'])) {
+            $settings['card_bg_color'] = sanitize_hex_color($_POST['card_background_color']);
+        }
+        if (isset($_POST['card_image_background'])) {
+            $settings['card_image_background'] = sanitize_hex_color($_POST['card_image_background']);
+        }
+        if (isset($_POST['text_color'])) {
+            $settings['text_color'] = sanitize_hex_color($_POST['text_color']);
+        }
+        // v1.5.8: Salvar price_color (cor do preço)
+        if (isset($_POST['price_color'])) {
+            $settings['price_color'] = sanitize_hex_color($_POST['price_color']);
+        }
+        // v1.5.7: Corrigido - salvar button_color como button_color_start (não como accent_color)
+        if (isset($_POST['button_color'])) {
+            $settings['button_color_start'] = sanitize_hex_color($_POST['button_color']);
+        }
+        // v1.5.7: Salvar gradient_color como button_color_end
+        if (isset($_POST['gradient_color'])) {
+            $settings['button_color_end'] = sanitize_hex_color($_POST['gradient_color']);
+        }
+        // v1.5.7: Salvar accent_color (cor de destaque/badge)
+        if (isset($_POST['accent_color'])) {
+            $settings['accent_color'] = sanitize_hex_color($_POST['accent_color']);
+        }
 
-        // Estilos
-        $allowed_card_styles = array('modern', 'classic', 'minimal', 'cards');
-        $settings['card_style'] = isset($_POST['card_style']) && in_array($_POST['card_style'], $allowed_card_styles)
-            ? sanitize_text_field($_POST['card_style'])
-            : 'modern';
+        // Mapear bordas (converter de texto para número)
+        if (isset($_POST['border_radius'])) {
+            $radius_map = array(
+                'none' => 0,
+                'small' => 4,
+                'medium' => 12,
+                'large' => 20,
+            );
+            $border_key = sanitize_text_field($_POST['border_radius']);
+            if (isset($radius_map[$border_key])) {
+                $settings['card_border_radius'] = $radius_map[$border_key];
+            }
+        }
 
-        $allowed_button_styles = array('filled', 'outline', 'gradient');
-        $settings['button_style'] = isset($_POST['button_style']) && in_array($_POST['button_style'], $allowed_button_styles)
-            ? sanitize_text_field($_POST['button_style'])
-            : 'filled';
+        // Mapear sombra
+        if (isset($_POST['shadow_card'])) {
+            $settings['card_shadow'] = boolval($_POST['shadow_card']);
+        } else {
+            $settings['card_shadow'] = false;
+        }
+        if (isset($_POST['shadow_button'])) {
+            $settings['shadow_button'] = boolval($_POST['shadow_button']);
+        } else {
+            $settings['shadow_button'] = false;
+        }
+        if (isset($_POST['force_css'])) {
+            $settings['force_css'] = boolval($_POST['force_css']);
+        } else {
+            $settings['force_css'] = false;
+        }
 
-        // Borda
-        $allowed_border_radius = array('none', 'small', 'medium', 'large');
-        $settings['border_radius'] = isset($_POST['border_radius']) && in_array($_POST['border_radius'], $allowed_border_radius)
-            ? sanitize_text_field($_POST['border_radius'])
-            : 'medium';
+        // Mapear layout
+        if (isset($_POST['layout_default'])) {
+            $allowed_layouts = array('grid', 'list');
+            $layout = sanitize_text_field($_POST['layout_default']);
+            if (in_array($layout, $allowed_layouts)) {
+                $settings['default_layout'] = $layout;
+            }
+        }
 
-        // Sombra separada para card e botão (v1.4.0)
-        $settings['shadow_card'] = isset($_POST['shadow_card']) ? boolval($_POST['shadow_card']) : false;
-        $settings['shadow_button'] = isset($_POST['shadow_button']) ? boolval($_POST['shadow_button']) : false;
+        // Mapear colunas
+        if (isset($_POST['columns'])) {
+            $columns = absint($_POST['columns']);
+            $settings['default_columns'] = max(2, min(4, $columns));
+        }
 
-        // Layout
-        $allowed_layouts = array('grid', 'list', 'carousel', 'masonry');
-        $settings['layout_default'] = isset($_POST['layout_default']) && in_array($_POST['layout_default'], $allowed_layouts)
-            ? sanitize_text_field($_POST['layout_default'])
-            : 'grid';
+        // Mapear gap
+        if (isset($_POST['card_gap'])) {
+            $card_gap = absint($_POST['card_gap']);
+            $settings['card_gap'] = max(0, min(100, $card_gap));
+        }
 
-        // Colunas
-        $columns = isset($_POST['columns']) ? absint($_POST['columns']) : 3;
-        $settings['columns'] = max(2, min(4, $columns)); // Entre 2 e 4
+        // Mapear configurações funcionais
+        if (isset($_POST['button_text'])) {
+            $settings['button_text'] = sanitize_text_field($_POST['button_text']);
+        }
+        if (isset($_POST['clickable_title'])) {
+            $settings['title_clickable'] = boolval($_POST['clickable_title']);
+        } else {
+            $settings['title_clickable'] = false;
+        }
+        if (isset($_POST['open_in_new_tab'])) {
+            $settings['open_in_new_tab'] = boolval($_POST['open_in_new_tab']);
+        } else {
+            $settings['open_in_new_tab'] = false;
+        }
+        if (isset($_POST['show_store_badge'])) {
+            $settings['show_store_badge'] = boolval($_POST['show_store_badge']);
+        } else {
+            $settings['show_store_badge'] = false;
+        }
+        if (isset($_POST['show_price'])) {
+            $settings['show_price'] = boolval($_POST['show_price']);
+        } else {
+            $settings['show_price'] = false;
+        }
+        if (isset($_POST['custom_css'])) {
+            $settings['custom_css'] = wp_strip_all_tags($_POST['custom_css']);
+        }
 
-        // Gap entre cards (v1.4.2)
-        $card_gap = isset($_POST['card_gap']) ? absint($_POST['card_gap']) : 20;
-        $settings['card_gap'] = max(0, min(100, $card_gap)); // Entre 0 e 100
+        // Mapear formato de preço
+        if (isset($_POST['price_format'])) {
+            $settings['price_format'] = sanitize_text_field($_POST['price_format']);
+        }
+        if (isset($_POST['price_text_empty'])) {
+            $settings['price_placeholder'] = sanitize_text_field($_POST['price_text_empty']);
+        }
 
-        // Forçar CSS
-        $settings['force_css'] = isset($_POST['force_css']) ? boolval($_POST['force_css']) : false;
-
-        // Functional settings (v1.4.4 - Settings tab)
-        $settings['button_text'] = isset($_POST['button_text']) ? sanitize_text_field($_POST['button_text']) : 'Ver Produto';
-        $settings['show_price'] = isset($_POST['show_price']) ? boolval($_POST['show_price']) : true;
-        $settings['clickable_title'] = isset($_POST['clickable_title']) ? boolval($_POST['clickable_title']) : false;
-        $settings['open_in_new_tab'] = isset($_POST['open_in_new_tab']) ? boolval($_POST['open_in_new_tab']) : false; // v1.4.5
-        $settings['show_store_badge'] = isset($_POST['show_store_badge']) ? boolval($_POST['show_store_badge']) : false;
-        $settings['custom_css'] = isset($_POST['custom_css']) ? wp_strip_all_tags($_POST['custom_css']) : '';
-
-        // Price display settings (v1.4.5)
-        $settings['price_format'] = isset($_POST['price_format']) ? sanitize_text_field($_POST['price_format']) : 'R$ {valor}';
-        $settings['price_text_empty'] = isset($_POST['price_text_empty']) ? sanitize_text_field($_POST['price_text_empty']) : 'Consulte o preço';
-
-        // Salvar no banco de dados
-        update_option($this->option_name, $settings);
+        // v1.5.2: Salvar no sistema unificado affiliate_pro_settings
+        update_option('affiliate_pro_settings', $settings);
 
         // Registrar log (se debug ativo)
-        affiliate_pro_log('Template Builder: Configurações salvas com sucesso');
+        affiliate_pro_log('Template Builder: Configurações salvas com sucesso em affiliate_pro_settings');
 
         // Redirecionar com mensagem de sucesso
         wp_redirect(add_query_arg(
@@ -538,41 +629,97 @@ class Affiliate_Template_Builder {
 
     /**
      * Retorna as configurações do template (mescladas com defaults)
+     * v1.5.2: Sincronizado com Affiliate_Pro_Settings para persistência correta
+     * v1.5.3: Adiciona mapeamento reverso para compatibilidade com formulários antigos
      *
      * @return array
      */
     public static function get_template_settings() {
-        $defaults = array(
-            // Appearance settings
-            'primary_color' => '#283593',
-            'button_color' => '#ffa70a',
-            'gradient_color' => '#025C95', // v1.4.1
-            'highlight_color' => '#ff4081', // v1.4.5
-            'card_background_color' => '#ffffff', // v1.4.5
-            'text_color' => '#333333', // v1.4.5
-            'card_style' => 'modern',
-            'button_style' => 'filled',
-            'border_radius' => 'medium',
-            'shadow_card' => true, // v1.4.0
-            'shadow_button' => true, // v1.4.0
-            'layout_default' => 'grid',
-            'columns' => 3,
-            'card_gap' => 20, // v1.4.2
-            'force_css' => false,
-            // Functional settings (v1.4.4)
-            'button_text' => 'Ver Produto',
-            'show_price' => true,
-            'clickable_title' => false,
-            'open_in_new_tab' => false, // v1.4.5
-            'show_store_badge' => false,
-            'custom_css' => '',
-            // Price display settings (v1.4.5)
-            'price_format' => 'R$ {valor}',
-            'price_text_empty' => 'Consulte o preço',
-        );
+        // v1.5.2: Agora usa as configurações unificadas do Affiliate_Pro_Settings
+        // Isso garante que o front-end e o admin sempre estejam sincronizados
+        $settings = Affiliate_Pro_Settings::get_settings();
 
-        $settings = get_option('affiliate_template_settings', array());
-        return wp_parse_args($settings, $defaults);
+        // v1.5.3: Mapear chaves unificadas de volta para chaves antigas do Template Builder
+        // Isso previne "Undefined array key" warnings nos formulários antigos
+
+        // Mapear accent_color -> highlight_color (para exibição no form)
+        if (!isset($settings['highlight_color']) && isset($settings['accent_color'])) {
+            $settings['highlight_color'] = $settings['accent_color'];
+        }
+
+        // Mapear card_bg_color -> card_background_color
+        if (!isset($settings['card_background_color']) && isset($settings['card_bg_color'])) {
+            $settings['card_background_color'] = $settings['card_bg_color'];
+        }
+
+        // Mapear button_color_start -> button_color
+        if (!isset($settings['button_color']) && isset($settings['button_color_start'])) {
+            $settings['button_color'] = $settings['button_color_start'];
+        } elseif (!isset($settings['button_color']) && isset($settings['accent_color'])) {
+            $settings['button_color'] = $settings['accent_color'];
+        }
+
+        // Mapear button_color_end -> gradient_color
+        if (!isset($settings['gradient_color']) && isset($settings['button_color_end'])) {
+            $settings['gradient_color'] = $settings['button_color_end'];
+        }
+
+        // Mapear card_border_radius (número) -> border_radius (texto)
+        if (!isset($settings['border_radius']) && isset($settings['card_border_radius'])) {
+            $radius = intval($settings['card_border_radius']);
+            if ($radius === 0) {
+                $settings['border_radius'] = 'none';
+            } elseif ($radius <= 4) {
+                $settings['border_radius'] = 'small';
+            } elseif ($radius <= 12) {
+                $settings['border_radius'] = 'medium';
+            } else {
+                $settings['border_radius'] = 'large';
+            }
+        }
+
+        // Mapear card_shadow -> shadow_card
+        if (!isset($settings['shadow_card']) && isset($settings['card_shadow'])) {
+            $settings['shadow_card'] = $settings['card_shadow'];
+        }
+
+        // Mapear default_layout -> layout_default
+        if (!isset($settings['layout_default']) && isset($settings['default_layout'])) {
+            $settings['layout_default'] = $settings['default_layout'];
+        }
+
+        // Mapear default_columns -> columns
+        if (!isset($settings['columns']) && isset($settings['default_columns'])) {
+            $settings['columns'] = $settings['default_columns'];
+        }
+
+        // Mapear title_clickable -> clickable_title
+        if (!isset($settings['clickable_title']) && isset($settings['title_clickable'])) {
+            $settings['clickable_title'] = $settings['title_clickable'];
+        }
+
+        // Mapear price_placeholder -> price_text_empty
+        if (!isset($settings['price_text_empty']) && isset($settings['price_placeholder'])) {
+            $settings['price_text_empty'] = $settings['price_placeholder'];
+        }
+
+        // v1.5.4: Mapear valores antigos de button_style
+        if (isset($settings['button_style'])) {
+            if ($settings['button_style'] === 'filled') {
+                $settings['button_style'] = 'flat';
+            }
+        }
+
+        // Defaults para campos que não existem no sistema unificado
+        $settings = wp_parse_args($settings, array(
+            'card_style' => 'modern',
+            'button_style' => 'gradient',
+            'shadow_button' => false,
+            'force_css' => false,
+            'show_price' => true,
+        ));
+
+        return $settings;
     }
 
     /**
@@ -626,12 +773,13 @@ class Affiliate_Template_Builder {
 
         // Gerar CSS dinâmico
         $css = "
-        /* Afiliados Pro - Template Builder v1.4.0 */
+        /* Afiliados Pro - Template Builder v1.5.8 */
 
         :root {
             --affiliate-template-primary: {$settings['primary_color']};
             --affiliate-template-button: {$settings['button_color']};
             --affiliate-template-radius: {$border_radius};
+            --affiliate-price-color: {$settings['price_color']};
         }
 
         /* Refinamento Visual - Cards de Produtos */

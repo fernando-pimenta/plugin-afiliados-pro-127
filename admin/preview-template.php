@@ -2,10 +2,10 @@
 /**
  * Afiliados Pro - Preview Template
  *
- * Completely standalone preview template with v1.4.5 enhancements
+ * Completely standalone preview template with v1.5.8 unified color system
  *
  * @package AfiliadorsPro
- * @version 1.4.5
+ * @version 1.5.8.1
  */
 
 if (!defined('ABSPATH')) {
@@ -17,51 +17,54 @@ if (!isset($settings)) {
     $settings = Affiliate_Template_Builder::get_template_settings();
 }
 
-// Map border radius values
-$radius_map = [
-    'none' => '0px',
-    'small' => '4px',
-    'medium' => '8px',
-    'large' => '16px',
-];
+// v1.5.3: Fallbacks para compatibilidade com chaves antigas
+if (!isset($settings['accent_color']) && isset($settings['highlight_color'])) {
+    $settings['accent_color'] = $settings['highlight_color'];
+}
+if (!isset($settings['card_bg_color']) && isset($settings['card_background_color'])) {
+    $settings['card_bg_color'] = $settings['card_background_color'];
+}
+if (!isset($settings['price_placeholder']) && isset($settings['price_text_empty'])) {
+    $settings['price_placeholder'] = $settings['price_text_empty'];
+}
 
-$border_radius = isset($radius_map[$settings['border_radius']])
-    ? $radius_map[$settings['border_radius']]
-    : '8px';
+// Extract settings with default values (using null coalescing operator) - v1.5.6
+$primary_color = $settings['primary_color'] ?? '#283593';
+$secondary_color = $settings['secondary_color'] ?? '#3949ab';
+$button_color = $settings['button_color_start'] ?? '#6a82fb';
+$gradient_color = $settings['button_color_end'] ?? '#fc5c7d';
+$button_text_color = $settings['button_text_color'] ?? '#ffffff';
+$accent_color = $settings['accent_color'] ?? '#ffa70a';
+$price_color = $settings['price_color'] ?? '#111111';
+$card_bg_color = $settings['card_bg_color'] ?? '#ffffff';
+$text_color = $settings['text_color'] ?? '#1a1a1a';
+$card_image_background = $settings['card_image_background'] ?? '#f9f9f9';
+$card_border_radius = $settings['card_border_radius'] ?? 12;
+$card_shadow = $settings['card_shadow'] ?? true;
+$card_gap = $settings['card_gap'] ?? 20;
 
-// Gradient secondary color
-$gradient_secondary = !empty($settings['gradient_color'])
-    ? $settings['gradient_color']
-    : $settings['primary_color'];
+// Functional settings
+$button_text = $settings['button_text'] ?? 'Ver oferta';
+$title_clickable = $settings['title_clickable'] ?? true;
+$open_in_new_tab = $settings['open_in_new_tab'] ?? true;
+$show_store_badge = $settings['show_store_badge'] ?? true;
+$price_format = $settings['price_format'] ?? 'R$ {valor}';
+$price_placeholder = $settings['price_placeholder'] ?? 'Consulte o preço';
 
-// Determine if CSS should be forced
-$important = !empty($settings['force_css']) ? ' !important' : '';
+// Legacy settings (for old installations)
+$button_style = $settings['button_style'] ?? 'gradient';
+$show_price = $settings['show_price'] ?? true;
 
-// Card shadow
-$use_card_shadow = !empty($settings['shadow_card']);
+// Convert border radius to px
+$border_radius = $card_border_radius . 'px';
 
-// Button shadow
-$use_button_shadow = !empty($settings['shadow_button']);
-
-// Gap between cards
-$card_gap = isset($settings['card_gap']) ? absint($settings['card_gap']) : 20;
-
-// Functional settings (v1.4.4)
-$button_text = !empty($settings['button_text']) ? $settings['button_text'] : 'Ver Produto';
-$show_price = !empty($settings['show_price']);
-$clickable_title = !empty($settings['clickable_title']);
-$show_store_badge = !empty($settings['show_store_badge']);
-
-// New settings (v1.4.5)
-$open_in_new_tab = !empty($settings['open_in_new_tab']);
+// Link target
 $link_target = $open_in_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
-$highlight_color = $settings['highlight_color'];
-$card_background_color = $settings['card_background_color'];
-$text_color = $settings['text_color'];
-$price_format = $settings['price_format'];
-$price_text_empty = $settings['price_text_empty'];
 
-// Local placeholder image (v1.4.5)
+// Important flag (legacy)
+$important = '';
+
+// Local placeholder image
 $placeholder_img = AFFILIATE_PRO_PLUGIN_URL . 'assets/img/placeholder.svg';
 ?>
 <!DOCTYPE html>
@@ -69,7 +72,7 @@ $placeholder_img = AFFILIATE_PRO_PLUGIN_URL . 'assets/img/placeholder.svg';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preview - Afiliados Pro v1.4.5</title>
+<title>Preview - Afiliados Pro v1.5.8.1</title>
 <style>
 /* Reset básico */
 * {
@@ -96,10 +99,10 @@ body {
     font-weight: 500;
 }
 
-/* Container dos cards (v1.4.5 - dynamic gap) */
+/* Container dos cards */
 .preview-products-container {
     display: flex;
-    gap: <?php echo $card_gap; ?>px;
+    gap: <?php echo absint($card_gap); ?>px;
     flex-wrap: wrap;
     max-width: 900px;
     margin: 0 auto;
@@ -107,147 +110,154 @@ body {
 
 /* Product Card */
 .affiliate-product-card {
-    flex: 1 1 calc(50% - <?php echo $card_gap / 2; ?>px);
+    flex: 1 1 calc(50% - <?php echo absint($card_gap) / 2; ?>px);
     min-width: 280px;
-    background: <?php echo esc_attr($card_background_color); ?><?php echo $important; ?>;
-    color: <?php echo esc_attr($text_color); ?><?php echo $important; ?>;
-    border: 1px solid #e0e0e0<?php echo $important; ?>;
-    border-radius: <?php echo esc_attr($border_radius); ?><?php echo $important; ?>;
-    padding: 16px<?php echo $important; ?>;
-    transition: all 0.3s ease<?php echo $important; ?>;
-    position: relative<?php echo $important; ?>;
-
-    <?php
-    // Apply card shadow
-    if ($use_card_shadow) {
-        echo "box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1){$important};";
-    } else {
-        echo "box-shadow: none{$important};";
-    }
-    ?>
+    background: <?php echo esc_attr($card_bg_color); ?>;
+    color: <?php echo esc_attr($text_color); ?>;
+    border: 1px solid #e0e0e0;
+    border-radius: <?php echo esc_attr($border_radius); ?>;
+    padding: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+    <?php if ($card_shadow): ?>
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    <?php else: ?>
+    box-shadow: none;
+    <?php endif; ?>
 }
 
 .affiliate-product-card:hover {
-    transform: translateY(-3px)<?php echo $important; ?>;
-    <?php
-    if ($use_card_shadow) {
-        echo "box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15){$important};";
-    }
-    ?>
+    transform: translateY(-3px);
+    <?php if ($card_shadow): ?>
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    <?php endif; ?>
 }
 
-/* Store Badge (v1.4.4) */
+/* Store Badge */
 .store-badge {
-    position: absolute<?php echo $important; ?>;
-    top: 10px<?php echo $important; ?>;
-    right: 10px<?php echo $important; ?>;
-    background: <?php echo esc_attr($highlight_color); ?><?php echo $important; ?>;
-    color: #fff<?php echo $important; ?>;
-    padding: 4px 10px<?php echo $important; ?>;
-    border-radius: 12px<?php echo $important; ?>;
-    font-size: 0.75em<?php echo $important; ?>;
-    font-weight: 600<?php echo $important; ?>;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: <?php echo esc_attr($accent_color); ?>;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 600;
 }
 
-/* Product Image */
+/* Product Image - v1.5.6 */
+.affiliate-product-card .product-image {
+    background: <?php echo esc_attr($card_image_background); ?>;
+    border-radius: <?php echo esc_attr($border_radius); ?>;
+    padding: 10px;
+    margin-bottom: 12px;
+}
+
 .affiliate-product-card img {
-    width: 100%<?php echo $important; ?>;
-    height: auto<?php echo $important; ?>;
-    border-radius: <?php echo esc_attr($border_radius); ?><?php echo $important; ?>;
-    margin-bottom: 12px<?php echo $important; ?>;
-    display: block<?php echo $important; ?>;
+    width: 100%;
+    height: auto;
+    border-radius: <?php echo esc_attr($border_radius); ?>;
+    display: block;
 }
 
 /* Product Title */
 .affiliate-title {
-    color: <?php echo esc_attr($settings['primary_color']); ?><?php echo $important; ?>;
-    font-size: 1.2em<?php echo $important; ?>;
-    font-weight: 600<?php echo $important; ?>;
-    margin-bottom: 10px<?php echo $important; ?>;
-    line-height: 1.4<?php echo $important; ?>;
+    color: <?php echo esc_attr($primary_color); ?>;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.4;
 }
 
 .affiliate-title a {
-    color: <?php echo esc_attr($settings['primary_color']); ?><?php echo $important; ?>;
-    text-decoration: none<?php echo $important; ?>;
+    color: <?php echo esc_attr($primary_color); ?>;
+    text-decoration: none;
 }
 
 .affiliate-title a:hover {
-    text-decoration: underline<?php echo $important; ?>;
+    text-decoration: underline;
 }
 
 /* Product Description */
 .affiliate-description {
-    color: <?php echo esc_attr($text_color); ?><?php echo $important; ?>;
-    font-size: 0.9em<?php echo $important; ?>;
-    line-height: 1.5<?php echo $important; ?>;
-    margin-bottom: 12px<?php echo $important; ?>;
+    color: <?php echo esc_attr($text_color); ?>;
+    font-size: 0.9em;
+    line-height: 1.5;
+    margin-bottom: 12px;
 }
 
-/* Product Price (v1.4.5) */
+/* Product Price - v1.5.8.1 */
 .affiliate-price {
-    font-size: 1.4em<?php echo $important; ?>;
-    font-weight: 700<?php echo $important; ?>;
-    color: <?php echo esc_attr($highlight_color); ?><?php echo $important; ?>;
-    margin-bottom: 12px<?php echo $important; ?>;
+    font-size: 1.4em;
+    font-weight: 700;
+    color: <?php echo esc_attr($price_color); ?>;
+    margin-bottom: 12px;
 }
 
-/* Price Empty Text (v1.4.5) */
+/* Price Empty Text */
 .price-empty {
-    font-size: 0.95em<?php echo $important; ?>;
-    font-style: italic<?php echo $important; ?>;
-    color: #888<?php echo $important; ?>;
-    margin-bottom: 12px<?php echo $important; ?>;
+    font-size: 0.95em;
+    font-style: italic;
+    color: #888;
+    margin-bottom: 12px;
 }
 
-/* Product Button */
+/* Product Button - Base (v1.5.5) */
 .affiliate-btn {
-    display: inline-block<?php echo $important; ?>;
-    margin-top: 10px<?php echo $important; ?>;
-    padding: 10px 18px<?php echo $important; ?>;
-    border-radius: <?php echo esc_attr($border_radius); ?><?php echo $important; ?>;
-    cursor: pointer<?php echo $important; ?>;
-    transition: all 0.3s ease<?php echo $important; ?>;
-    text-decoration: none<?php echo $important; ?>;
-    font-weight: 500<?php echo $important; ?>;
-    font-size: 0.95em<?php echo $important; ?>;
-    border: none<?php echo $important; ?>;
-
-    <?php
-    // Button style based on settings
-    if ($settings['button_style'] === 'filled') {
-        echo "background: {$settings['button_color']}{$important};";
-        echo "color: #fff{$important};";
-        echo "border: 2px solid {$settings['button_color']}{$important};";
-    } elseif ($settings['button_style'] === 'outline') {
-        echo "background: transparent{$important};";
-        echo "color: {$settings['button_color']}{$important};";
-        echo "border: 2px solid {$settings['button_color']}{$important};";
-    } elseif ($settings['button_style'] === 'gradient') {
-        echo "background: linear-gradient(135deg, {$settings['button_color']}, {$gradient_secondary}){$important};";
-        echo "color: #fff{$important};";
-        echo "border: none{$important};";
-    }
-
-    // Apply button shadow
-    if ($use_button_shadow) {
-        echo "box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15){$important};";
-    } else {
-        echo "box-shadow: none{$important};";
-    }
-    ?>
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 18px;
+    border-radius: <?php echo esc_attr($border_radius); ?>;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95em;
+    border: none;
 }
 
-.affiliate-btn:hover {
-    opacity: 0.9<?php echo $important; ?>;
-    transform: scale(1.02)<?php echo $important; ?>;
+/* Estilo: Preenchido (Flat) - v1.5.6 */
+.affiliate-btn-flat {
+    background: var(--button-color-start, <?php echo esc_attr($button_color); ?>);
+    color: var(--button-text-color, <?php echo esc_attr($button_text_color); ?>);
+    border: 2px solid var(--button-color-start, <?php echo esc_attr($button_color); ?>);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
 
-    <?php
-    // Enhanced shadow on hover
-    if ($use_button_shadow) {
-        echo "box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2){$important};";
-    }
-    ?>
+.affiliate-btn-flat:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo: Contorno (Outline) - v1.5.6 */
+.affiliate-btn-outline {
+    background: transparent;
+    color: var(--button-color-start, <?php echo esc_attr($button_color); ?>);
+    border: 2px solid var(--button-color-start, <?php echo esc_attr($button_color); ?>);
+    box-shadow: none;
+}
+
+.affiliate-btn-outline:hover {
+    background: var(--button-color-start, <?php echo esc_attr($button_color); ?>);
+    color: var(--button-text-color, <?php echo esc_attr($button_text_color); ?>);
+    transform: scale(1.02);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo: Gradiente - v1.5.6 */
+.affiliate-btn-gradient {
+    background: linear-gradient(135deg, var(--button-color-start, <?php echo esc_attr($button_color); ?>), var(--button-color-end, <?php echo esc_attr($gradient_color); ?>));
+    color: var(--button-text-color, <?php echo esc_attr($button_text_color); ?>);
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.affiliate-btn-gradient:hover {
+    filter: brightness(1.1);
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Responsive */
@@ -257,15 +267,15 @@ body {
     }
 }
 
-/* Custom CSS (v1.4.4) */
+/* Custom CSS */
 <?php if (!empty($settings['custom_css'])): ?>
-<?php echo $settings['custom_css']; ?>
+<?php echo wp_strip_all_tags($settings['custom_css']); ?>
 <?php endif; ?>
 </style>
 </head>
 <body>
     <div class="preview-header">
-        📱 Pré-visualização ao Vivo - v1.4.5 (Otimizado com Cache)
+        📱 Pré-visualização ao Vivo - v1.5.8.1 (Cor do preço corrigida)
     </div>
 
     <div class="preview-products-container">
@@ -277,9 +287,11 @@ body {
                     </div>
                 <?php endif; ?>
 
-                <img src="<?php echo esc_url($placeholder_img); ?>" alt="Produto Exemplo <?php echo $i; ?>">
+                <div class="product-image">
+                    <img src="<?php echo esc_url($placeholder_img); ?>" alt="Produto Exemplo <?php echo $i; ?>">
+                </div>
 
-                <?php if ($clickable_title): ?>
+                <?php if ($title_clickable): ?>
                     <h3 class="affiliate-title">
                         <a href="#"<?php echo $link_target; ?>
                            data-aff-id="preview-<?php echo $i; ?>"
@@ -306,11 +318,12 @@ body {
                     </p>
                 <?php else: ?>
                     <p class="price-empty">
-                        <?php echo esc_html($price_text_empty); ?>
+                        <?php echo esc_html($price_placeholder); ?>
                     </p>
                 <?php endif; ?>
 
-                <button class="affiliate-btn"
+                <button class="affiliate-btn affiliate-btn-<?php echo esc_attr($button_style); ?>"
+                        style="--button-color-start: <?php echo esc_attr($button_color); ?>; --button-color-end: <?php echo esc_attr($gradient_color); ?>; --button-text-color: <?php echo esc_attr($button_text_color); ?>;"
                         data-aff-id="preview-<?php echo $i; ?>"
                         data-source="button">
                     <?php echo esc_html($button_text); ?>

@@ -217,9 +217,36 @@ class Affiliate_Pro_Shortcodes {
         // Texto do botão
         $button_text = !empty($link) ? $settings['button_text'] : $settings['button_text_disabled'];
 
+        // v1.5.5: Determinar classe do botão baseada no estilo
+        $button_style = $settings['button_style'] ?? 'gradient';
+        $button_class = 'product-button affiliate-btn-' . esc_attr($button_style);
+
+        // v1.5.6: Variáveis CSS inline para cores do botão
+        $button_color_start = $settings['button_color_start'] ?? '#6a82fb';
+        $button_color_end = $settings['button_color_end'] ?? '#fc5c7d';
+        $button_text_color = $settings['button_text_color'] ?? '#ffffff';
+        $price_color = $settings['price_color'] ?? '#111111';
+        $card_image_background = $settings['card_image_background'] ?? '#f9f9f9';
+        $card_bg_color = $settings['card_bg_color'] ?? '#ffffff';
+
+        // v1.5.8.3: Variáveis CSS para card e botão
+        $card_inline_style = sprintf(
+            'style="--affiliate-card-bg: %s; --affiliate-image-bg: %s; --affiliate-price-color: %s;"',
+            esc_attr($card_bg_color),
+            esc_attr($card_image_background),
+            esc_attr($price_color)
+        );
+
+        $button_inline_style = sprintf(
+            'style="--button-color-start: %s; --button-color-end: %s; --button-text-color: %s;"',
+            esc_attr($button_color_start),
+            esc_attr($button_color_end),
+            esc_attr($button_text_color)
+        );
+
         ob_start();
         ?>
-        <div class="affiliate-product-card">
+        <div class="affiliate-product-card" <?php echo $card_inline_style; ?>>
             <?php if ($image) : ?>
                 <div class="product-image">
                     <?php echo $image; ?>
@@ -243,21 +270,24 @@ class Affiliate_Pro_Shortcodes {
                     </h3>
                 <?php endif; ?>
 
-                <p class="product-price"><?php echo esc_html($price_formatted); ?></p>
-
                 <?php if ($excerpt) : ?>
                     <p class="product-excerpt"><?php echo esc_html($excerpt); ?></p>
                 <?php endif; ?>
 
+                <?php if (!empty($settings['show_price'])) : ?>
+                    <p class="product-price"><?php echo esc_html($price_formatted); ?></p>
+                <?php endif; ?>
+
                 <?php if (!empty($link)) : ?>
                     <a href="<?php echo esc_url($link); ?>"
-                       class="product-button"<?php echo $link_attrs; ?>
+                       class="<?php echo esc_attr($button_class); ?>"<?php echo $link_attrs; ?>
+                       <?php echo $button_inline_style; ?>
                        data-aff-id="<?php echo esc_attr($post->ID); ?>"
                        data-source="button">
                         <?php echo esc_html($button_text); ?>
                     </a>
                 <?php else : ?>
-                    <span class="product-button product-button-disabled">
+                    <span class="<?php echo esc_attr($button_class); ?> product-button-disabled" <?php echo $button_inline_style; ?>>
                         <?php echo esc_html($button_text); ?>
                     </span>
                 <?php endif; ?>

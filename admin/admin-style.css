@@ -1,6 +1,6 @@
 /**
  * Admin Styles - Plugin Afiliados Pro
- * @version 1.2
+ * @version 1.5.1
  */
 
 /* =============================================================================
@@ -23,8 +23,14 @@
 .affiliate-settings-section {
     margin-bottom: 20px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 10px;
     background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: background 0.2s ease;
+}
+
+.affiliate-settings-section:hover {
+    background: #f9faff;
 }
 
 .affiliate-settings-section .section-title {
@@ -39,6 +45,7 @@
     gap: 10px;
     font-size: 16px;
     transition: background 0.2s;
+    border-radius: 10px 10px 0 0;
 }
 
 .affiliate-settings-section .section-title:hover {
@@ -245,6 +252,92 @@
     color: #666;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* =============================================================================
+   v1.5.1 - Visual Polish
+   ========================================================================== */
+
+/* Panels with hover */
+.affiliate-pro-settings-panel {
+    margin-bottom: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: background 0.2s ease;
+}
+
+.affiliate-pro-settings-panel:hover {
+    background: #f9faff;
+}
+
+/* Stats Table Improvements */
+.widefat.striped tr:nth-child(even) {
+    background: #f9f9fb;
+}
+
+.widefat.striped tbody tr:hover {
+    background: #f1f5ff;
+}
+
+.widefat tbody td {
+    padding: 10px 8px;
+}
+
+/* Source Tags */
+.affiliate-pro-source-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: #eef2ff;
+    color: #283593;
+    font-size: 12px;
+    transition: all 0.15s ease-in-out;
+}
+
+.affiliate-pro-source-tag:hover {
+    background: #e0e7ff;
+}
+
+/* Preview Cards */
+.affiliate-pro-preview-card,
+.affiliate-product-card {
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: all 0.15s ease-in-out;
+}
+
+.affiliate-pro-preview-card:hover,
+.affiliate-product-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* Button Improvements */
+.button-primary {
+    transition: all 0.15s ease-in-out;
+}
+
+.button-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Form Table Styling */
+.form-table th {
+    padding: 15px 10px 15px 0;
+}
+
+.form-table td {
+    padding: 15px 10px;
+}
+
+.form-table .description {
+    color: #666;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 5px;
 }
 
 /* =============================================================================

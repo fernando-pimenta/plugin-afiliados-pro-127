@@ -79,13 +79,19 @@ class Affiliate_Pro_Settings {
         $sanitized['accent_color'] = isset($input['accent_color']) ? sanitize_hex_color($input['accent_color']) : '#ffa70a';
         $sanitized['card_bg_color'] = isset($input['card_bg_color']) ? sanitize_hex_color($input['card_bg_color']) : '#ffffff';
         $sanitized['text_color'] = isset($input['text_color']) ? sanitize_hex_color($input['text_color']) : '#1a1a1a';
+        $sanitized['price_color'] = isset($input['price_color']) ? sanitize_hex_color($input['price_color']) : '#111111';
+        $sanitized['card_image_background'] = isset($input['card_image_background']) ? sanitize_hex_color($input['card_image_background']) : '#f9f9f9';
         $sanitized['card_border_radius'] = isset($input['card_border_radius']) ? absint($input['card_border_radius']) : 12;
         $sanitized['card_shadow'] = isset($input['card_shadow']) ? (bool) $input['card_shadow'] : true;
+        $sanitized['shadow_button'] = isset($input['shadow_button']) ? (bool) $input['shadow_button'] : false;
+        $sanitized['force_css'] = isset($input['force_css']) ? (bool) $input['force_css'] : false;
 
         // Seção 2 - Botão de Ação
         $sanitized['button_text'] = isset($input['button_text']) ? sanitize_text_field($input['button_text']) : __('Ver oferta', 'afiliados-pro');
+        $sanitized['button_style'] = isset($input['button_style']) && in_array($input['button_style'], array('gradient', 'flat', 'outline')) ? $input['button_style'] : 'gradient';
         $sanitized['button_color_start'] = isset($input['button_color_start']) ? sanitize_hex_color($input['button_color_start']) : '#6a82fb';
         $sanitized['button_color_end'] = isset($input['button_color_end']) ? sanitize_hex_color($input['button_color_end']) : '#fc5c7d';
+        $sanitized['button_text_color'] = isset($input['button_text_color']) ? sanitize_hex_color($input['button_text_color']) : '#ffffff';
         $sanitized['button_text_disabled'] = isset($input['button_text_disabled']) ? sanitize_text_field($input['button_text_disabled']) : __('Indisponível', 'afiliados-pro');
 
         // Seção 3 - Layout da Grade
@@ -101,6 +107,7 @@ class Affiliate_Pro_Settings {
         $sanitized['title_clickable'] = isset($input['title_clickable']) ? (bool) $input['title_clickable'] : true;
         $sanitized['open_in_new_tab'] = isset($input['open_in_new_tab']) ? (bool) $input['open_in_new_tab'] : true;
         $sanitized['show_store_badge'] = isset($input['show_store_badge']) ? (bool) $input['show_store_badge'] : true;
+        $sanitized['show_price'] = isset($input['show_price']) ? (bool) $input['show_price'] : true;
         $sanitized['custom_css'] = isset($input['custom_css']) ? wp_strip_all_tags($input['custom_css']) : '';
 
         return $sanitized;
@@ -119,13 +126,19 @@ class Affiliate_Pro_Settings {
             'accent_color' => '#ffa70a',
             'card_bg_color' => '#ffffff',
             'text_color' => '#1a1a1a',
+            'price_color' => '#111111',
+            'card_image_background' => '#f9f9f9',
             'card_border_radius' => 12,
             'card_shadow' => true,
+            'shadow_button' => false,
+            'force_css' => false,
 
             // Seção 2 - Botão de Ação
             'button_text' => __('Ver oferta', 'afiliados-pro'),
+            'button_style' => 'gradient',
             'button_color_start' => '#6a82fb',
             'button_color_end' => '#fc5c7d',
+            'button_text_color' => '#ffffff',
             'button_text_disabled' => __('Indisponível', 'afiliados-pro'),
 
             // Seção 3 - Layout da Grade
@@ -141,6 +154,7 @@ class Affiliate_Pro_Settings {
             'title_clickable' => true,
             'open_in_new_tab' => true,
             'show_store_badge' => true,
+            'show_price' => true,
             'custom_css' => ''
         );
     }
@@ -197,9 +211,9 @@ class Affiliate_Pro_Settings {
     public static function get_dynamic_css() {
         $settings = self::get_settings();
 
-        // Variáveis CSS no :root para fácil customização
+        // Variáveis CSS no :root para fácil customização (v1.5.6)
         $css = "
-        /* Afiliados Pro - CSS Dinâmico v1.2.6 */
+        /* Afiliados Pro - CSS Dinâmico v1.5.6 */
 
         :root {
             --affiliate-primary-color: {$settings['primary_color']};
@@ -207,10 +221,13 @@ class Affiliate_Pro_Settings {
             --affiliate-accent-color: {$settings['accent_color']};
             --affiliate-card-bg: {$settings['card_bg_color']};
             --affiliate-text-color: {$settings['text_color']};
+            --affiliate-image-bg: {$settings['card_image_background']};
             --affiliate-card-radius: {$settings['card_border_radius']}px;
             --affiliate-card-gap: {$settings['card_gap']}px;
             --affiliate-button-start: {$settings['button_color_start']};
             --affiliate-button-end: {$settings['button_color_end']};
+            --affiliate-button-text: {$settings['button_text_color']};
+            --affiliate-price-color: {$settings['price_color']};
         }
 
         /* Grade de produtos com gap dinâmico */
@@ -256,10 +273,29 @@ class Affiliate_Pro_Settings {
             ";
         }
 
-        // Imagens com altura controlada
         $css .= "
+        /* Títulos com cor primária (v1.5.6) */
+        .affiliate-product-card .product-title {
+            color: var(--affiliate-primary-color);
+        }
+
+        .affiliate-product-card .product-title a {
+            color: var(--affiliate-primary-color);
+        }
+
+        /* Texto auxiliar com cor secundária (v1.5.6) */
+        .affiliate-product-card .product-excerpt,
+        .affiliate-product-card .product-description {
+            color: var(--affiliate-text-color);
+        }
+
+        /* Imagens com fundo controlado (v1.5.6) */
         .affiliate-product-card .product-image {
             height: 220px;
+            background: var(--affiliate-image-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .affiliate-product-card .product-image img {
@@ -271,24 +307,76 @@ class Affiliate_Pro_Settings {
             display: block;
         }
 
-        /* Preço com cor de destaque */
-        .affiliate-product-card .product-price {
-            color: var(--affiliate-accent-color);
+        /* Badge da loja com cor de destaque (v1.5.6) */
+        .affiliate-product-card .store-badge {
+            background: var(--affiliate-accent-color);
+            color: #fff;
         }
 
-        /* Botões com gradiente personalizado */
-        .affiliate-product-card .product-button {
-            background: linear-gradient(135deg, var(--affiliate-button-start) 0%, var(--affiliate-button-end) 100%);
+        /* Preço com cor personalizada (v1.5.8) */
+        .affiliate-product-card .product-price {
+            color: var(--affiliate-price-color);
+            font-weight: 600;
+        }
+
+        /* Botões base (v1.5.5) */
+        .affiliate-product-card .product-button,
+        .affiliate-product-card .affiliate-btn-flat,
+        .affiliate-product-card .affiliate-btn-outline,
+        .affiliate-product-card .affiliate-btn-gradient {
             width: auto;
             min-width: 120px;
             max-width: 90%;
             text-align: center;
             display: inline-block;
+            transition: all 0.3s ease;
+            padding: 10px 18px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 6px;
         }
 
-        .affiliate-product-card .product-button:hover {
+        /* Estilo: Preenchido (Flat) - v1.5.6 */
+        .affiliate-product-card .affiliate-btn-flat {
+            background: var(--button-color-start, var(--affiliate-button-start));
+            color: var(--button-text-color, var(--affiliate-button-text));
+            border: 2px solid var(--button-color-start, var(--affiliate-button-start));
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .affiliate-product-card .affiliate-btn-flat:hover {
             opacity: 0.9;
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Estilo: Contorno (Outline) - v1.5.6 */
+        .affiliate-product-card .affiliate-btn-outline {
+            background: transparent;
+            color: var(--button-color-start, var(--affiliate-button-start));
+            border: 2px solid var(--button-color-start, var(--affiliate-button-start));
+            box-shadow: none;
+        }
+
+        .affiliate-product-card .affiliate-btn-outline:hover {
+            background: var(--button-color-start, var(--affiliate-button-start));
+            color: var(--button-text-color, var(--affiliate-button-text));
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Estilo: Gradiente - v1.5.6 */
+        .affiliate-product-card .affiliate-btn-gradient {
+            background: linear-gradient(135deg, var(--button-color-start, var(--affiliate-button-start)) 0%, var(--button-color-end, var(--affiliate-button-end)) 100%);
+            color: var(--button-text-color, var(--affiliate-button-text));
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .affiliate-product-card .affiliate-btn-gradient:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         ";
 
