@@ -221,13 +221,15 @@ class Affiliate_Pro_Shortcodes {
         $button_style = $settings['button_style'] ?? 'gradient';
         $button_class = 'product-button affiliate-btn-' . esc_attr($button_style);
 
-        // v1.5.5: Variáveis CSS inline para cores do botão
+        // v1.5.6: Variáveis CSS inline para cores do botão
         $button_color_start = $settings['button_color_start'] ?? '#6a82fb';
         $button_color_end = $settings['button_color_end'] ?? '#fc5c7d';
+        $button_text_color = $settings['button_text_color'] ?? '#ffffff';
         $button_inline_style = sprintf(
-            'style="--button-color-start: %s; --button-color-end: %s;"',
+            'style="--button-color-start: %s; --button-color-end: %s; --button-text-color: %s;"',
             esc_attr($button_color_start),
-            esc_attr($button_color_end)
+            esc_attr($button_color_end),
+            esc_attr($button_text_color)
         );
 
         ob_start();

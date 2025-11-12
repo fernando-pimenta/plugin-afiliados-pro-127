@@ -2,10 +2,10 @@
 /**
  * Afiliados Pro - Preview Template
  *
- * Completely standalone preview template with v1.5.5 real button style application
+ * Completely standalone preview template with v1.5.6 unified color system
  *
  * @package AfiliadorsPro
- * @version 1.5.5
+ * @version 1.5.6
  */
 
 if (!defined('ABSPATH')) {
@@ -28,13 +28,16 @@ if (!isset($settings['price_placeholder']) && isset($settings['price_text_empty'
     $settings['price_placeholder'] = $settings['price_text_empty'];
 }
 
-// Extract settings with default values (using null coalescing operator)
+// Extract settings with default values (using null coalescing operator) - v1.5.6
 $primary_color = $settings['primary_color'] ?? '#283593';
-$button_color = $settings['button_color_start'] ?? ($settings['accent_color'] ?? '#ffa70a');
-$gradient_color = $settings['button_color_end'] ?? ($settings['secondary_color'] ?? '#fc5c7d');
+$secondary_color = $settings['secondary_color'] ?? '#3949ab';
+$button_color = $settings['button_color_start'] ?? '#6a82fb';
+$gradient_color = $settings['button_color_end'] ?? '#fc5c7d';
+$button_text_color = $settings['button_text_color'] ?? '#ffffff';
 $accent_color = $settings['accent_color'] ?? '#ffa70a';
 $card_bg_color = $settings['card_bg_color'] ?? '#ffffff';
 $text_color = $settings['text_color'] ?? '#1a1a1a';
+$card_image_background = $settings['card_image_background'] ?? '#f9f9f9';
 $card_border_radius = $settings['card_border_radius'] ?? 12;
 $card_shadow = $settings['card_shadow'] ?? true;
 $card_gap = $settings['card_gap'] ?? 20;
@@ -68,7 +71,7 @@ $placeholder_img = AFFILIATE_PRO_PLUGIN_URL . 'assets/img/placeholder.svg';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preview - Afiliados Pro v1.5.5</title>
+<title>Preview - Afiliados Pro v1.5.6</title>
 <style>
 /* Reset básico */
 * {
@@ -142,12 +145,18 @@ body {
     font-weight: 600;
 }
 
-/* Product Image */
+/* Product Image - v1.5.6 */
+.affiliate-product-card .product-image {
+    background: <?php echo esc_attr($card_image_background); ?>;
+    border-radius: <?php echo esc_attr($border_radius); ?>;
+    padding: 10px;
+    margin-bottom: 12px;
+}
+
 .affiliate-product-card img {
     width: 100%;
     height: auto;
     border-radius: <?php echo esc_attr($border_radius); ?>;
-    margin-bottom: 12px;
     display: block;
 }
 
@@ -207,10 +216,10 @@ body {
     border: none;
 }
 
-/* Estilo: Preenchido (Flat) */
+/* Estilo: Preenchido (Flat) - v1.5.6 */
 .affiliate-btn-flat {
     background: var(--button-color-start, <?php echo esc_attr($button_color); ?>);
-    color: #fff;
+    color: var(--button-text-color, <?php echo esc_attr($button_text_color); ?>);
     border: 2px solid var(--button-color-start, <?php echo esc_attr($button_color); ?>);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
@@ -221,7 +230,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Estilo: Contorno (Outline) */
+/* Estilo: Contorno (Outline) - v1.5.6 */
 .affiliate-btn-outline {
     background: transparent;
     color: var(--button-color-start, <?php echo esc_attr($button_color); ?>);
@@ -231,15 +240,15 @@ body {
 
 .affiliate-btn-outline:hover {
     background: var(--button-color-start, <?php echo esc_attr($button_color); ?>);
-    color: #fff;
+    color: var(--button-text-color, <?php echo esc_attr($button_text_color); ?>);
     transform: scale(1.02);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-/* Estilo: Gradiente */
+/* Estilo: Gradiente - v1.5.6 */
 .affiliate-btn-gradient {
     background: linear-gradient(135deg, var(--button-color-start, <?php echo esc_attr($button_color); ?>), var(--button-color-end, <?php echo esc_attr($gradient_color); ?>));
-    color: #fff;
+    color: var(--button-text-color, <?php echo esc_attr($button_text_color); ?>);
     border: none;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
@@ -265,7 +274,7 @@ body {
 </head>
 <body>
     <div class="preview-header">
-        📱 Pré-visualização ao Vivo - v1.5.5 (Aplicação real de estilos de botão)
+        📱 Pré-visualização ao Vivo - v1.5.6 (Sistema de cores unificado)
     </div>
 
     <div class="preview-products-container">
@@ -277,7 +286,9 @@ body {
                     </div>
                 <?php endif; ?>
 
-                <img src="<?php echo esc_url($placeholder_img); ?>" alt="Produto Exemplo <?php echo $i; ?>">
+                <div class="product-image">
+                    <img src="<?php echo esc_url($placeholder_img); ?>" alt="Produto Exemplo <?php echo $i; ?>">
+                </div>
 
                 <?php if ($title_clickable): ?>
                     <h3 class="affiliate-title">
@@ -311,7 +322,7 @@ body {
                 <?php endif; ?>
 
                 <button class="affiliate-btn affiliate-btn-<?php echo esc_attr($button_style); ?>"
-                        style="--button-color-start: <?php echo esc_attr($button_color); ?>; --button-color-end: <?php echo esc_attr($gradient_color); ?>;"
+                        style="--button-color-start: <?php echo esc_attr($button_color); ?>; --button-color-end: <?php echo esc_attr($gradient_color); ?>; --button-text-color: <?php echo esc_attr($button_text_color); ?>;"
                         data-aff-id="preview-<?php echo $i; ?>"
                         data-source="button">
                     <?php echo esc_html($button_text); ?>

@@ -52,10 +52,10 @@ if (isset($_GET['reset']) && $_GET['reset'] === 'success') {
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e('Cor de Destaque', 'afiliados-pro'); ?></th>
+                        <th scope="row"><?php _e('Cor de Destaque (Badge)', 'afiliados-pro'); ?></th>
                         <td>
                             <input type="text" name="affiliate_pro_settings[accent_color]" value="<?php echo esc_attr($settings['accent_color']); ?>" class="color-picker" data-default-color="#ffa70a">
-                            <p class="description"><?php _e('Usada para preços e elementos de destaque', 'afiliados-pro'); ?></p>
+                            <p class="description"><?php _e('Usada para badges da loja, preços e elementos de destaque (não afeta o botão)', 'afiliados-pro'); ?></p>
                         </td>
                     </tr>
                     <tr>
@@ -68,6 +68,14 @@ if (isset($_GET['reset']) && $_GET['reset'] === 'success') {
                         <th scope="row"><?php _e('Cor do Texto', 'afiliados-pro'); ?></th>
                         <td>
                             <input type="text" name="affiliate_pro_settings[text_color]" value="<?php echo esc_attr($settings['text_color']); ?>" class="color-picker" data-default-color="#1a1a1a">
+                            <p class="description"><?php _e('Cor do texto nos cards de produtos', 'afiliados-pro'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e('Fundo da Imagem', 'afiliados-pro'); ?></th>
+                        <td>
+                            <input type="text" name="affiliate_pro_settings[card_image_background]" value="<?php echo esc_attr($settings['card_image_background'] ?? '#f9f9f9'); ?>" class="color-picker" data-default-color="#f9f9f9">
+                            <p class="description"><?php _e('Cor de fundo atrás da imagem do produto', 'afiliados-pro'); ?></p>
                         </td>
                     </tr>
                     <tr>
@@ -120,13 +128,21 @@ if (isset($_GET['reset']) && $_GET['reset'] === 'success') {
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e('Cor Inicial do Gradiente', 'afiliados-pro'); ?></th>
+                        <th scope="row"><?php _e('Cor do Botão', 'afiliados-pro'); ?></th>
                         <td>
                             <input type="text" name="affiliate_pro_settings[button_color_start]" value="<?php echo esc_attr($settings['button_color_start']); ?>" class="color-picker" data-default-color="#6a82fb">
+                            <p class="description"><?php _e('Cor principal do botão (usada em todos os estilos)', 'afiliados-pro'); ?></p>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e('Cor Final do Gradiente', 'afiliados-pro'); ?></th>
+                        <th scope="row"><?php _e('Cor do Texto do Botão', 'afiliados-pro'); ?></th>
+                        <td>
+                            <input type="text" name="affiliate_pro_settings[button_text_color]" value="<?php echo esc_attr($settings['button_text_color'] ?? '#ffffff'); ?>" class="color-picker" data-default-color="#ffffff">
+                            <p class="description"><?php _e('Cor do texto dentro do botão', 'afiliados-pro'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e('Cor Secundária do Gradiente', 'afiliados-pro'); ?></th>
                         <td>
                             <input type="text" name="affiliate_pro_settings[button_color_end]" value="<?php echo esc_attr($settings['button_color_end']); ?>" class="color-picker" data-default-color="#fc5c7d">
                             <p class="description"><?php _e('O botão terá um gradiente entre essas duas cores', 'afiliados-pro'); ?></p>
