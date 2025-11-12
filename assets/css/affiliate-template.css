@@ -1,6 +1,6 @@
 /**
  * Afiliados Pro - Template Builder Styles
- * Version: 1.6.3
+ * Version: 1.6.5
  *
  * Global CSS for affiliate product cards and buttons
  */
@@ -191,13 +191,13 @@
     border-color: #135e96;
 }
 
-/* Card Styling (v1.6.2: Refined padding and proportions) */
+/* Card Styling (v1.6.5: sombras removidas - controladas por CSS dinâmico) */
 .affiliate-product-card {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     padding: 0;
     margin: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    /* box-shadow controlado via CSS dinâmico condicional */
     transition: all 0.3s ease;
     background: #fff;
     position: relative;
@@ -209,7 +209,7 @@
 
 .affiliate-product-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    /* box-shadow hover controlado via CSS dinâmico condicional */
 }
 
 .affiliate-product-card .product-content {
