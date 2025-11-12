@@ -1,11 +1,11 @@
 /**
  * Afiliados Pro - Template Builder Styles
- * Version: 1.5.9.2
+ * Version: 1.5.9.3
  *
  * Global CSS for affiliate product cards and buttons
  */
 
-/* Split Layout Container (v1.5.9.2 - Rebalanceamento e Inversão) */
+/* Split Layout Container (v1.5.9.3 - Preview Centralizado e Altura Expandida) */
 .affiliate-builder-container {
     display: flex;
     flex-direction: row-reverse;
@@ -13,7 +13,7 @@
     align-items: flex-start;
     margin-top: 20px;
     flex-wrap: nowrap;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .affiliate-preview-pane {
@@ -27,6 +27,8 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     transform: scale(1);
     transition: all 0.25s ease;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .affiliate-preview-pane h3 {
@@ -35,8 +37,8 @@
 }
 
 .affiliate-preview-pane iframe {
-    max-height: 420px;
-    overflow: hidden;
+    max-height: 600px;
+    overflow-y: auto;
 }
 
 .affiliate-controls-pane {
@@ -95,18 +97,19 @@
     cursor: pointer;
 }
 
-/* Responsive Split Layout (v1.5.9.2 - Breakpoint 1024px) */
+/* Responsive Split Layout (v1.5.9.3 - Breakpoint 1024px) */
 @media (max-width: 1024px) {
     .affiliate-builder-container {
         flex-direction: column;
         flex-wrap: wrap;
+        align-items: center;
     }
 
     .affiliate-preview-pane {
         flex: 1 1 100%;
         max-width: 100%;
         min-width: 100%;
-        transform: scale(0.9);
+        transform: scale(0.95);
         transform-origin: top center;
     }
 
