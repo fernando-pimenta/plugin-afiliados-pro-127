@@ -105,6 +105,7 @@ class Affiliate_Pro_Settings {
         $sanitized['title_clickable'] = isset($input['title_clickable']) ? (bool) $input['title_clickable'] : true;
         $sanitized['open_in_new_tab'] = isset($input['open_in_new_tab']) ? (bool) $input['open_in_new_tab'] : true;
         $sanitized['show_store_badge'] = isset($input['show_store_badge']) ? (bool) $input['show_store_badge'] : true;
+        $sanitized['show_price'] = isset($input['show_price']) ? (bool) $input['show_price'] : true;
         $sanitized['custom_css'] = isset($input['custom_css']) ? wp_strip_all_tags($input['custom_css']) : '';
 
         return $sanitized;
@@ -149,6 +150,7 @@ class Affiliate_Pro_Settings {
             'title_clickable' => true,
             'open_in_new_tab' => true,
             'show_store_badge' => true,
+            'show_price' => true,
             'custom_css' => ''
         );
     }

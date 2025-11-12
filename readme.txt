@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.9.3
+Stable tag: 1.5.9.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,14 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.9.4 (2025-11-28) =
+* ⚙️ **FUNCIONAL**: Opção "Exibir Preço" agora aplicada corretamente no front-end
+* 💰 **CORREÇÃO**: Salvamento de show_price implementado no Template Builder
+* 🔧 **FIX**: Condicionais aplicadas para exibir/ocultar preço conforme configuração
+* 📝 **DEFAULTS**: Adicionado show_price aos defaults das configurações
+* ✅ **TODAS OPÇÕES FUNCIONAIS**: Texto do botão, formato de preço, badge, título clicável, nova aba e CSS personalizado já estavam funcionando corretamente
+* 🎨 **INTERFACE**: Nenhuma mudança visual, apenas correção funcional
 
 = 1.5.9.3 (2025-11-27) =
 * 📏 **VISUAL**: Altura do preview expandida (600px) com overflow-y auto

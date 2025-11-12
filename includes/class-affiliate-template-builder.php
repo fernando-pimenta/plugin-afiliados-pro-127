@@ -562,6 +562,11 @@ class Affiliate_Template_Builder {
         if (isset($_POST['show_store_badge'])) {
             $settings['show_store_badge'] = boolval($_POST['show_store_badge']);
         }
+        if (isset($_POST['show_price'])) {
+            $settings['show_price'] = boolval($_POST['show_price']);
+        } else {
+            $settings['show_price'] = false;
+        }
         if (isset($_POST['custom_css'])) {
             $settings['custom_css'] = wp_strip_all_tags($_POST['custom_css']);
         }
