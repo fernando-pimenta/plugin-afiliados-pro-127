@@ -313,7 +313,7 @@ class Affiliate_Pro_Settings {
             color: #fff;
         }
 
-        /* Preço com cor personalizada (v1.6.3: aplica-se também ao texto alternativo "Sem preço") */
+        /* Preço com cor personalizada (v1.6.3: aplica-se também ao texto alternativo Sem preco) */
         .affiliate-product-card .product-price {
             color: var(--affiliate-price-color) !important;
             font-weight: 600;
