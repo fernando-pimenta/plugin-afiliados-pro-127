@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.6
+Stable tag: 1.5.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,11 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.6.1 (2025-11-18) =
+* 🛠️ **HOTFIX**: Corrigido erro fatal de sintaxe (concatenação PHP incorreta em class-affiliate-settings.php linha 267)
+* ✅ **CORREÇÃO**: Plugin agora ativa normalmente sem erros PHP
+* 🧩 **VERIFICADO**: Proteção contra warnings "Undefined array key button_style" já estava implementada
 
 = 1.5.6 (2025-11-17) =
 * 🎨 **CORREÇÃO**: Sistema de cores totalmente unificado entre preview e front-end

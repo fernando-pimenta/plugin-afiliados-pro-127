@@ -264,6 +264,7 @@ class Affiliate_Pro_Settings {
             ";
         }
 
+        $css .= "
         /* Títulos com cor primária (v1.5.6) */
         .affiliate-product-card .product-title {
             color: var(--affiliate-primary-color);
