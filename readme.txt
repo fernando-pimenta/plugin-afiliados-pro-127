@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.8.4
+Stable tag: 1.5.8.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,12 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.8.5 (2025-11-25) =
+* 🖼️ **CORREÇÃO**: Melhorado campo "Fundo da Área da Imagem" para melhor visibilidade
+* 📝 **MELHORIA**: Adicionada descrição ao campo "Cor de Fundo do Card"
+* ✅ **UX**: Título do campo alterado para "Fundo da Área da Imagem" (mais descritivo)
+* 🔧 **FIX**: Removido operador coalescente redundante no value do campo
 
 = 1.5.8.4 (2025-11-24) =
 * 🖼️ **MELHORIA**: Campo "Fundo da Imagem" reposicionado para dentro da seção Identidade Visual

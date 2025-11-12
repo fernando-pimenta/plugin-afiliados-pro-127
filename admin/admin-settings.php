@@ -62,13 +62,14 @@ if (isset($_GET['reset']) && $_GET['reset'] === 'success') {
                         <th scope="row"><?php _e('Cor de Fundo do Card', 'afiliados-pro'); ?></th>
                         <td>
                             <input type="text" name="affiliate_pro_settings[card_bg_color]" value="<?php echo esc_attr($settings['card_bg_color']); ?>" class="color-picker" data-default-color="#ffffff">
+                            <p class="description"><?php _e('Cor de fundo do card completo', 'afiliados-pro'); ?></p>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e('Fundo da Imagem', 'afiliados-pro'); ?></th>
+                        <th scope="row"><?php _e('Fundo da Área da Imagem', 'afiliados-pro'); ?></th>
                         <td>
-                            <input type="text" name="affiliate_pro_settings[card_image_background]" value="<?php echo esc_attr($settings['card_image_background'] ?? '#f9f9f9'); ?>" class="color-picker" data-default-color="#f9f9f9">
-                            <p class="description"><?php _e('Cor de fundo atrás da imagem do produto', 'afiliados-pro'); ?></p>
+                            <input type="text" name="affiliate_pro_settings[card_image_background]" value="<?php echo esc_attr($settings['card_image_background']); ?>" class="color-picker" data-default-color="#f9f9f9">
+                            <p class="description"><?php _e('Cor de fundo atrás da imagem do produto (útil para imagens com transparência)', 'afiliados-pro'); ?></p>
                         </td>
                     </tr>
                     <tr>
