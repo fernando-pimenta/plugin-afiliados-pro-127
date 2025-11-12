@@ -44,6 +44,7 @@ class Affiliate_Pro_Shortcodes {
     private function init_hooks() {
         add_shortcode('affiliate_product', array($this, 'single_product_shortcode'));
         add_shortcode('affiliate_products', array($this, 'products_grid_shortcode'));
+        add_shortcode('afiliados_pro', array($this, 'preset_shortcode')); // v1.6.0
     }
 
     /**
@@ -165,6 +166,56 @@ class Affiliate_Pro_Shortcodes {
         } else {
             $output = '<p>' . __('Nenhum produto encontrado.', 'afiliados-pro') . '</p>';
         }
+
+        return $output;
+    }
+
+    /**
+     * Shortcode para exibir produtos com preset personalizado (v1.6.0)
+     *
+     * @param array $atts
+     * @return string
+     */
+    public function preset_shortcode($atts) {
+        $atts = shortcode_atts(array(
+            'id' => 0,
+            'limit' => 6,
+            'category' => '',
+            'orderby' => 'date',
+            'order' => 'DESC'
+        ), $atts);
+
+        $preset_id = intval($atts['id']);
+
+        // Verificar se o preset existe
+        if ($preset_id <= 0) {
+            return '<p>' . __('ID do preset não informado. Use: [afiliados_pro id="1"]', 'afiliados-pro') . '</p>';
+        }
+
+        $preset = Affiliate_Template_Builder::get_preset_by_id($preset_id);
+
+        if (!$preset || !isset($preset['settings'])) {
+            return '<p>' . sprintf(__('Preset #%d não encontrado.', 'afiliados-pro'), $preset_id) . '</p>';
+        }
+
+        // Salvar configurações atuais
+        $original_settings = Affiliate_Pro_Settings::get_settings();
+
+        // Aplicar configurações do preset temporariamente
+        add_filter('option_affiliate_pro_settings', function($value) use ($preset) {
+            return $preset['settings'];
+        });
+
+        // Renderizar produtos com as configurações do preset
+        $output = $this->products_grid_shortcode(array(
+            'limit' => $atts['limit'],
+            'category' => $atts['category'],
+            'orderby' => $atts['orderby'],
+            'order' => $atts['order']
+        ));
+
+        // Restaurar configurações originais (remover o filtro)
+        remove_all_filters('option_affiliate_pro_settings');
 
         return $output;
     }

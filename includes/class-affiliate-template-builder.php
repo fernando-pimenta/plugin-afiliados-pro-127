@@ -70,6 +70,9 @@ class Affiliate_Template_Builder {
         // v1.5.2: Removido apply_template_styles - agora usa Affiliate_Pro_Settings::get_dynamic_css()
         // add_action('wp_head', array($this, 'apply_template_styles'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
+        // v1.6.0: Sistema de Presets
+        add_action('admin_post_affiliate_preset_save', array($this, 'save_preset'));
+        add_action('admin_post_affiliate_preset_delete', array($this, 'delete_preset'));
     }
 
     /**
@@ -126,7 +129,7 @@ class Affiliate_Template_Builder {
         <div class="wrap">
             <h1><?php _e('Afiliados Pro - Aparência e Configurações', 'afiliados-pro'); ?></h1>
 
-            <!-- Tab Navigation (v1.4.4) -->
+            <!-- Tab Navigation (v1.6.0 - Adicionado Presets) -->
             <h2 class="nav-tab-wrapper">
                 <a href="?page=affiliate-template-builder&tab=appearance" class="nav-tab <?php echo $active_tab === 'appearance' ? 'nav-tab-active' : ''; ?>">
                     <?php _e('Aparência', 'afiliados-pro'); ?>
@@ -134,12 +137,17 @@ class Affiliate_Template_Builder {
                 <a href="?page=affiliate-template-builder&tab=settings" class="nav-tab <?php echo $active_tab === 'settings' ? 'nav-tab-active' : ''; ?>">
                     <?php _e('Configurações', 'afiliados-pro'); ?>
                 </a>
+                <a href="?page=affiliate-template-builder&tab=presets" class="nav-tab <?php echo $active_tab === 'presets' ? 'nav-tab-active' : ''; ?>">
+                    <?php _e('Presets', 'afiliados-pro'); ?>
+                </a>
             </h2>
 
             <?php
             // Render active tab
             if ($active_tab === 'appearance') {
                 $this->render_appearance_tab();
+            } elseif ($active_tab === 'presets') {
+                $this->render_presets_tab();
             } else {
                 $this->render_settings_tab();
             }
@@ -470,6 +478,121 @@ class Affiliate_Template_Builder {
 
                 <?php submit_button(__('Salvar Configurações', 'afiliados-pro'), 'primary', 'submit'); ?>
             </form>
+        </div>
+        <?php
+    }
+
+    /**
+     * Render Presets Tab (v1.6.0)
+     */
+    private function render_presets_tab() {
+        $presets = self::get_presets();
+
+        // Mensagens
+        if (isset($_GET['preset-saved']) && $_GET['preset-saved'] === 'true') {
+            $preset_id = isset($_GET['preset-id']) ? intval($_GET['preset-id']) : 0;
+            echo '<div class="notice notice-success is-dismissible"><p>' . sprintf(__('Preset salvo com sucesso! Use o shortcode: %s', 'afiliados-pro'), '<code>[afiliados_pro id="' . $preset_id . '"]</code>') . '</p></div>';
+        }
+
+        if (isset($_GET['preset-deleted']) && $_GET['preset-deleted'] === 'true') {
+            echo '<div class="notice notice-success is-dismissible"><p>' . __('Preset excluído com sucesso!', 'afiliados-pro') . '</p></div>';
+        }
+
+        if (isset($_GET['error'])) {
+            $error = sanitize_text_field($_GET['error']);
+            $error_messages = array(
+                'empty_name' => __('Por favor, insira um nome para o preset.', 'afiliados-pro'),
+                'invalid_id' => __('ID do preset inválido.', 'afiliados-pro'),
+                'not_found' => __('Preset não encontrado.', 'afiliados-pro'),
+            );
+            $message = isset($error_messages[$error]) ? $error_messages[$error] : __('Ocorreu um erro.', 'afiliados-pro');
+            echo '<div class="notice notice-error is-dismissible"><p>' . esc_html($message) . '</p></div>';
+        }
+        ?>
+        <div class="tab-content">
+            <p><?php _e('Salve múltiplas personalizações de aparência e use cada uma com seu próprio shortcode.', 'afiliados-pro'); ?></p>
+
+            <!-- Formulário para salvar novo preset -->
+            <div style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px; margin-bottom: 20px;">
+                <h3 style="margin-top: 0;"><?php _e('Salvar Configuração Atual como Preset', 'afiliados-pro'); ?></h3>
+                <p class="description"><?php _e('As configurações de aparência e funcionalidades atuais serão salvas neste preset.', 'afiliados-pro'); ?></p>
+
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-top: 15px;">
+                    <?php wp_nonce_field('affiliate_preset_save', 'affiliate_preset_nonce'); ?>
+                    <input type="hidden" name="action" value="affiliate_preset_save">
+
+                    <table class="form-table" role="presentation">
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                    <label for="preset_name"><?php _e('Nome do Preset', 'afiliados-pro'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="text" id="preset_name" name="preset_name" class="regular-text" placeholder="<?php _e('Ex: Layout Azul Moderno', 'afiliados-pro'); ?>" required>
+                                    <p class="description"><?php _e('Dê um nome descritivo para identificar este preset facilmente.', 'afiliados-pro'); ?></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <?php submit_button(__('Salvar Preset', 'afiliados-pro'), 'primary', 'submit', false); ?>
+                </form>
+            </div>
+
+            <!-- Lista de presets salvos -->
+            <div style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px;">
+                <h3 style="margin-top: 0;"><?php _e('Presets Salvos', 'afiliados-pro'); ?></h3>
+
+                <?php if (empty($presets)) : ?>
+                    <p><?php _e('Nenhum preset salvo ainda. Salve suas primeiras configurações acima!', 'afiliados-pro'); ?></p>
+                <?php else : ?>
+                    <table class="wp-list-table widefat fixed striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;"><?php _e('ID', 'afiliados-pro'); ?></th>
+                                <th><?php _e('Nome', 'afiliados-pro'); ?></th>
+                                <th><?php _e('Shortcode', 'afiliados-pro'); ?></th>
+                                <th><?php _e('Criado em', 'afiliados-pro'); ?></th>
+                                <th style="width: 150px;"><?php _e('Ações', 'afiliados-pro'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($presets as $preset_id => $preset) : ?>
+                                <tr>
+                                    <td><strong><?php echo esc_html($preset_id); ?></strong></td>
+                                    <td><?php echo esc_html($preset['name']); ?></td>
+                                    <td>
+                                        <code style="background: #f0f0f1; padding: 4px 8px; border-radius: 3px;">[afiliados_pro id="<?php echo esc_attr($preset_id); ?>"]</code>
+                                        <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[afiliados_pro id=&quot;<?php echo esc_attr($preset_id); ?>&quot;]'); alert('Shortcode copiado!');" style="margin-left: 5px;">
+                                            <?php _e('Copiar', 'afiliados-pro'); ?>
+                                        </button>
+                                    </td>
+                                    <td><?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($preset['timestamp']))); ?></td>
+                                    <td>
+                                        <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=affiliate_preset_delete&preset_id=' . $preset_id), 'delete_preset_' . $preset_id)); ?>"
+                                           class="button button-small"
+                                           onclick="return confirm('<?php _e('Tem certeza que deseja excluir este preset?', 'afiliados-pro'); ?>');"
+                                           style="color: #b32d2e;">
+                                            <?php _e('Excluir', 'afiliados-pro'); ?>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            </div>
+
+            <!-- Instruções de uso -->
+            <div style="background: #f0f6fc; border-left: 4px solid #0073aa; padding: 15px; margin-top: 20px;">
+                <h4 style="margin-top: 0; color: #0073aa;"><?php _e('Como usar os Presets', 'afiliados-pro'); ?></h4>
+                <ol style="margin-bottom: 0;">
+                    <li><?php _e('Configure a aparência e funcionalidades nas abas "Aparência" e "Configurações"', 'afiliados-pro'); ?></li>
+                    <li><?php _e('Volte para esta aba e salve um novo preset com um nome descritivo', 'afiliados-pro'); ?></li>
+                    <li><?php _e('Use o shortcode gerado em qualquer página ou post para exibir produtos com aquele preset', 'afiliados-pro'); ?></li>
+                    <li><?php _e('Você pode ter quantos presets quiser e usar diferentes em páginas diferentes!', 'afiliados-pro'); ?></li>
+                </ol>
+            </div>
         </div>
         <?php
     }
@@ -936,5 +1059,154 @@ class Affiliate_Template_Builder {
             'medium' => '8px',
             'large' => '16px',
         );
+    }
+
+    /**
+     * Obtém todos os presets salvos (v1.6.0)
+     *
+     * @return array
+     */
+    public static function get_presets() {
+        return get_option('affiliate_pro_presets', array());
+    }
+
+    /**
+     * Obtém um preset específico por ID (v1.6.0)
+     *
+     * @param int $preset_id
+     * @return array|false
+     */
+    public static function get_preset_by_id($preset_id) {
+        $presets = self::get_presets();
+        return isset($presets[$preset_id]) ? $presets[$preset_id] : false;
+    }
+
+    /**
+     * Salva um novo preset (v1.6.0)
+     */
+    public function save_preset() {
+        // Verificar permissões
+        if (!current_user_can('manage_options')) {
+            wp_die(__('Você não tem permissão para executar esta ação.', 'afiliados-pro'));
+        }
+
+        // Verificar nonce
+        if (!isset($_POST['affiliate_preset_nonce']) || !wp_verify_nonce($_POST['affiliate_preset_nonce'], 'affiliate_preset_save')) {
+            wp_die(__('Erro de segurança. Tente novamente.', 'afiliados-pro'));
+        }
+
+        // Nome do preset
+        $preset_name = isset($_POST['preset_name']) ? sanitize_text_field($_POST['preset_name']) : '';
+        if (empty($preset_name)) {
+            wp_redirect(add_query_arg(
+                array('page' => 'affiliate-template-builder', 'tab' => 'presets', 'error' => 'empty_name'),
+                admin_url('admin.php')
+            ));
+            exit;
+        }
+
+        // Obter configurações atuais
+        $current_settings = Affiliate_Pro_Settings::get_settings();
+
+        // Obter presets existentes
+        $presets = self::get_presets();
+
+        // Gerar novo ID (incremental)
+        $new_id = 1;
+        if (!empty($presets)) {
+            $new_id = max(array_keys($presets)) + 1;
+        }
+
+        // Criar novo preset
+        $presets[$new_id] = array(
+            'name' => $preset_name,
+            'settings' => $current_settings,
+            'timestamp' => current_time('mysql')
+        );
+
+        // Salvar no banco
+        update_option('affiliate_pro_presets', $presets);
+
+        // Log
+        affiliate_pro_log('Preset criado com sucesso. ID: ' . $new_id . ', Nome: ' . $preset_name);
+
+        // Redirecionar com sucesso
+        wp_redirect(add_query_arg(
+            array('page' => 'affiliate-template-builder', 'tab' => 'presets', 'preset-saved' => 'true', 'preset-id' => $new_id),
+            admin_url('admin.php')
+        ));
+        exit;
+    }
+
+    /**
+     * Exclui um preset (v1.6.0)
+     */
+    public function delete_preset() {
+        // Verificar permissões
+        if (!current_user_can('manage_options')) {
+            wp_die(__('Você não tem permissão para executar esta ação.', 'afiliados-pro'));
+        }
+
+        // Verificar nonce
+        if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'delete_preset_' . $_GET['preset_id'])) {
+            wp_die(__('Erro de segurança. Tente novamente.', 'afiliados-pro'));
+        }
+
+        $preset_id = isset($_GET['preset_id']) ? intval($_GET['preset_id']) : 0;
+
+        if ($preset_id <= 0) {
+            wp_redirect(add_query_arg(
+                array('page' => 'affiliate-template-builder', 'tab' => 'presets', 'error' => 'invalid_id'),
+                admin_url('admin.php')
+            ));
+            exit;
+        }
+
+        // Obter presets
+        $presets = self::get_presets();
+
+        // Verificar se existe
+        if (!isset($presets[$preset_id])) {
+            wp_redirect(add_query_arg(
+                array('page' => 'affiliate-template-builder', 'tab' => 'presets', 'error' => 'not_found'),
+                admin_url('admin.php')
+            ));
+            exit;
+        }
+
+        // Remover preset
+        unset($presets[$preset_id]);
+
+        // Salvar no banco
+        update_option('affiliate_pro_presets', $presets);
+
+        // Log
+        affiliate_pro_log('Preset excluído com sucesso. ID: ' . $preset_id);
+
+        // Redirecionar com sucesso
+        wp_redirect(add_query_arg(
+            array('page' => 'affiliate-template-builder', 'tab' => 'presets', 'preset-deleted' => 'true'),
+            admin_url('admin.php')
+        ));
+        exit;
+    }
+
+    /**
+     * Carrega as configurações de um preset (v1.6.0)
+     *
+     * @param int $preset_id
+     * @return bool
+     */
+    public static function load_preset($preset_id) {
+        $preset = self::get_preset_by_id($preset_id);
+
+        if (!$preset || !isset($preset['settings'])) {
+            return false;
+        }
+
+        // Atualizar configurações atuais com as do preset
+        update_option('affiliate_pro_settings', $preset['settings']);
+
+        return true;
     }
 }
