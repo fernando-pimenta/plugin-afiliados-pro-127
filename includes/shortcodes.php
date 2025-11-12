@@ -172,6 +172,8 @@ class Affiliate_Pro_Shortcodes {
 
     /**
      * Shortcode para exibir produtos com preset personalizado (v1.6.0)
+     * v1.6.5: Corrigido filtro e passagem de parâmetros
+     * v1.6.6: Corrigida prioridade de layout/columns (preset > Template Builder)
      *
      * @param array $atts
      * @return string
@@ -181,6 +183,8 @@ class Affiliate_Pro_Shortcodes {
             'id' => 0,
             'limit' => 6,
             'category' => '',
+            'layout' => '',
+            'columns' => '',
             'orderby' => 'date',
             'order' => 'DESC'
         ), $atts);
@@ -198,24 +202,40 @@ class Affiliate_Pro_Shortcodes {
             return '<p>' . sprintf(__('Preset #%d não encontrado.', 'afiliados-pro'), $preset_id) . '</p>';
         }
 
-        // Salvar configurações atuais
-        $original_settings = Affiliate_Pro_Settings::get_settings();
+        // Criar callback específico para este preset
+        $filter_callback = function($value) use ($preset) {
+            return $preset['settings'];
+        };
 
         // Aplicar configurações do preset temporariamente
-        add_filter('option_affiliate_pro_settings', function($value) use ($preset) {
-            return $preset['settings'];
-        });
+        add_filter('option_affiliate_pro_settings', $filter_callback, 99);
 
         // Renderizar produtos com as configurações do preset
-        $output = $this->products_grid_shortcode(array(
+        // Passar atts como string formatada para o shortcode interno
+        $shortcode_atts = array(
             'limit' => $atts['limit'],
             'category' => $atts['category'],
             'orderby' => $atts['orderby'],
             'order' => $atts['order']
-        ));
+        );
 
-        // Restaurar configurações originais (remover o filtro)
-        remove_all_filters('option_affiliate_pro_settings');
+        // Adicionar layout e columns (prioridade: shortcode > preset > fallback)
+        if (!empty($atts['layout'])) {
+            $shortcode_atts['layout'] = $atts['layout'];
+        } elseif (!empty($preset['settings']['default_layout'])) {
+            $shortcode_atts['layout'] = $preset['settings']['default_layout'];
+        }
+
+        if (!empty($atts['columns'])) {
+            $shortcode_atts['columns'] = $atts['columns'];
+        } elseif (!empty($preset['settings']['default_columns'])) {
+            $shortcode_atts['columns'] = $preset['settings']['default_columns'];
+        }
+
+        $output = $this->products_grid_shortcode($shortcode_atts);
+
+        // Remover APENAS o filtro que adicionamos
+        remove_filter('option_affiliate_pro_settings', $filter_callback, 99);
 
         return $output;
     }
