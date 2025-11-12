@@ -1,6 +1,6 @@
 /**
  * Afiliados Pro - Template Builder Styles
- * Version: 1.6.2
+ * Version: 1.6.3
  *
  * Global CSS for affiliate product cards and buttons
  */
@@ -289,13 +289,13 @@
     max-width: 100%;
 }
 
-/* Price Styling */
+/* Price Styling (v1.6.3: cor removida - controlada por CSS dinâmico) */
 .affiliate-product-card .product-price,
 .affiliate-product-card .affiliate-price {
     font-size: 1.3em;
     font-weight: 700;
-    color: #2c3e50;
     margin: 10px 0;
+    /* Cor controlada via var(--affiliate-price-color) no CSS dinâmico */
 }
 
 /* Product Image */
