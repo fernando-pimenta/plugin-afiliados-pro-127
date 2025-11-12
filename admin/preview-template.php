@@ -2,10 +2,10 @@
 /**
  * Afiliados Pro - Preview Template
  *
- * Completely standalone preview template with v1.5.3 compatibility
+ * Completely standalone preview template with v1.5.4 button style support
  *
  * @package AfiliadorsPro
- * @version 1.5.3
+ * @version 1.5.4
  */
 
 if (!defined('ABSPATH')) {
@@ -48,7 +48,7 @@ $price_format = $settings['price_format'] ?? 'R$ {valor}';
 $price_placeholder = $settings['price_placeholder'] ?? 'Consulte o preço';
 
 // Legacy settings (for old installations)
-$button_style = $settings['button_style'] ?? 'filled';
+$button_style = $settings['button_style'] ?? 'gradient';
 $show_price = $settings['show_price'] ?? true;
 
 // Convert border radius to px
@@ -68,7 +68,7 @@ $placeholder_img = AFFILIATE_PRO_PLUGIN_URL . 'assets/img/placeholder.svg';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preview - Afiliados Pro v1.5.3</title>
+<title>Preview - Afiliados Pro v1.5.4</title>
 <style>
 /* Reset básico */
 * {
@@ -193,7 +193,7 @@ body {
     margin-bottom: 12px;
 }
 
-/* Product Button */
+/* Product Button - Base (v1.5.4) */
 .affiliate-btn {
     display: inline-block;
     margin-top: 10px;
@@ -204,16 +204,49 @@ body {
     text-decoration: none;
     font-weight: 500;
     font-size: 0.95em;
-    border: none;
+    <?php if ($button_style === 'gradient'): ?>
+    /* Estilo: Gradiente */
     background: linear-gradient(135deg, <?php echo esc_attr($button_color); ?>, <?php echo esc_attr($gradient_color); ?>);
     color: #fff;
+    border: none;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    <?php elseif ($button_style === 'flat'): ?>
+    /* Estilo: Preenchido */
+    background: <?php echo esc_attr($button_color); ?>;
+    color: #fff;
+    border: 2px solid <?php echo esc_attr($button_color); ?>;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    <?php elseif ($button_style === 'outline'): ?>
+    /* Estilo: Contorno */
+    background: transparent;
+    color: <?php echo esc_attr($button_color); ?>;
+    border: 2px solid <?php echo esc_attr($button_color); ?>;
+    box-shadow: none;
+    <?php else: ?>
+    /* Fallback para gradiente */
+    background: linear-gradient(135deg, <?php echo esc_attr($button_color); ?>, <?php echo esc_attr($gradient_color); ?>);
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    <?php endif; ?>
 }
 
 .affiliate-btn:hover {
-    opacity: 0.9;
     transform: scale(1.02);
+    <?php if ($button_style === 'gradient'): ?>
+    filter: brightness(1.1);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    <?php elseif ($button_style === 'flat'): ?>
+    opacity: 0.9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    <?php elseif ($button_style === 'outline'): ?>
+    background: <?php echo esc_attr($button_color); ?>;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    <?php else: ?>
+    filter: brightness(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    <?php endif; ?>
 }
 
 /* Responsive */
@@ -231,7 +264,7 @@ body {
 </head>
 <body>
     <div class="preview-header">
-        📱 Pré-visualização ao Vivo - v1.5.3 (Sincronizado com affiliate_pro_settings)
+        📱 Pré-visualização ao Vivo - v1.5.4 (Sincronizado com affiliate_pro_settings + button_style)
     </div>
 
     <div class="preview-products-container">

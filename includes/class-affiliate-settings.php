@@ -84,6 +84,7 @@ class Affiliate_Pro_Settings {
 
         // Seção 2 - Botão de Ação
         $sanitized['button_text'] = isset($input['button_text']) ? sanitize_text_field($input['button_text']) : __('Ver oferta', 'afiliados-pro');
+        $sanitized['button_style'] = isset($input['button_style']) && in_array($input['button_style'], array('gradient', 'flat', 'outline')) ? $input['button_style'] : 'gradient';
         $sanitized['button_color_start'] = isset($input['button_color_start']) ? sanitize_hex_color($input['button_color_start']) : '#6a82fb';
         $sanitized['button_color_end'] = isset($input['button_color_end']) ? sanitize_hex_color($input['button_color_end']) : '#fc5c7d';
         $sanitized['button_text_disabled'] = isset($input['button_text_disabled']) ? sanitize_text_field($input['button_text_disabled']) : __('Indisponível', 'afiliados-pro');
@@ -124,6 +125,7 @@ class Affiliate_Pro_Settings {
 
             // Seção 2 - Botão de Ação
             'button_text' => __('Ver oferta', 'afiliados-pro'),
+            'button_style' => 'gradient',
             'button_color_start' => '#6a82fb',
             'button_color_end' => '#fc5c7d',
             'button_text_disabled' => __('Indisponível', 'afiliados-pro'),
@@ -276,20 +278,67 @@ class Affiliate_Pro_Settings {
             color: var(--affiliate-accent-color);
         }
 
-        /* Botões com gradiente personalizado */
+        /* Botões base */
         .affiliate-product-card .product-button {
-            background: linear-gradient(135deg, var(--affiliate-button-start) 0%, var(--affiliate-button-end) 100%);
             width: auto;
             min-width: 120px;
             max-width: 90%;
             text-align: center;
             display: inline-block;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        ";
+
+        // Estilos específicos por tipo de botão (v1.5.4)
+        $button_style = $settings['button_style'] ?? 'gradient';
+
+        if ($button_style === 'gradient') {
+            $css .= "
+        /* Estilo: Gradiente */
+        .affiliate-product-card .product-button {
+            background: linear-gradient(135deg, var(--affiliate-button-start) 0%, var(--affiliate-button-end) 100%);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .affiliate-product-card .product-button:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+            ";
+        } elseif ($button_style === 'flat') {
+            $css .= "
+        /* Estilo: Preenchido */
+        .affiliate-product-card .product-button {
+            background: var(--affiliate-button-start);
+            color: #fff;
+            border-color: var(--affiliate-button-start);
         }
 
         .affiliate-product-card .product-button:hover {
             opacity: 0.9;
             transform: translateY(-2px);
         }
+            ";
+        } elseif ($button_style === 'outline') {
+            $css .= "
+        /* Estilo: Contorno */
+        .affiliate-product-card .product-button {
+            background: transparent;
+            color: var(--affiliate-button-start);
+            border-color: var(--affiliate-button-start);
+        }
+
+        .affiliate-product-card .product-button:hover {
+            background: var(--affiliate-button-start);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+            ";
+        }
+
+        $css .= "
         ";
 
         // Título clicável (condicional)

@@ -636,6 +636,13 @@ class Affiliate_Template_Builder {
             $settings['price_text_empty'] = $settings['price_placeholder'];
         }
 
+        // v1.5.4: Mapear valores antigos de button_style
+        if (isset($settings['button_style'])) {
+            if ($settings['button_style'] === 'filled') {
+                $settings['button_style'] = 'flat';
+            }
+        }
+
         // Defaults para campos que não existem no sistema unificado
         $settings = wp_parse_args($settings, array(
             'card_style' => 'modern',

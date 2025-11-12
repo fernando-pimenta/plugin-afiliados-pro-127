@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,15 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.4 (2025-11-15) =
+* 🧩 **CORREÇÃO**: Campo "Estilo de Botão" agora funciona corretamente (Contorno / Gradiente / Preenchido)
+* 🎨 **MELHORIA**: Sincronização total do button_style entre painel admin, preview e front-end
+* 💾 **CORREÇÃO**: Persistência real do valor button_style em affiliate_pro_settings
+* 🧱 **MELHORIA**: Aplicação condicional de estilos CSS baseada em button_style
+* 🛡️ **MELHORIA**: Isolamento entre cor do botão (button_color_start) e cor de destaque (accent_color)
+* 🔄 **MELHORIA**: Mapeamento de compatibilidade para valores antigos ('filled' → 'flat')
+* 🎯 **MELHORIA**: CSS dinâmico agora aplica estilos específicos por tipo de botão (flat, outline, gradient)
 
 = 1.5.3 (2025-11-14) =
 * 🔧 **CORREÇÃO**: Eliminados warnings "Undefined array key" no preview-template.php

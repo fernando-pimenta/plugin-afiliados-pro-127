@@ -109,6 +109,17 @@ if (isset($_GET['reset']) && $_GET['reset'] === 'success') {
                         </td>
                     </tr>
                     <tr>
+                        <th scope="row"><?php _e('Estilo do Botão', 'afiliados-pro'); ?></th>
+                        <td>
+                            <select name="affiliate_pro_settings[button_style]">
+                                <option value="gradient" <?php selected($settings['button_style'] ?? 'gradient', 'gradient'); ?>><?php _e('Gradiente', 'afiliados-pro'); ?></option>
+                                <option value="flat" <?php selected($settings['button_style'] ?? 'gradient', 'flat'); ?>><?php _e('Preenchido', 'afiliados-pro'); ?></option>
+                                <option value="outline" <?php selected($settings['button_style'] ?? 'gradient', 'outline'); ?>><?php _e('Contorno', 'afiliados-pro'); ?></option>
+                            </select>
+                            <p class="description"><?php _e('Define o estilo visual do botão principal nos cards de produto', 'afiliados-pro'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
                         <th scope="row"><?php _e('Cor Inicial do Gradiente', 'afiliados-pro'); ?></th>
                         <td>
                             <input type="text" name="affiliate_pro_settings[button_color_start]" value="<?php echo esc_attr($settings['button_color_start']); ?>" class="color-picker" data-default-color="#6a82fb">
