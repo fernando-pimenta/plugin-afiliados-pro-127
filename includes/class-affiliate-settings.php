@@ -211,9 +211,9 @@ class Affiliate_Pro_Settings {
     public static function get_dynamic_css() {
         $settings = self::get_settings();
 
-        // Variáveis CSS no :root para fácil customização (v1.5.6)
+        // Variáveis CSS no :root para fácil customização (v1.6.5)
         $css = "
-        /* Afiliados Pro - CSS Dinâmico v1.5.6 */
+        /* Afiliados Pro - CSS Dinâmico v1.6.5 */
 
         :root {
             --affiliate-primary-color: {$settings['primary_color']};
@@ -340,14 +340,27 @@ class Affiliate_Pro_Settings {
         .affiliate-product-card .affiliate-btn-flat {
             background: var(--button-color-start, var(--affiliate-button-start));
             color: var(--button-text-color, var(--affiliate-button-text));
-            border: 2px solid var(--button-color-start, var(--affiliate-button-start));
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            border: 2px solid var(--button-color-start, var(--affiliate-button-start));";
+
+        // v1.6.5: Sombra nos botões condicional
+        if ($settings['shadow_button']) {
+            $css .= "
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);";
+        }
+
+        $css .= "
         }
 
         .affiliate-product-card .affiliate-btn-flat:hover {
             opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);";
+
+        if ($settings['shadow_button']) {
+            $css .= "
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);";
+        }
+
+        $css .= "
         }
 
         /* Estilo: Contorno (Outline) - v1.5.6 */
@@ -361,22 +374,40 @@ class Affiliate_Pro_Settings {
         .affiliate-product-card .affiliate-btn-outline:hover {
             background: var(--button-color-start, var(--affiliate-button-start));
             color: var(--button-text-color, var(--affiliate-button-text));
-            transform: translateY(-2px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);";
+
+        if ($settings['shadow_button']) {
+            $css .= "
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);";
+        }
+
+        $css .= "
         }
 
         /* Estilo: Gradiente - v1.5.6 */
         .affiliate-product-card .affiliate-btn-gradient {
             background: linear-gradient(135deg, var(--button-color-start, var(--affiliate-button-start)) 0%, var(--button-color-end, var(--affiliate-button-end)) 100%);
             color: var(--button-text-color, var(--affiliate-button-text));
-            border: none;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            border: none;";
+
+        if ($settings['shadow_button']) {
+            $css .= "
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);";
+        }
+
+        $css .= "
         }
 
         .affiliate-product-card .affiliate-btn-gradient:hover {
             filter: brightness(1.1);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);";
+
+        if ($settings['shadow_button']) {
+            $css .= "
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);";
+        }
+
+        $css .= "
         }
         ";
 

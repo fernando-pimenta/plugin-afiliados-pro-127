@@ -285,8 +285,8 @@ class Affiliate_Template_Builder {
                                 <select id="border_radius" name="border_radius" class="regular-text">
                                     <option value="none" <?php selected($settings['border_radius'], 'none'); ?>><?php _e('Nenhum (0px)', 'afiliados-pro'); ?></option>
                                     <option value="small" <?php selected($settings['border_radius'], 'small'); ?>><?php _e('Pequeno (4px)', 'afiliados-pro'); ?></option>
-                                    <option value="medium" <?php selected($settings['border_radius'], 'medium'); ?>><?php _e('Médio (8px)', 'afiliados-pro'); ?></option>
-                                    <option value="large" <?php selected($settings['border_radius'], 'large'); ?>><?php _e('Grande (16px)', 'afiliados-pro'); ?></option>
+                                    <option value="medium" <?php selected($settings['border_radius'], 'medium'); ?>><?php _e('Médio (12px)', 'afiliados-pro'); ?></option>
+                                    <option value="large" <?php selected($settings['border_radius'], 'large'); ?>><?php _e('Grande (20px)', 'afiliados-pro'); ?></option>
                                 </select>
                             </p>
 
