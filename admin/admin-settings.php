@@ -72,6 +72,13 @@ if (isset($_GET['reset']) && $_GET['reset'] === 'success') {
                         </td>
                     </tr>
                     <tr>
+                        <th scope="row"><?php _e('Cor do Preço', 'afiliados-pro'); ?></th>
+                        <td>
+                            <input type="text" name="affiliate_pro_settings[price_color]" value="<?php echo esc_attr($settings['price_color'] ?? '#111111'); ?>" class="color-picker" data-default-color="#111111">
+                            <p class="description"><?php _e('Define a cor do valor do produto exibido nos cards', 'afiliados-pro'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
                         <th scope="row"><?php _e('Fundo da Imagem', 'afiliados-pro'); ?></th>
                         <td>
                             <input type="text" name="affiliate_pro_settings[card_image_background]" value="<?php echo esc_attr($settings['card_image_background'] ?? '#f9f9f9'); ?>" class="color-picker" data-default-color="#f9f9f9">

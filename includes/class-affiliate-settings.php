@@ -79,6 +79,7 @@ class Affiliate_Pro_Settings {
         $sanitized['accent_color'] = isset($input['accent_color']) ? sanitize_hex_color($input['accent_color']) : '#ffa70a';
         $sanitized['card_bg_color'] = isset($input['card_bg_color']) ? sanitize_hex_color($input['card_bg_color']) : '#ffffff';
         $sanitized['text_color'] = isset($input['text_color']) ? sanitize_hex_color($input['text_color']) : '#1a1a1a';
+        $sanitized['price_color'] = isset($input['price_color']) ? sanitize_hex_color($input['price_color']) : '#111111';
         $sanitized['card_image_background'] = isset($input['card_image_background']) ? sanitize_hex_color($input['card_image_background']) : '#f9f9f9';
         $sanitized['card_border_radius'] = isset($input['card_border_radius']) ? absint($input['card_border_radius']) : 12;
         $sanitized['card_shadow'] = isset($input['card_shadow']) ? (bool) $input['card_shadow'] : true;
@@ -122,6 +123,7 @@ class Affiliate_Pro_Settings {
             'accent_color' => '#ffa70a',
             'card_bg_color' => '#ffffff',
             'text_color' => '#1a1a1a',
+            'price_color' => '#111111',
             'card_image_background' => '#f9f9f9',
             'card_border_radius' => 12,
             'card_shadow' => true,
@@ -219,6 +221,7 @@ class Affiliate_Pro_Settings {
             --affiliate-button-start: {$settings['button_color_start']};
             --affiliate-button-end: {$settings['button_color_end']};
             --affiliate-button-text: {$settings['button_text_color']};
+            --affiliate-price-color: {$settings['price_color']};
         }
 
         /* Grade de produtos com gap dinâmico */
@@ -304,9 +307,10 @@ class Affiliate_Pro_Settings {
             color: #fff;
         }
 
-        /* Preço com cor de destaque */
+        /* Preço com cor personalizada (v1.5.8) */
         .affiliate-product-card .product-price {
-            color: var(--affiliate-accent-color);
+            color: var(--affiliate-price-color);
+            font-weight: 600;
         }
 
         /* Botões base (v1.5.5) */

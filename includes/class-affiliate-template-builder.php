@@ -185,12 +185,6 @@ class Affiliate_Template_Builder {
                             <legend><strong><?php _e('Identidade Visual', 'afiliados-pro'); ?></strong></legend>
 
                             <p>
-                                <label for="highlight_color"><?php _e('Cor de Destaque', 'afiliados-pro'); ?></label><br>
-                                <input type="color" id="highlight_color" name="highlight_color" value="<?php echo esc_attr($settings['highlight_color']); ?>" style="width:60px;height:40px;">
-                                <span class="description"><?php _e('Preços e elementos de destaque', 'afiliados-pro'); ?></span>
-                            </p>
-
-                            <p>
                                 <label for="card_background_color"><?php _e('Fundo do Card', 'afiliados-pro'); ?></label><br>
                                 <input type="color" id="card_background_color" name="card_background_color" value="<?php echo esc_attr($settings['card_background_color']); ?>" style="width:60px;height:40px;">
                                 <span class="description"><?php _e('Cor de fundo dos cards', 'afiliados-pro'); ?></span>
@@ -200,6 +194,12 @@ class Affiliate_Template_Builder {
                                 <label for="text_color"><?php _e('Cor do Texto', 'afiliados-pro'); ?></label><br>
                                 <input type="color" id="text_color" name="text_color" value="<?php echo esc_attr($settings['text_color']); ?>" style="width:60px;height:40px;">
                                 <span class="description"><?php _e('Texto nos cards', 'afiliados-pro'); ?></span>
+                            </p>
+
+                            <p>
+                                <label for="price_color"><?php _e('Cor do Preço', 'afiliados-pro'); ?></label><br>
+                                <input type="color" id="price_color" name="price_color" value="<?php echo esc_attr($settings['price_color']); ?>" style="width:60px;height:40px;">
+                                <span class="description"><?php _e('Cor do valor do produto', 'afiliados-pro'); ?></span>
                             </p>
 
                             <p>
@@ -483,6 +483,10 @@ class Affiliate_Template_Builder {
         if (isset($_POST['text_color'])) {
             $settings['text_color'] = sanitize_hex_color($_POST['text_color']);
         }
+        // v1.5.8: Salvar price_color (cor do preço)
+        if (isset($_POST['price_color'])) {
+            $settings['price_color'] = sanitize_hex_color($_POST['price_color']);
+        }
         // v1.5.7: Corrigido - salvar button_color como button_color_start (não como accent_color)
         if (isset($_POST['button_color'])) {
             $settings['button_color_start'] = sanitize_hex_color($_POST['button_color']);
@@ -721,12 +725,13 @@ class Affiliate_Template_Builder {
 
         // Gerar CSS dinâmico
         $css = "
-        /* Afiliados Pro - Template Builder v1.4.0 */
+        /* Afiliados Pro - Template Builder v1.5.8 */
 
         :root {
             --affiliate-template-primary: {$settings['primary_color']};
             --affiliate-template-button: {$settings['button_color']};
             --affiliate-template-radius: {$border_radius};
+            --affiliate-price-color: {$settings['price_color']};
         }
 
         /* Refinamento Visual - Cards de Produtos */

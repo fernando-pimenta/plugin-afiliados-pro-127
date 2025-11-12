@@ -225,11 +225,13 @@ class Affiliate_Pro_Shortcodes {
         $button_color_start = $settings['button_color_start'] ?? '#6a82fb';
         $button_color_end = $settings['button_color_end'] ?? '#fc5c7d';
         $button_text_color = $settings['button_text_color'] ?? '#ffffff';
+        $price_color = $settings['price_color'] ?? '#111111';
         $button_inline_style = sprintf(
-            'style="--button-color-start: %s; --button-color-end: %s; --button-text-color: %s;"',
+            'style="--button-color-start: %s; --button-color-end: %s; --button-text-color: %s; --price-color: %s;"',
             esc_attr($button_color_start),
             esc_attr($button_color_end),
-            esc_attr($button_text_color)
+            esc_attr($button_text_color),
+            esc_attr($price_color)
         );
 
         ob_start();

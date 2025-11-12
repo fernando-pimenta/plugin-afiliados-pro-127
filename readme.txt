@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.7
+Stable tag: 1.5.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,14 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.8 (2025-11-20) =
+* 💰 **NOVO**: Adicionado campo "Cor do Preço" (price_color)
+* 🧩 **CORREÇÃO**: Removida cor de destaque redundante (highlight_color)
+* 🎨 **MELHORIA**: Preview e front-end aplicam cor de preço via --price-color
+* ✅ **MELHORIA**: Sistema de cores consolidado e limpo
+* 📊 **MELHORIA**: Cor do preço independente e personalizável
+* 🔄 **SINCRONIZAÇÃO**: Template Builder, admin e front 100% sincronizados
 
 = 1.5.7 (2025-11-19) =
 * 🎨 **CORREÇÃO CRÍTICA**: Cores de botão e destaque agora salvam e persistem corretamente
