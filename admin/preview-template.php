@@ -2,10 +2,10 @@
 /**
  * Afiliados Pro - Preview Template
  *
- * Completely standalone preview template with v1.5.6 unified color system
+ * Completely standalone preview template with v1.5.8 unified color system
  *
  * @package AfiliadorsPro
- * @version 1.5.6
+ * @version 1.5.8.1
  */
 
 if (!defined('ABSPATH')) {
@@ -35,6 +35,7 @@ $button_color = $settings['button_color_start'] ?? '#6a82fb';
 $gradient_color = $settings['button_color_end'] ?? '#fc5c7d';
 $button_text_color = $settings['button_text_color'] ?? '#ffffff';
 $accent_color = $settings['accent_color'] ?? '#ffa70a';
+$price_color = $settings['price_color'] ?? '#111111';
 $card_bg_color = $settings['card_bg_color'] ?? '#ffffff';
 $text_color = $settings['text_color'] ?? '#1a1a1a';
 $card_image_background = $settings['card_image_background'] ?? '#f9f9f9';
@@ -71,7 +72,7 @@ $placeholder_img = AFFILIATE_PRO_PLUGIN_URL . 'assets/img/placeholder.svg';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preview - Afiliados Pro v1.5.6</title>
+<title>Preview - Afiliados Pro v1.5.8.1</title>
 <style>
 /* Reset básico */
 * {
@@ -186,11 +187,11 @@ body {
     margin-bottom: 12px;
 }
 
-/* Product Price */
+/* Product Price - v1.5.8.1 */
 .affiliate-price {
     font-size: 1.4em;
     font-weight: 700;
-    color: <?php echo esc_attr($accent_color); ?>;
+    color: <?php echo esc_attr($price_color); ?>;
     margin-bottom: 12px;
 }
 
@@ -274,7 +275,7 @@ body {
 </head>
 <body>
     <div class="preview-header">
-        📱 Pré-visualização ao Vivo - v1.5.6 (Sistema de cores unificado)
+        📱 Pré-visualização ao Vivo - v1.5.8.1 (Cor do preço corrigida)
     </div>
 
     <div class="preview-products-container">
