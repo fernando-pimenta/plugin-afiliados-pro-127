@@ -1,60 +1,86 @@
 /**
  * Afiliados Pro - Template Builder Styles
- * Version: 1.4.6
+ * Version: 1.5.9
  *
  * Global CSS for affiliate product cards and buttons
  */
 
-/* Split Layout Container (v1.4.6) */
+/* Split Layout Container (v1.5.9 - Optimized) */
 .affiliate-builder-container {
     display: flex;
-    gap: 24px;
+    gap: 20px;
     align-items: flex-start;
     margin-top: 20px;
     flex-wrap: wrap;
 }
 
 .affiliate-preview-pane {
-    flex: 1 1 60%;
+    flex: 1 1 55%;
     min-width: 480px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .affiliate-controls-pane {
-    flex: 0 0 35%;
-    min-width: 300px;
+    flex: 0 0 42%;
+    min-width: 320px;
     background: #fff;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
+/* v1.5.9: Optimized spacing for fieldsets */
 .affiliate-controls-pane fieldset {
-    margin-bottom: 20px;
-    border: 1px solid #eee;
-    border-radius: 6px;
-    padding: 10px 12px;
+    margin-bottom: 18px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: #fafafa;
 }
 
 .affiliate-controls-pane legend {
-    padding: 0 6px;
+    padding: 0 8px;
     font-weight: 600;
-    color: #444;
+    color: #333;
+    font-size: 0.95em;
 }
 
+/* v1.5.9: Reduced vertical spacing between fields */
 .affiliate-controls-pane p {
-    margin: 8px 0;
+    margin: 10px 0;
+}
+
+.affiliate-controls-pane p label {
+    display: inline-block;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #444;
 }
 
 .affiliate-controls-pane .description {
     display: block;
-    font-size: 12px;
-    color: #666;
-    margin-top: 4px;
+    font-size: 11.5px;
+    color: #777;
+    margin-top: 3px;
+    line-height: 1.4;
+}
+
+/* v1.5.9: Standardized color picker size */
+.affiliate-controls-pane input[type="color"] {
+    width: 60px;
+    height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 /* Responsive Split Layout */
-@media (max-width: 1200px) {
+@media (max-width: 960px) {
     .affiliate-builder-container {
         flex-direction: column;
     }

@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.8.6
+Stable tag: 1.5.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,16 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.9 (2025-11-12) =
+* 🎨 **UX OTIMIZADA**: Redesenho completo do Template Builder com layout split-pane moderno
+* 📐 **LAYOUT**: Preview 55% + Controles 42% com responsividade em <960px
+* 📏 **PREVIEW COMPACTO**: Altura da pré-visualização reduzida de 800px para 500px
+* ✨ **VISUAL**: Painéis com bordas arredondadas (12px), fundos brancos e sombras suaves
+* 🎯 **ESPAÇAMENTO**: Margens otimizadas (10px entre campos) para melhor densidade visual
+* 🎨 **COLOR PICKERS**: Tamanho padronizado (60px × 35px) para consistência
+* 📱 **RESPONSIVE**: Empilhamento automático em telas menores (<960px)
+* 🔧 **FIELDSETS**: Fundos (#fafafa) e bordas para melhor agrupamento visual
 
 = 1.5.8.6 (2025-11-25) =
 * 🖼️ **CORREÇÃO IMPORTANTE**: Adicionado campo "Fundo da Área da Imagem" no Template Builder (page=affiliate-template-builder)
