@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.9.5
+Stable tag: 1.5.9.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,14 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.9.6 (2025-11-28) =
+* 🔧 **FIX**: Corrigido salvamento de checkboxes shadow_card (Sombra nos cards)
+* ✅ **SHADOW_BUTTON**: Adicionado salvamento completo de shadow_button (Sombra nos botões)
+* ✅ **FORCE_CSS**: Adicionado salvamento completo de force_css (Forçar CSS)
+* 💾 **DEFAULTS**: Adicionado shadow_button e force_css aos defaults das configurações
+* 📝 **SANITIZAÇÃO**: Adicionada sanitização de shadow_button e force_css no Affiliate_Pro_Settings
+* 🎯 **CONSISTÊNCIA**: Todos os checkboxes agora salvam corretamente quando marcados ou desmarcados
 
 = 1.5.9.5 (2025-11-28) =
 * 🔧 **FIX CRÍTICO**: Corrigido salvamento de checkboxes desmarcados no Template Builder

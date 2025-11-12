@@ -526,6 +526,18 @@ class Affiliate_Template_Builder {
         // Mapear sombra
         if (isset($_POST['shadow_card'])) {
             $settings['card_shadow'] = boolval($_POST['shadow_card']);
+        } else {
+            $settings['card_shadow'] = false;
+        }
+        if (isset($_POST['shadow_button'])) {
+            $settings['shadow_button'] = boolval($_POST['shadow_button']);
+        } else {
+            $settings['shadow_button'] = false;
+        }
+        if (isset($_POST['force_css'])) {
+            $settings['force_css'] = boolval($_POST['force_css']);
+        } else {
+            $settings['force_css'] = false;
         }
 
         // Mapear layout

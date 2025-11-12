@@ -83,6 +83,8 @@ class Affiliate_Pro_Settings {
         $sanitized['card_image_background'] = isset($input['card_image_background']) ? sanitize_hex_color($input['card_image_background']) : '#f9f9f9';
         $sanitized['card_border_radius'] = isset($input['card_border_radius']) ? absint($input['card_border_radius']) : 12;
         $sanitized['card_shadow'] = isset($input['card_shadow']) ? (bool) $input['card_shadow'] : true;
+        $sanitized['shadow_button'] = isset($input['shadow_button']) ? (bool) $input['shadow_button'] : false;
+        $sanitized['force_css'] = isset($input['force_css']) ? (bool) $input['force_css'] : false;
 
         // Seção 2 - Botão de Ação
         $sanitized['button_text'] = isset($input['button_text']) ? sanitize_text_field($input['button_text']) : __('Ver oferta', 'afiliados-pro');
@@ -128,6 +130,8 @@ class Affiliate_Pro_Settings {
             'card_image_background' => '#f9f9f9',
             'card_border_radius' => 12,
             'card_shadow' => true,
+            'shadow_button' => false,
+            'force_css' => false,
 
             // Seção 2 - Botão de Ação
             'button_text' => __('Ver oferta', 'afiliados-pro'),
