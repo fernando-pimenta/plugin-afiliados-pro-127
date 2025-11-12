@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.9
+Stable tag: 1.5.9.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,14 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.9.1 (2025-11-27) =
+* 🎯 **CORREÇÃO UX**: Preview e painel agora lado a lado em 100% de zoom
+* 📏 **AJUSTE**: Proporções refinadas (preview ocupa ~48% da largura com max-width 480px)
+* ⚡ **RESPONSIVO**: Stack vertical automático abaixo de 1024px
+* 🧱 **VISUAL**: Padding reduzido (12px) e altura limitada (340px) para proporção realista
+* 🔍 **ESCALA**: Transform scale(0.9) no preview para melhor ajuste visual
+* ✅ **SEM ALTERAÇÕES FUNCIONAIS**: Apenas refinamento visual e proporções
 
 = 1.5.9 (2025-11-12) =
 * 🎨 **UX OTIMIZADA**: Redesenho completo do Template Builder com layout split-pane moderno

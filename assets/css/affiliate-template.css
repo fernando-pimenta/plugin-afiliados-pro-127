@@ -1,31 +1,41 @@
 /**
  * Afiliados Pro - Template Builder Styles
- * Version: 1.5.9
+ * Version: 1.5.9.1
  *
  * Global CSS for affiliate product cards and buttons
  */
 
-/* Split Layout Container (v1.5.9 - Optimized) */
+/* Split Layout Container (v1.5.9.1 - Proporção Ajustada) */
 .affiliate-builder-container {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     align-items: flex-start;
     margin-top: 20px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    justify-content: space-between;
 }
 
 .affiliate-preview-pane {
-    flex: 1 1 55%;
-    min-width: 480px;
+    flex: 0 0 48%;
+    max-width: 480px;
+    min-width: 380px;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 12px;
-    padding: 16px;
+    padding: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transform: scale(0.9);
+    transform-origin: top left;
+}
+
+.affiliate-preview-pane iframe {
+    max-height: 340px;
+    overflow: hidden;
 }
 
 .affiliate-controls-pane {
-    flex: 0 0 42%;
+    flex: 1;
+    max-width: 520px;
     min-width: 320px;
     background: #fff;
     border: 1px solid #ddd;
@@ -79,15 +89,23 @@
     cursor: pointer;
 }
 
-/* Responsive Split Layout */
-@media (max-width: 960px) {
+/* Responsive Split Layout (v1.5.9.1 - Breakpoint 1024px) */
+@media (max-width: 1024px) {
     .affiliate-builder-container {
         flex-direction: column;
+        flex-wrap: wrap;
     }
 
-    .affiliate-preview-pane,
+    .affiliate-preview-pane {
+        flex: 1 1 100%;
+        max-width: 100%;
+        min-width: 100%;
+        transform: scale(1);
+    }
+
     .affiliate-controls-pane {
         flex: 1 1 100%;
+        max-width: 100%;
         min-width: 100%;
     }
 }
