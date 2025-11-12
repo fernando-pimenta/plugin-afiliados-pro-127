@@ -563,13 +563,89 @@ class Affiliate_Template_Builder {
     /**
      * Retorna as configurações do template (mescladas com defaults)
      * v1.5.2: Sincronizado com Affiliate_Pro_Settings para persistência correta
+     * v1.5.3: Adiciona mapeamento reverso para compatibilidade com formulários antigos
      *
      * @return array
      */
     public static function get_template_settings() {
         // v1.5.2: Agora usa as configurações unificadas do Affiliate_Pro_Settings
         // Isso garante que o front-end e o admin sempre estejam sincronizados
-        return Affiliate_Pro_Settings::get_settings();
+        $settings = Affiliate_Pro_Settings::get_settings();
+
+        // v1.5.3: Mapear chaves unificadas de volta para chaves antigas do Template Builder
+        // Isso previne "Undefined array key" warnings nos formulários antigos
+
+        // Mapear accent_color -> highlight_color (para exibição no form)
+        if (!isset($settings['highlight_color']) && isset($settings['accent_color'])) {
+            $settings['highlight_color'] = $settings['accent_color'];
+        }
+
+        // Mapear card_bg_color -> card_background_color
+        if (!isset($settings['card_background_color']) && isset($settings['card_bg_color'])) {
+            $settings['card_background_color'] = $settings['card_bg_color'];
+        }
+
+        // Mapear button_color_start -> button_color
+        if (!isset($settings['button_color']) && isset($settings['button_color_start'])) {
+            $settings['button_color'] = $settings['button_color_start'];
+        } elseif (!isset($settings['button_color']) && isset($settings['accent_color'])) {
+            $settings['button_color'] = $settings['accent_color'];
+        }
+
+        // Mapear button_color_end -> gradient_color
+        if (!isset($settings['gradient_color']) && isset($settings['button_color_end'])) {
+            $settings['gradient_color'] = $settings['button_color_end'];
+        }
+
+        // Mapear card_border_radius (número) -> border_radius (texto)
+        if (!isset($settings['border_radius']) && isset($settings['card_border_radius'])) {
+            $radius = intval($settings['card_border_radius']);
+            if ($radius === 0) {
+                $settings['border_radius'] = 'none';
+            } elseif ($radius <= 4) {
+                $settings['border_radius'] = 'small';
+            } elseif ($radius <= 12) {
+                $settings['border_radius'] = 'medium';
+            } else {
+                $settings['border_radius'] = 'large';
+            }
+        }
+
+        // Mapear card_shadow -> shadow_card
+        if (!isset($settings['shadow_card']) && isset($settings['card_shadow'])) {
+            $settings['shadow_card'] = $settings['card_shadow'];
+        }
+
+        // Mapear default_layout -> layout_default
+        if (!isset($settings['layout_default']) && isset($settings['default_layout'])) {
+            $settings['layout_default'] = $settings['default_layout'];
+        }
+
+        // Mapear default_columns -> columns
+        if (!isset($settings['columns']) && isset($settings['default_columns'])) {
+            $settings['columns'] = $settings['default_columns'];
+        }
+
+        // Mapear title_clickable -> clickable_title
+        if (!isset($settings['clickable_title']) && isset($settings['title_clickable'])) {
+            $settings['clickable_title'] = $settings['title_clickable'];
+        }
+
+        // Mapear price_placeholder -> price_text_empty
+        if (!isset($settings['price_text_empty']) && isset($settings['price_placeholder'])) {
+            $settings['price_text_empty'] = $settings['price_placeholder'];
+        }
+
+        // Defaults para campos que não existem no sistema unificado
+        $settings = wp_parse_args($settings, array(
+            'card_style' => 'modern',
+            'button_style' => 'gradient',
+            'shadow_button' => false,
+            'force_css' => false,
+            'show_price' => true,
+        ));
+
+        return $settings;
     }
 
     /**
