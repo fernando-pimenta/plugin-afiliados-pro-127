@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.9.4
+Stable tag: 1.5.9.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,14 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.9.5 (2025-11-28) =
+* 🔧 **FIX CRÍTICO**: Corrigido salvamento de checkboxes desmarcados no Template Builder
+* ✅ **TÍTULO CLICÁVEL**: Agora desabilita corretamente quando desmarcado
+* ✅ **ABRIR EM NOVA ABA**: Agora desabilita corretamente quando desmarcado
+* ✅ **BADGE DA LOJA**: Agora oculta corretamente quando desmarcado
+* 💾 **SALVAMENTO**: Adicionado else { false } para todos os checkboxes
+* 📝 **COMPORTAMENTO**: Checkboxes agora salvam false ao serem desmarcados
 
 = 1.5.9.4 (2025-11-28) =
 * ⚙️ **FUNCIONAL**: Opção "Exibir Preço" agora aplicada corretamente no front-end

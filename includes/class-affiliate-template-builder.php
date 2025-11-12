@@ -555,12 +555,18 @@ class Affiliate_Template_Builder {
         }
         if (isset($_POST['clickable_title'])) {
             $settings['title_clickable'] = boolval($_POST['clickable_title']);
+        } else {
+            $settings['title_clickable'] = false;
         }
         if (isset($_POST['open_in_new_tab'])) {
             $settings['open_in_new_tab'] = boolval($_POST['open_in_new_tab']);
+        } else {
+            $settings['open_in_new_tab'] = false;
         }
         if (isset($_POST['show_store_badge'])) {
             $settings['show_store_badge'] = boolval($_POST['show_store_badge']);
+        } else {
+            $settings['show_store_badge'] = false;
         }
         if (isset($_POST['show_price'])) {
             $settings['show_price'] = boolval($_POST['show_price']);
