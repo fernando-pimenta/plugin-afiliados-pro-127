@@ -191,6 +191,12 @@ class Affiliate_Template_Builder {
                             </p>
 
                             <p>
+                                <label for="card_image_background"><?php _e('Fundo da Área da Imagem', 'afiliados-pro'); ?></label><br>
+                                <input type="color" id="card_image_background" name="card_image_background" value="<?php echo esc_attr($settings['card_image_background']); ?>" style="width:60px;height:40px;">
+                                <span class="description"><?php _e('Cor de fundo atrás da imagem do produto', 'afiliados-pro'); ?></span>
+                            </p>
+
+                            <p>
                                 <label for="text_color"><?php _e('Cor do Texto', 'afiliados-pro'); ?></label><br>
                                 <input type="color" id="text_color" name="text_color" value="<?php echo esc_attr($settings['text_color']); ?>" style="width:60px;height:40px;">
                                 <span class="description"><?php _e('Texto nos cards', 'afiliados-pro'); ?></span>
@@ -479,6 +485,9 @@ class Affiliate_Template_Builder {
         }
         if (isset($_POST['card_background_color'])) {
             $settings['card_bg_color'] = sanitize_hex_color($_POST['card_background_color']);
+        }
+        if (isset($_POST['card_image_background'])) {
+            $settings['card_image_background'] = sanitize_hex_color($_POST['card_image_background']);
         }
         if (isset($_POST['text_color'])) {
             $settings['text_color'] = sanitize_hex_color($_POST['text_color']);

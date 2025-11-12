@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.8.5
+Stable tag: 1.5.8.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,12 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.5.8.6 (2025-11-25) =
+* 🖼️ **CORREÇÃO IMPORTANTE**: Adicionado campo "Fundo da Área da Imagem" no Template Builder (page=affiliate-template-builder)
+* 📍 **LOCAL CORRETO**: Campo agora aparece em WordPress Admin → Afiliados → Aparência e Configurações → Template Builder
+* 💾 **PERSISTÊNCIA**: Salvamento do campo card_image_background implementado no Template Builder
+* ✅ **SINCRONIZAÇÃO**: Campo aparece logo após "Fundo do Card" na seção Identidade Visual
 
 = 1.5.8.5 (2025-11-25) =
 * 🖼️ **CORREÇÃO**: Melhorado campo "Fundo da Área da Imagem" para melhor visibilidade
