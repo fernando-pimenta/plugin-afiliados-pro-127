@@ -262,11 +262,11 @@ class Affiliate_Pro_Shortcodes {
                     </h3>
                 <?php endif; ?>
 
-                <p class="product-price"><?php echo esc_html($price_formatted); ?></p>
-
                 <?php if ($excerpt) : ?>
                     <p class="product-excerpt"><?php echo esc_html($excerpt); ?></p>
                 <?php endif; ?>
+
+                <p class="product-price"><?php echo esc_html($price_formatted); ?></p>
 
                 <?php if (!empty($link)) : ?>
                     <a href="<?php echo esc_url($link); ?>"
