@@ -1,8 +1,9 @@
 <?php
 /**
  * Classe responsável pelo Custom Post Type e Taxonomia
+ * v1.7.1: Refatoração gradual - PAP_Products é agora a classe principal
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.0
  */
 
@@ -10,12 +11,19 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Affiliate_Pro_Products {
+/**
+ * Classe principal de Products com prefixo padronizado PAP
+ * v1.7.1: Promovida de espelho para classe principal
+ *
+ * @package PAP
+ * @since 1.7.1
+ */
+class PAP_Products {
 
     /**
      * Instância única (Singleton)
      *
-     * @var Affiliate_Pro_Products
+     * @var PAP_Products
      */
     private static $instance = null;
 
@@ -36,7 +44,7 @@ class Affiliate_Pro_Products {
     /**
      * Obtém a instância única
      *
-     * @return Affiliate_Pro_Products
+     * @return PAP_Products
      */
     public static function get_instance() {
         if (null === self::$instance) {
@@ -669,12 +677,13 @@ class Affiliate_Pro_Products {
 }
 
 /**
- * Classe espelho com prefixo padronizado PAP (v1.7.0)
- * Compatibilidade total: herda todos os métodos de Affiliate_Pro_Products
+ * Classe de compatibilidade com prefixo legado (v1.7.1)
+ * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Products
  *
- * @package PAP
- * @since 1.7.0
+ * @package Affiliate_Pro
+ * @since 1.0
+ * @deprecated 1.7.1 Use PAP_Products ao invés
  */
-class PAP_Products extends Affiliate_Pro_Products {
-    // Herança completa - mantém todos os métodos e comportamentos
+class Affiliate_Pro_Products extends PAP_Products {
+    // Herança completa para compatibilidade com código legado
 }

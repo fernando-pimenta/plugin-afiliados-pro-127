@@ -1,8 +1,9 @@
 <?php
 /**
  * Classe responsável pelos shortcodes do plugin
+ * v1.7.1: Refatoração gradual - PAP_Shortcodes é agora a classe principal
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.0
  */
 
@@ -10,19 +11,26 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Affiliate_Pro_Shortcodes {
+/**
+ * Classe principal de Shortcodes com prefixo padronizado PAP
+ * v1.7.1: Promovida de espelho para classe principal
+ *
+ * @package PAP
+ * @since 1.7.1
+ */
+class PAP_Shortcodes {
 
     /**
      * Instância única (Singleton)
      *
-     * @var Affiliate_Pro_Shortcodes
+     * @var PAP_Shortcodes
      */
     private static $instance = null;
 
     /**
      * Obtém a instância única
      *
-     * @return Affiliate_Pro_Shortcodes
+     * @return PAP_Shortcodes
      */
     public static function get_instance() {
         if (null === self::$instance) {
@@ -405,12 +413,13 @@ class Affiliate_Pro_Shortcodes {
 }
 
 /**
- * Classe espelho com prefixo padronizado PAP (v1.7.0)
- * Compatibilidade total: herda todos os métodos de Affiliate_Pro_Shortcodes
+ * Classe de compatibilidade com prefixo legado (v1.7.1)
+ * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Shortcodes
  *
- * @package PAP
- * @since 1.7.0
+ * @package Affiliate_Pro
+ * @since 1.0
+ * @deprecated 1.7.1 Use PAP_Shortcodes ao invés
  */
-class PAP_Shortcodes extends Affiliate_Pro_Shortcodes {
-    // Herança completa - mantém todos os métodos e comportamentos
+class Affiliate_Pro_Shortcodes extends PAP_Shortcodes {
+    // Herança completa para compatibilidade com código legado
 }

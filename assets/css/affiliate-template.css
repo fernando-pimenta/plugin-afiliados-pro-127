@@ -1,8 +1,9 @@
 /**
  * Afiliados Pro - Template Builder Styles
- * Version: 1.6.7
+ * Version: 1.7.1
  *
  * Global CSS for affiliate product cards and buttons
+ * v1.7.1: Adicionados seletores .pap- para padronização
  */
 
 /* Split Layout Container (v1.5.9.3 - Preview Centralizado e Altura Expandida) */
@@ -310,6 +311,19 @@
 .affiliate-card-container,
 .affiliate-products-grid,
 .affiliate-products-list {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    flex-wrap: wrap !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* === Seletores padronizados PAP (v1.7.1) === */
+/* Compatibilidade total: .pap- funciona identicamente a .affiliate- */
+.pap-card-container,
+.pap-products-grid,
+.pap-products-list {
     display: flex !important;
     justify-content: center !important;
     align-items: flex-start !important;

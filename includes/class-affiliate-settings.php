@@ -1,8 +1,9 @@
 <?php
 /**
  * Classe responsável pelas configurações do plugin
+ * v1.7.1: Refatoração gradual - PAP_Settings é agora a classe principal
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.2
  */
 
@@ -10,12 +11,19 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Affiliate_Pro_Settings {
+/**
+ * Classe principal de Settings com prefixo padronizado PAP
+ * v1.7.1: Promovida de espelho para classe principal
+ *
+ * @package PAP
+ * @since 1.7.1
+ */
+class PAP_Settings {
 
     /**
      * Instância única (Singleton)
      *
-     * @var Affiliate_Pro_Settings
+     * @var PAP_Settings
      */
     private static $instance = null;
 
@@ -29,7 +37,7 @@ class Affiliate_Pro_Settings {
     /**
      * Obtém a instância única
      *
-     * @return Affiliate_Pro_Settings
+     * @return PAP_Settings
      */
     public static function get_instance() {
         if (null === self::$instance) {
@@ -451,12 +459,13 @@ class Affiliate_Pro_Settings {
 }
 
 /**
- * Classe espelho com prefixo padronizado PAP (v1.7.0)
- * Compatibilidade total: herda todos os métodos de Affiliate_Pro_Settings
+ * Classe de compatibilidade com prefixo legado (v1.7.1)
+ * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Settings
  *
- * @package PAP
- * @since 1.7.0
+ * @package Affiliate_Pro
+ * @since 1.2
+ * @deprecated 1.7.1 Use PAP_Settings ao invés
  */
-class PAP_Settings extends Affiliate_Pro_Settings {
-    // Herança completa - mantém todos os métodos e comportamentos
+class Affiliate_Pro_Settings extends PAP_Settings {
+    // Herança completa para compatibilidade com código legado
 }
