@@ -10,19 +10,19 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Affiliate_Pro_Tracker {
+class PAP_Tracker {
 
     /**
      * Instância única (Singleton)
      *
-     * @var Affiliate_Pro_Tracker
+     * @var PAP_Tracker
      */
     private static $instance = null;
 
     /**
      * Obtém a instância única
      *
-     * @return Affiliate_Pro_Tracker
+     * @return PAP_Tracker
      */
     public static function get_instance() {
         if (null === self::$instance) {
@@ -103,9 +103,9 @@ class Affiliate_Pro_Tracker {
 
         wp_enqueue_script(
             'affiliate-tracker',
-            AFFILIATE_PRO_PLUGIN_URL . 'assets/js/affiliate-tracker.js',
+            PAP_URL . 'assets/js/affiliate-tracker.js',
             array('jquery'),
-            AFFILIATE_PRO_VERSION,
+            PAP_VERSION,
             true
         );
 

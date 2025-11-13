@@ -244,54 +244,41 @@ class PAP_Products {
                 <a href="<?php echo esc_url(admin_url('admin.php?page=affiliate-manage-products')); ?>" class="button"><?php _e('Gerenciar Produtos', 'afiliados-pro'); ?></a>
             </p>
 
-            <h2><?php _e('Como usar os Shortcodes', 'afiliados-pro'); ?></h2>
+            <h2><?php _e('Shortcodes Disponíveis – Padrão PAP', 'afiliados-pro'); ?></h2>
             <div style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px;">
                 <div style="margin-bottom: 20px; background: #f0f6fc; padding: 15px; border-left: 4px solid #0073aa;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Preset Personalizado (NOVO v1.6.0)', 'afiliados-pro'); ?></h3>
+                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Preset Personalizado', 'afiliados-pro'); ?></h3>
                     <code style="display: block; padding: 10px; background: #fff; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_preset id="1"]</code>
+                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_preset id=&quot;1&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
                     <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe produtos com as configurações salvas no preset #1. Crie seus presets em Aparência e Configurações > Presets', 'afiliados-pro'); ?></p>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Produto Único', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_product id="123"]</code>
+                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_product id="123"]</code>
+                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_product id=&quot;123&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
                     <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe um produto específico pelo seu ID', 'afiliados-pro'); ?></p>
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Grade de Produtos', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_products limit="6" category="eletronicos"]</code>
-                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe uma grade com 6 produtos da categoria "eletronicos"', 'afiliados-pro'); ?></p>
+                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Grade com Limite e Colunas', 'afiliados-pro'); ?></h3>
+                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_products limit="12" columns="4"]</code>
+                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_products limit=&quot;12&quot; columns=&quot;4&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
+                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe grade com 12 produtos em 4 colunas', 'afiliados-pro'); ?></p>
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Layout em Grade (3 colunas)', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_products layout="grid" columns="3"]</code>
-                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe produtos em formato de grade com 3 colunas', 'afiliados-pro'); ?></p>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Layout em Lista', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_products layout="list"]</code>
-                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe produtos em formato de lista vertical', 'afiliados-pro'); ?></p>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Produtos Aleatórios', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_products orderby="rand" limit="3"]</code>
-                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe 3 produtos em ordem aleatória', 'afiliados-pro'); ?></p>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Múltiplas Categorias', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_products category="eletronicos,perifericos"]</code>
-                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe produtos de múltiplas categorias (separadas por vírgula)', 'afiliados-pro'); ?></p>
+                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Categorias e Ordem Aleatória', 'afiliados-pro'); ?></h3>
+                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_products category="eletronicos,games" orderby="rand" limit="10"]</code>
+                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_products category=&quot;eletronicos,games&quot; orderby=&quot;rand&quot; limit=&quot;10&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
+                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe 10 produtos aleatórios das categorias "eletronicos" e "games"', 'afiliados-pro'); ?></p>
                 </div>
 
                 <div style="margin-bottom: 0;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Ordenação Personalizada', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_products orderby="title" order="ASC"]</code>
-                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Ordena produtos por título em ordem alfabética crescente', 'afiliados-pro'); ?></p>
+                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Layout em Lista', 'afiliados-pro'); ?></h3>
+                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_products layout="list" columns="3" limit="9"]</code>
+                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_products layout=&quot;list&quot; columns=&quot;3&quot; limit=&quot;9&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
+                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe 9 produtos em formato de lista vertical com 3 colunas', 'afiliados-pro'); ?></p>
                 </div>
             </div>
         </div>
@@ -302,23 +289,23 @@ class PAP_Products {
      * Renderiza a página de Importar CSV
      */
     public function render_import_csv_page() {
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'admin/admin-import-csv.php';
+        require_once PAP_DIR . 'admin/admin-import-csv.php';
     }
 
     /**
      * Renderiza a página de Gerenciar Produtos
      */
     public function render_manage_products_page() {
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'admin/admin-manage-products.php';
+        require_once PAP_DIR . 'admin/admin-manage-products.php';
     }
 
     /**
      * Renderiza a página de Configurações
      */
     // REMOVED (v1.4.5.1): Legacy settings page method
-    // Now handled by Affiliate_Template_Builder::render_template_builder_page()
+    // Now handled by PAP_Template_Builder::render_template_builder_page()
     // public function render_settings_page() {
-    //     require_once AFFILIATE_PRO_PLUGIN_DIR . 'admin/admin-settings.php';
+    //     require_once PAP_DIR . 'admin/admin-settings.php';
     // }
 
     /**
@@ -674,24 +661,4 @@ class PAP_Products {
     public function get_taxonomy() {
         return $this->taxonomy;
     }
-}
-
-/**
- * Classe de compatibilidade com prefixo legado (v1.7.1)
- * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Products
- *
- * AVISO DE DEPRECAÇÃO (v1.7.3):
- * Esta classe está obsoleta e será removida em versões futuras.
- * Use PAP_Products::get_instance() ao invés de Affiliate_Pro_Products::get_instance()
- *
- * @package Affiliate_Pro
- * @since 1.0
- * @deprecated 1.7.3 Use PAP_Products ao invés. Será removida na v2.0.0
- */
-class Affiliate_Pro_Products extends PAP_Products {
-    /**
-     * Herança completa para compatibilidade com código legado
-     *
-     * @deprecated 1.7.3
-     */
 }

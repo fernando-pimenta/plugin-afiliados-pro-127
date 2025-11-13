@@ -65,7 +65,7 @@ $link_target = $open_in_new_tab ? ' target="_blank" rel="noopener noreferrer"' :
 $important = '';
 
 // Local placeholder image
-$placeholder_img = AFFILIATE_PRO_PLUGIN_URL . 'assets/img/placeholder.svg';
+$placeholder_img = PAP_URL . 'assets/img/placeholder.svg';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

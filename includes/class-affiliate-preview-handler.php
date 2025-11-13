@@ -13,11 +13,11 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class Affiliate_Preview_Handler
+ * Class PAP_Preview_Handler
  *
  * Renders preview template via public endpoint for completely isolated preview
  */
-class Affiliate_Preview_Handler {
+class PAP_Preview_Handler {
 
     /**
      * Initialize preview handler (v1.4.5 - Public endpoint with cache)
@@ -85,7 +85,7 @@ class Affiliate_Preview_Handler {
         }
 
         // Get settings from database
-        $settings = Affiliate_Template_Builder::get_template_settings();
+        $settings = PAP_Template_Builder::get_template_settings();
 
         // Log preview rendering
         affiliate_pro_log('Preview Handler: Generating fresh preview (cached for 30s)');
@@ -94,8 +94,8 @@ class Affiliate_Preview_Handler {
         ob_start();
 
         // Include preview template (pure HTML)
-        if (file_exists(AFFILIATE_PRO_PLUGIN_DIR . 'admin/preview-template.php')) {
-            include AFFILIATE_PRO_PLUGIN_DIR . 'admin/preview-template.php';
+        if (file_exists(PAP_DIR . 'admin/preview-template.php')) {
+            include PAP_DIR . 'admin/preview-template.php';
         } else {
             echo '<!DOCTYPE html><html><body><p style="color:red;">Erro: Template de preview não encontrado.</p></body></html>';
         }
@@ -133,4 +133,4 @@ class Affiliate_Preview_Handler {
 }
 
 // Initialize the handler
-Affiliate_Preview_Handler::init();
+PAP_Preview_Handler::init();
