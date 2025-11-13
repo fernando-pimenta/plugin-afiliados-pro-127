@@ -2,7 +2,7 @@
 /**
  * Template da página de Gerenciar Produtos
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.0
  */
 

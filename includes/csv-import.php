@@ -2,7 +2,7 @@
 /**
  * Classe responsável pela importação de produtos via CSV
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.0
  */
 

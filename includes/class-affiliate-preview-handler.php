@@ -1,10 +1,10 @@
 <?php
 /**
- * Afiliados Pro - Preview Handler
+ * PAP - Preview Handler
  *
  * Handles preview rendering via public endpoint
  *
- * @package AfiliadorsPro
+ * @package PAP
  * @version 1.4.5
  */
 

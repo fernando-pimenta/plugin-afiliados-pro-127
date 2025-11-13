@@ -2,7 +2,7 @@
 /**
  * Template da página de Aparência e Configurações
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.2
  */
 

@@ -1,10 +1,10 @@
 <?php
 /**
- * Afiliados Pro - Preview Template
+ * PAP - Preview Template
  *
  * Completely standalone preview template with v1.5.8 unified color system
  *
- * @package AfiliadorsPro
+ * @package PAP
  * @version 1.5.8.1
  */
 

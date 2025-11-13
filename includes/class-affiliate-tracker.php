@@ -1,8 +1,8 @@
 <?php
 /**
- * Afiliados Pro - Rastreamento de Cliques
+ * PAP - Rastreamento de Cliques
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @version 1.4.7
  */
 
