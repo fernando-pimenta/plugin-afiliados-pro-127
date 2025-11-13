@@ -438,7 +438,7 @@ function affiliate_pro_check_link_status($url) {
                         $price = get_post_meta($product_id, '_affiliate_price', true);
                         $link = get_post_meta($product_id, '_affiliate_link', true);
                         $link_status = affiliate_pro_check_link_status($link);
-                        $shortcode = '[affiliate_product id="' . $product_id . '"]';
+                        $shortcode = '[pap_product id="' . $product_id . '"]';
                         ?>
                         <tr>
                             <th scope="row" class="check-column">
