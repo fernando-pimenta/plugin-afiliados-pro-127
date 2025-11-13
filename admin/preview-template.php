@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 
 // Get settings (should be passed from parent handler)
 if (!isset($settings)) {
-    $settings = Affiliate_Template_Builder::get_template_settings();
+    $settings = PAP_Template_Builder::get_template_settings();
 }
 
 // v1.5.3: Fallbacks para compatibilidade com chaves antigas

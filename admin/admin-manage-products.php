@@ -53,7 +53,7 @@ if (isset($_POST['bulk_action']) && isset($_POST['product_ids']) && wp_verify_no
             break;
 
         case 'duplicate':
-            $products_instance = Affiliate_Pro_Products::get_instance();
+            $products_instance = PAP_Products::get_instance();
             foreach ($product_ids as $product_id) {
                 if ($products_instance->duplicate_product($product_id)) {
                     $count++;

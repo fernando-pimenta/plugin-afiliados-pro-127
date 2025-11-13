@@ -185,7 +185,7 @@ class PAP_Template_Builder {
                         <h3>🖼️ <?php _e('Pré-visualização', 'afiliados-pro'); ?></h3>
                         <iframe id="affiliate-preview-frame"
                             src="about:blank"
-                            data-preview-url="<?php echo esc_url(Affiliate_Preview_Handler::get_preview_url()); ?>"
+                            data-preview-url="<?php echo esc_url(PAP_Preview_Handler::get_preview_url()); ?>"
                             style="width:100%;height:500px;border:1px solid #ccc;border-radius:8px;background:#fff;">
                         </iframe>
                         <button id="generate-preview" class="button button-primary" type="button" style="margin-top:10px;">
