@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.6.7
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,10 +38,15 @@ O **Plugin Afiliados Pro** é uma solução completa para WordPress que permite 
 = Shortcodes Disponíveis =
 
 **Produto único:**
-`[affiliate_product id="123"]`
+`[affiliate_product id="123"]` ou `[pap_product id="123"]`
 
 **Grade de produtos:**
-`[affiliate_products limit="6" category="eletronicos" columns="3"]`
+`[affiliate_products limit="6" category="eletronicos" columns="3"]` ou `[pap_products limit="6" category="eletronicos" columns="3"]`
+
+**Preset personalizado (v1.6.0+):**
+`[afiliados_pro id="1"]` ou `[pap_preset id="1"]`
+
+**Nota:** A partir da v1.7.0, os shortcodes com prefixo `pap_` são os oficiais. Os shortcodes antigos continuam funcionando para total compatibilidade.
 
 = Suporte e Documentação =
 
@@ -121,6 +126,15 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.7.0 (2025-11-13) =
+* 🧱 **BASE**: Introdução do padrão pap_ (Plugin Afiliados Pro)
+* 🧩 **NOVOS SHORTCODES**: [pap_product], [pap_products], [pap_preset]
+* ⚙️ **CLASSES**: PAP_Plugin, PAP_Products, PAP_Settings, PAP_Template_Builder, PAP_Shortcodes
+* 🔧 **CONSTANTES**: PAP_VERSION, PAP_DIR, PAP_URL, PAP_BASENAME
+* 🔄 **FUNÇÕES**: pap(), pap_log() como aliases compatíveis
+* 🧠 **COMPATIBILIDADE**: Total retroatividade com shortcodes e funções antigas
+* 🚀 **PREPARAÇÃO**: Base para refatoração completa nas próximas versões
 
 = 1.6.7 (2025-11-13) =
 * 🎨 **VISUAL**: Centralização global dos cards renderizados por shortcodes

@@ -667,3 +667,14 @@ class Affiliate_Pro_Products {
         return $this->taxonomy;
     }
 }
+
+/**
+ * Classe espelho com prefixo padronizado PAP (v1.7.0)
+ * Compatibilidade total: herda todos os métodos de Affiliate_Pro_Products
+ *
+ * @package PAP
+ * @since 1.7.0
+ */
+class PAP_Products extends Affiliate_Pro_Products {
+    // Herança completa - mantém todos os métodos e comportamentos
+}

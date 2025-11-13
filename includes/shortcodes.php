@@ -40,11 +40,18 @@ class Affiliate_Pro_Shortcodes {
 
     /**
      * Inicializa os hooks
+     * v1.7.0: Adicionados shortcodes com prefixo pap_ (compatibilidade total mantida)
      */
     private function init_hooks() {
+        // Shortcodes originais (mantidos para compatibilidade)
         add_shortcode('affiliate_product', array($this, 'single_product_shortcode'));
         add_shortcode('affiliate_products', array($this, 'products_grid_shortcode'));
         add_shortcode('afiliados_pro', array($this, 'preset_shortcode')); // v1.6.0
+
+        // v1.7.0: Novos shortcodes com prefixo padronizado pap_ (Plugin Afiliados Pro)
+        add_shortcode('pap_product', array($this, 'single_product_shortcode'));
+        add_shortcode('pap_products', array($this, 'products_grid_shortcode'));
+        add_shortcode('pap_preset', array($this, 'preset_shortcode'));
     }
 
     /**
@@ -395,4 +402,15 @@ class Affiliate_Pro_Shortcodes {
 
         return false;
     }
+}
+
+/**
+ * Classe espelho com prefixo padronizado PAP (v1.7.0)
+ * Compatibilidade total: herda todos os métodos de Affiliate_Pro_Shortcodes
+ *
+ * @package PAP
+ * @since 1.7.0
+ */
+class PAP_Shortcodes extends Affiliate_Pro_Shortcodes {
+    // Herança completa - mantém todos os métodos e comportamentos
 }

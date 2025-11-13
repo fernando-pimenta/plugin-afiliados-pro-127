@@ -1221,3 +1221,14 @@ class Affiliate_Template_Builder {
         return true;
     }
 }
+
+/**
+ * Classe espelho com prefixo padronizado PAP (v1.7.0)
+ * Compatibilidade total: herda todos os métodos de Affiliate_Template_Builder
+ *
+ * @package PAP
+ * @since 1.7.0
+ */
+class PAP_Template_Builder extends Affiliate_Template_Builder {
+    // Herança completa - mantém todos os métodos e comportamentos
+}

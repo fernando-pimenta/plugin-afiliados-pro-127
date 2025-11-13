@@ -449,3 +449,14 @@ class Affiliate_Pro_Settings {
         return $css;
     }
 }
+
+/**
+ * Classe espelho com prefixo padronizado PAP (v1.7.0)
+ * Compatibilidade total: herda todos os métodos de Affiliate_Pro_Settings
+ *
+ * @package PAP
+ * @since 1.7.0
+ */
+class PAP_Settings extends Affiliate_Pro_Settings {
+    // Herança completa - mantém todos os métodos e comportamentos
+}
