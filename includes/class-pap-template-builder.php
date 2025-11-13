@@ -65,7 +65,7 @@ class PAP_Template_Builder {
             $settings['shadow_card'] = $settings['shadow'];
             unset($settings['shadow']);
             update_option($this->option_name, $settings);
-            affiliate_pro_log('Template Builder: Migrated legacy shadow to shadow_card');
+            pap_log('Template Builder: Migrated legacy shadow to shadow_card');
         }
     }
 
@@ -755,7 +755,7 @@ class PAP_Template_Builder {
         update_option('affiliate_pro_settings', $settings);
 
         // Registrar log (se debug ativo)
-        affiliate_pro_log('Template Builder: Configurações salvas com sucesso em affiliate_pro_settings');
+        pap_log('Template Builder: Configurações salvas com sucesso em affiliate_pro_settings');
 
         // Redirecionar com mensagem de sucesso
         wp_redirect(add_query_arg(
@@ -891,7 +891,7 @@ class PAP_Template_Builder {
         );
 
         // Log asset loading
-        affiliate_pro_log('Template Builder: Assets enqueued for page ' . $hook);
+        pap_log('Template Builder: Assets enqueued for page ' . $hook);
     }
 
     /**
@@ -1147,7 +1147,7 @@ class PAP_Template_Builder {
         update_option('affiliate_pro_presets', $presets);
 
         // Log
-        affiliate_pro_log('Preset criado com sucesso. ID: ' . $new_id . ', Nome: ' . $preset_name);
+        pap_log('Preset criado com sucesso. ID: ' . $new_id . ', Nome: ' . $preset_name);
 
         // Redirecionar com sucesso
         wp_redirect(add_query_arg(
@@ -1200,7 +1200,7 @@ class PAP_Template_Builder {
         update_option('affiliate_pro_presets', $presets);
 
         // Log
-        affiliate_pro_log('Preset excluído com sucesso. ID: ' . $preset_id);
+        pap_log('Preset excluído com sucesso. ID: ' . $preset_id);
 
         // Redirecionar com sucesso
         wp_redirect(add_query_arg(

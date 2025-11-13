@@ -33,7 +33,7 @@ class PAP_Preview_Handler {
         add_action('update_option_affiliate_template_settings', [__CLASS__, 'clear_preview_cache']);
 
         // Log initialization if debug is enabled
-        affiliate_pro_log('Preview Handler: Initialized (v1.4.5 - Public Endpoint with Cache)');
+        pap_log('Preview Handler: Initialized (v1.4.5 - Public Endpoint with Cache)');
     }
 
     /**
@@ -56,7 +56,7 @@ class PAP_Preview_Handler {
         });
 
         // Log registration
-        affiliate_pro_log('Preview Handler: Registered public endpoint /affiliate-preview/');
+        pap_log('Preview Handler: Registered public endpoint /affiliate-preview/');
     }
 
     /**
@@ -79,7 +79,7 @@ class PAP_Preview_Handler {
 
         if ($cached_html !== false) {
             // Serve cached version
-            affiliate_pro_log('Preview Handler: Serving cached preview');
+            pap_log('Preview Handler: Serving cached preview');
             echo $cached_html;
             exit;
         }
@@ -88,7 +88,7 @@ class PAP_Preview_Handler {
         $settings = PAP_Template_Builder::get_template_settings();
 
         // Log preview rendering
-        affiliate_pro_log('Preview Handler: Generating fresh preview (cached for 30s)');
+        pap_log('Preview Handler: Generating fresh preview (cached for 30s)');
 
         // Start output buffering
         ob_start();
@@ -119,7 +119,7 @@ class PAP_Preview_Handler {
      */
     public static function clear_preview_cache() {
         delete_transient('affiliate_preview_html_v145');
-        affiliate_pro_log('Preview Handler: Cache cleared');
+        pap_log('Preview Handler: Cache cleared');
     }
 
     /**
