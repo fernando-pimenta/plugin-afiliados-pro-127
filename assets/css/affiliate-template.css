@@ -1,6 +1,6 @@
 /**
  * Afiliados Pro - Template Builder Styles
- * Version: 1.6.5
+ * Version: 1.6.7
  *
  * Global CSS for affiliate product cards and buttons
  */
@@ -304,6 +304,18 @@
     height: auto;
     border-radius: 4px;
     margin-bottom: 12px;
+}
+
+/* === Centralização global dos cards renderizados por shortcodes (v1.6.7) === */
+.affiliate-card-container,
+.affiliate-products-grid,
+.affiliate-products-list {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    flex-wrap: wrap !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 
 /* Responsive adjustments */
