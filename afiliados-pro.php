@@ -3,7 +3,7 @@
  * Plugin Name: Plugin Afiliados Pro
  * Plugin URI: https://fernandopimenta.blog.br
  * Description: Gerencie e exiba produtos afiliados com importação CSV, shortcodes personalizáveis e painel visual.
- * Version: 1.7.1
+ * Version: 1.7.2
  * Author: Fernando Pimenta
  * Author URI: https://fernandopimenta.blog.br
  * License: GPLv2 or later
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Definir constantes do plugin
-define('AFFILIATE_PRO_VERSION', '1.7.1');
+define('AFFILIATE_PRO_VERSION', '1.7.2');
 define('AFFILIATE_PRO_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('AFFILIATE_PRO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AFFILIATE_PRO_PLUGIN_BASENAME', plugin_basename(__FILE__));
@@ -95,16 +95,17 @@ class Affiliate_Pro_Plugin {
 
     /**
      * Carrega as dependências do plugin
+     * v1.7.2: Arquivos de classes renomeados para padrão class-pap-*
      */
     private function load_dependencies() {
-        // Core classes
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-affiliate-products.php';
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-affiliate-settings.php';
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-affiliate-template-builder.php';
+        // Core classes (v1.7.2: renomeadas para prefixo pap_)
+        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-pap-products.php';
+        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-pap-settings.php';
+        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-pap-template-builder.php';
         require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-affiliate-preview-handler.php'; // v1.4.0
         require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-affiliate-tracker.php'; // v1.4.7
         require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/csv-import.php';
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/shortcodes.php';
+        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-pap-shortcodes.php'; // v1.7.2: renomeado de shortcodes.php
     }
 
     /**

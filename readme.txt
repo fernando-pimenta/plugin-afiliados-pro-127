@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -126,6 +126,14 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.7.2 (2025-11-13) =
+* 📁 **ARQUIVOS**: Renomeados para padrão class-pap-* (class-pap-products.php, class-pap-settings.php, etc.)
+* 🧩 **TEMPLATE BUILDER**: PAP_Template_Builder promovida a classe principal
+* 🔗 **REQUIRES**: Atualizados todos os require_once() no arquivo principal
+* 🪶 **LEGADO**: Classes Affiliate_Template_Builder mantida via herança
+* 🧠 **ZERO QUEBRA**: Nenhuma alteração funcional ou visual
+* 🚀 **ETAPA 2/3**: Renomeação completa de arquivos concluída
 
 = 1.7.1 (2025-11-13) =
 * ⚙️ **REFACTOR**: Código interno migrado para padrão PAP nativo

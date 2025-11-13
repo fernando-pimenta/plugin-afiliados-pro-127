@@ -1,8 +1,9 @@
 <?php
 /**
  * Classe responsável pelo Template Builder
+ * v1.7.2: Refatoração gradual - PAP_Template_Builder é agora a classe principal
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.4.0
  */
 
@@ -10,12 +11,19 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Affiliate_Template_Builder {
+/**
+ * Classe principal de Template Builder com prefixo padronizado PAP
+ * v1.7.2: Promovida de espelho para classe principal
+ *
+ * @package PAP
+ * @since 1.7.2
+ */
+class PAP_Template_Builder {
 
     /**
      * Instância única (Singleton)
      *
-     * @var Affiliate_Template_Builder
+     * @var PAP_Template_Builder
      */
     private static $instance = null;
 
@@ -29,7 +37,7 @@ class Affiliate_Template_Builder {
     /**
      * Obtém a instância única
      *
-     * @return Affiliate_Template_Builder
+     * @return PAP_Template_Builder
      */
     public static function get_instance() {
         if (null === self::$instance) {
@@ -1223,12 +1231,13 @@ class Affiliate_Template_Builder {
 }
 
 /**
- * Classe espelho com prefixo padronizado PAP (v1.7.0)
- * Compatibilidade total: herda todos os métodos de Affiliate_Template_Builder
+ * Classe de compatibilidade com prefixo legado (v1.7.2)
+ * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Template_Builder
  *
- * @package PAP
- * @since 1.7.0
+ * @package Affiliate_Pro
+ * @since 1.4.0
+ * @deprecated 1.7.2 Use PAP_Template_Builder ao invés
  */
-class PAP_Template_Builder extends Affiliate_Template_Builder {
-    // Herança completa - mantém todos os métodos e comportamentos
+class Affiliate_Template_Builder extends PAP_Template_Builder {
+    // Herança completa para compatibilidade com código legado
 }
