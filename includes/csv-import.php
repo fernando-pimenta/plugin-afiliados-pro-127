@@ -2,7 +2,7 @@
 /**
  * Classe responsável pela importação de produtos via CSV
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.0
  */
 
@@ -10,19 +10,19 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Affiliate_Pro_CSV_Import {
+class PAP_CSV_Import {
 
     /**
      * Instância única (Singleton)
      *
-     * @var Affiliate_Pro_CSV_Import
+     * @var PAP_CSV_Import
      */
     private static $instance = null;
 
     /**
      * Obtém a instância única
      *
-     * @return Affiliate_Pro_CSV_Import
+     * @return PAP_CSV_Import
      */
     public static function get_instance() {
         if (null === self::$instance) {

@@ -244,54 +244,41 @@ class PAP_Products {
                 <a href="<?php echo esc_url(admin_url('admin.php?page=affiliate-manage-products')); ?>" class="button"><?php _e('Gerenciar Produtos', 'afiliados-pro'); ?></a>
             </p>
 
-            <h2><?php _e('Como usar os Shortcodes', 'afiliados-pro'); ?></h2>
+            <h2><?php _e('Shortcodes Disponíveis – Padrão PAP', 'afiliados-pro'); ?></h2>
             <div style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px;">
                 <div style="margin-bottom: 20px; background: #f0f6fc; padding: 15px; border-left: 4px solid #0073aa;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Preset Personalizado (NOVO v1.6.0)', 'afiliados-pro'); ?></h3>
+                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Preset Personalizado', 'afiliados-pro'); ?></h3>
                     <code style="display: block; padding: 10px; background: #fff; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_preset id="1"]</code>
+                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_preset id=&quot;1&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
                     <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe produtos com as configurações salvas no preset #1. Crie seus presets em Aparência e Configurações > Presets', 'afiliados-pro'); ?></p>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Produto Único', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_product id="123"]</code>
+                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_product id="123"]</code>
+                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_product id=&quot;123&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
                     <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe um produto específico pelo seu ID', 'afiliados-pro'); ?></p>
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Grade de Produtos', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_products limit="6" category="eletronicos"]</code>
-                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe uma grade com 6 produtos da categoria "eletronicos"', 'afiliados-pro'); ?></p>
+                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Grade com Limite e Colunas', 'afiliados-pro'); ?></h3>
+                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_products limit="12" columns="4"]</code>
+                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_products limit=&quot;12&quot; columns=&quot;4&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
+                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe grade com 12 produtos em 4 colunas', 'afiliados-pro'); ?></p>
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Layout em Grade (3 colunas)', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_products layout="grid" columns="3"]</code>
-                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe produtos em formato de grade com 3 colunas', 'afiliados-pro'); ?></p>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Layout em Lista', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_products layout="list"]</code>
-                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe produtos em formato de lista vertical', 'afiliados-pro'); ?></p>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Produtos Aleatórios', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_products orderby="rand" limit="3"]</code>
-                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe 3 produtos em ordem aleatória', 'afiliados-pro'); ?></p>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Múltiplas Categorias', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_products category="eletronicos,perifericos"]</code>
-                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe produtos de múltiplas categorias (separadas por vírgula)', 'afiliados-pro'); ?></p>
+                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Categorias e Ordem Aleatória', 'afiliados-pro'); ?></h3>
+                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_products category="eletronicos,games" orderby="rand" limit="10"]</code>
+                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_products category=&quot;eletronicos,games&quot; orderby=&quot;rand&quot; limit=&quot;10&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
+                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe 10 produtos aleatórios das categorias "eletronicos" e "games"', 'afiliados-pro'); ?></p>
                 </div>
 
                 <div style="margin-bottom: 0;">
-                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Ordenação Personalizada', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_products orderby="title" order="ASC"]</code>
-                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Ordena produtos por título em ordem alfabética crescente', 'afiliados-pro'); ?></p>
+                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Layout em Lista', 'afiliados-pro'); ?></h3>
+                    <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_products layout="list" columns="3" limit="9"]</code>
+                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_products layout=&quot;list&quot; columns=&quot;3&quot; limit=&quot;9&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
+                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe 9 produtos em formato de lista vertical com 3 colunas', 'afiliados-pro'); ?></p>
                 </div>
             </div>
         </div>
@@ -302,23 +289,23 @@ class PAP_Products {
      * Renderiza a página de Importar CSV
      */
     public function render_import_csv_page() {
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'admin/admin-import-csv.php';
+        require_once PAP_DIR . 'admin/admin-import-csv.php';
     }
 
     /**
      * Renderiza a página de Gerenciar Produtos
      */
     public function render_manage_products_page() {
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'admin/admin-manage-products.php';
+        require_once PAP_DIR . 'admin/admin-manage-products.php';
     }
 
     /**
      * Renderiza a página de Configurações
      */
     // REMOVED (v1.4.5.1): Legacy settings page method
-    // Now handled by Affiliate_Template_Builder::render_template_builder_page()
+    // Now handled by PAP_Template_Builder::render_template_builder_page()
     // public function render_settings_page() {
-    //     require_once AFFILIATE_PRO_PLUGIN_DIR . 'admin/admin-settings.php';
+    //     require_once PAP_DIR . 'admin/admin-settings.php';
     // }
 
     /**
@@ -414,12 +401,12 @@ class PAP_Products {
      * Duplica um produto via AJAX
      */
     public function ajax_duplicate_product() {
-        affiliate_pro_log('ajax_duplicate_product() - Iniciando duplicação via AJAX');
-        affiliate_pro_log('POST data: ' . print_r($_POST, true));
+        pap_log('ajax_duplicate_product() - Iniciando duplicação via AJAX');
+        pap_log('POST data: ' . print_r($_POST, true));
 
         // Verificar permissões
         if (!current_user_can('edit_posts')) {
-            affiliate_pro_log('ajax_duplicate_product() - Permissão negada');
+            pap_log('ajax_duplicate_product() - Permissão negada');
             wp_send_json_error(array(
                 'message' => __('Você não tem permissão para duplicar produtos', 'afiliados-pro')
             ));
@@ -428,7 +415,7 @@ class PAP_Products {
 
         // Verificar nonce
         if (!isset($_POST['nonce'])) {
-            affiliate_pro_log('ajax_duplicate_product() - Nonce não enviado');
+            pap_log('ajax_duplicate_product() - Nonce não enviado');
             wp_send_json_error(array(
                 'message' => __('Erro de segurança: nonce não enviado', 'afiliados-pro')
             ));
@@ -436,7 +423,7 @@ class PAP_Products {
         }
 
         if (!wp_verify_nonce($_POST['nonce'], 'affiliate_pro_admin_nonce')) {
-            affiliate_pro_log('ajax_duplicate_product() - Nonce inválido');
+            pap_log('ajax_duplicate_product() - Nonce inválido');
             wp_send_json_error(array(
                 'message' => __('Erro de segurança: nonce inválido', 'afiliados-pro')
             ));
@@ -445,7 +432,7 @@ class PAP_Products {
 
         // Verificar se product_id foi enviado e é válido
         if (!isset($_POST['product_id']) || empty($_POST['product_id'])) {
-            affiliate_pro_log('ajax_duplicate_product() - product_id não enviado ou vazio');
+            pap_log('ajax_duplicate_product() - product_id não enviado ou vazio');
             wp_send_json_error(array(
                 'message' => __('Nenhum produto foi selecionado para duplicação', 'afiliados-pro')
             ));
@@ -455,20 +442,20 @@ class PAP_Products {
         $product_id = intval($_POST['product_id']);
 
         if ($product_id <= 0) {
-            affiliate_pro_log('ajax_duplicate_product() - product_id inválido: ' . $_POST['product_id']);
+            pap_log('ajax_duplicate_product() - product_id inválido: ' . $_POST['product_id']);
             wp_send_json_error(array(
                 'message' => __('ID do produto inválido', 'afiliados-pro')
             ));
             return;
         }
 
-        affiliate_pro_log('ajax_duplicate_product() - Verificando produto ID: ' . $product_id);
+        pap_log('ajax_duplicate_product() - Verificando produto ID: ' . $product_id);
 
         // Verificar se o produto existe
         $product = get_post($product_id);
 
         if (!$product) {
-            affiliate_pro_log('ajax_duplicate_product() - Produto não encontrado. ID: ' . $product_id);
+            pap_log('ajax_duplicate_product() - Produto não encontrado. ID: ' . $product_id);
             wp_send_json_error(array(
                 'message' => __('Produto não encontrado (ID: ' . $product_id . ')', 'afiliados-pro')
             ));
@@ -476,7 +463,7 @@ class PAP_Products {
         }
 
         if (is_wp_error($product)) {
-            affiliate_pro_log('ajax_duplicate_product() - Erro ao buscar produto: ' . $product->get_error_message());
+            pap_log('ajax_duplicate_product() - Erro ao buscar produto: ' . $product->get_error_message());
             wp_send_json_error(array(
                 'message' => __('Erro ao buscar produto: ' . $product->get_error_message(), 'afiliados-pro')
             ));
@@ -484,21 +471,21 @@ class PAP_Products {
         }
 
         if ($product->post_type !== $this->post_type) {
-            affiliate_pro_log('ajax_duplicate_product() - Post type incorreto. Esperado: ' . $this->post_type . ', Recebido: ' . $product->post_type);
+            pap_log('ajax_duplicate_product() - Post type incorreto. Esperado: ' . $this->post_type . ', Recebido: ' . $product->post_type);
             wp_send_json_error(array(
                 'message' => __('O item selecionado não é um produto afiliado', 'afiliados-pro')
             ));
             return;
         }
 
-        affiliate_pro_log('ajax_duplicate_product() - Produto válido. Iniciando duplicação...');
+        pap_log('ajax_duplicate_product() - Produto válido. Iniciando duplicação...');
 
         // Tentar duplicar
         $new_product_id = $this->duplicate_product($product_id);
 
         // Verificar se houve erro (WP_Error)
         if (is_wp_error($new_product_id)) {
-            affiliate_pro_log('ajax_duplicate_product() - Erro na duplicação: ' . $new_product_id->get_error_message());
+            pap_log('ajax_duplicate_product() - Erro na duplicação: ' . $new_product_id->get_error_message());
             wp_send_json_error(array(
                 'message' => sprintf(__('Falha ao duplicar produto: %s', 'afiliados-pro'), $new_product_id->get_error_message())
             ));
@@ -507,7 +494,7 @@ class PAP_Products {
 
         // Verificar se o ID é válido
         if (!$new_product_id || !is_numeric($new_product_id) || $new_product_id <= 0) {
-            affiliate_pro_log('ajax_duplicate_product() - ID inválido retornado: ' . print_r($new_product_id, true));
+            pap_log('ajax_duplicate_product() - ID inválido retornado: ' . print_r($new_product_id, true));
             wp_send_json_error(array(
                 'message' => __('Falha ao duplicar produto: ID inválido retornado.', 'afiliados-pro')
             ));
@@ -517,7 +504,7 @@ class PAP_Products {
         // CRÍTICO: Verificar se o post realmente existe no banco de dados antes de retornar sucesso
         $check_new_post = get_post($new_product_id);
         if (!$check_new_post) {
-            affiliate_pro_log('ajax_duplicate_product() - FALHA CRÍTICA: duplicate_product() retornou ID ' . $new_product_id . ', mas get_post() retornou null. O post não existe!');
+            pap_log('ajax_duplicate_product() - FALHA CRÍTICA: duplicate_product() retornou ID ' . $new_product_id . ', mas get_post() retornou null. O post não existe!');
             wp_send_json_error(array(
                 'message' => sprintf(__('Falha ao duplicar produto: Post não encontrado após criação (ID: %d).', 'afiliados-pro'), $new_product_id)
             ));
@@ -526,7 +513,7 @@ class PAP_Products {
 
         // Verificar se o tipo do post está correto
         if ($check_new_post->post_type !== $this->post_type) {
-            affiliate_pro_log('ajax_duplicate_product() - Post criado com tipo incorreto. Esperado: ' . $this->post_type . ', Encontrado: ' . $check_new_post->post_type);
+            pap_log('ajax_duplicate_product() - Post criado com tipo incorreto. Esperado: ' . $this->post_type . ', Encontrado: ' . $check_new_post->post_type);
             wp_send_json_error(array(
                 'message' => __('Falha ao duplicar produto: Post criado com tipo incorreto.', 'afiliados-pro')
             ));
@@ -534,7 +521,7 @@ class PAP_Products {
         }
 
         // Tudo OK! Retornar sucesso
-        affiliate_pro_log('ajax_duplicate_product() - Duplicação VERIFICADA e bem-sucedida. Novo ID: ' . $new_product_id . ', Título: ' . $check_new_post->post_title . ', Status: ' . $check_new_post->post_status);
+        pap_log('ajax_duplicate_product() - Duplicação VERIFICADA e bem-sucedida. Novo ID: ' . $new_product_id . ', Título: ' . $check_new_post->post_title . ', Status: ' . $check_new_post->post_status);
         wp_send_json_success(array(
             'message' => sprintf(__('Produto duplicado com sucesso! Novo ID: %d', 'afiliados-pro'), $new_product_id),
             'new_id' => $new_product_id,
@@ -553,7 +540,7 @@ class PAP_Products {
     public function duplicate_product($original_id) {
         // Validar ID
         if (empty($original_id) || !is_numeric($original_id)) {
-            affiliate_pro_log('duplicate_product() - ID inválido: ' . print_r($original_id, true));
+            pap_log('duplicate_product() - ID inválido: ' . print_r($original_id, true));
             return new WP_Error('invalid_id', 'ID do produto inválido.');
         }
 
@@ -563,18 +550,18 @@ class PAP_Products {
         $original_post = get_post($original_id);
 
         if (!$original_post) {
-            affiliate_pro_log('duplicate_product() - Post não encontrado. ID: ' . $original_id);
+            pap_log('duplicate_product() - Post não encontrado. ID: ' . $original_id);
             return new WP_Error('invalid_post', 'Produto original não encontrado.');
         }
 
         if (is_wp_error($original_post)) {
-            affiliate_pro_log('duplicate_product() - Erro ao buscar post: ' . $original_post->get_error_message());
+            pap_log('duplicate_product() - Erro ao buscar post: ' . $original_post->get_error_message());
             return $original_post;
         }
 
         // Verificar se é do tipo correto
         if ($original_post->post_type !== $this->post_type) {
-            affiliate_pro_log('duplicate_product() - Post type incorreto. Esperado: ' . $this->post_type . ', Recebido: ' . $original_post->post_type);
+            pap_log('duplicate_product() - Post type incorreto. Esperado: ' . $this->post_type . ', Recebido: ' . $original_post->post_type);
             return new WP_Error('invalid_post_type', 'O item selecionado não é um produto afiliado.');
         }
 
@@ -588,36 +575,36 @@ class PAP_Products {
             'post_author'   => get_current_user_id()
         );
 
-        affiliate_pro_log('duplicate_product() - Tentando criar novo post com dados: ' . print_r($new_post_data, true));
+        pap_log('duplicate_product() - Tentando criar novo post com dados: ' . print_r($new_post_data, true));
 
         // Criar novo post (true = retorna WP_Error se falhar)
         $new_post_id = wp_insert_post($new_post_data, true);
 
         // Verificar se houve erro na criação
         if (is_wp_error($new_post_id)) {
-            affiliate_pro_log('duplicate_product() - Erro ao criar post (WP_Error): ' . $new_post_id->get_error_message());
+            pap_log('duplicate_product() - Erro ao criar post (WP_Error): ' . $new_post_id->get_error_message());
             return new WP_Error('insert_failed', 'Falha ao criar o produto duplicado: ' . $new_post_id->get_error_message());
         }
 
         if (!$new_post_id || $new_post_id === 0) {
-            affiliate_pro_log('duplicate_product() - wp_insert_post retornou ID inválido: ' . print_r($new_post_id, true));
+            pap_log('duplicate_product() - wp_insert_post retornou ID inválido: ' . print_r($new_post_id, true));
             return new WP_Error('insert_failed', 'wp_insert_post retornou ID inválido.');
         }
 
         // CRÍTICO: Confirmar que o post foi realmente criado no banco de dados
         $check_post = get_post($new_post_id);
         if (!$check_post) {
-            affiliate_pro_log('duplicate_product() - FALHA CRÍTICA: wp_insert_post retornou ID ' . $new_post_id . ', mas get_post() retornou null. O post não existe no banco de dados!');
+            pap_log('duplicate_product() - FALHA CRÍTICA: wp_insert_post retornou ID ' . $new_post_id . ', mas get_post() retornou null. O post não existe no banco de dados!');
             return new WP_Error('missing_post', 'Post não foi criado de fato no banco de dados. ID retornado: ' . $new_post_id);
         }
 
         if ($check_post->post_type !== $this->post_type) {
-            affiliate_pro_log('duplicate_product() - AVISO: Post criado com tipo incorreto. Esperado: ' . $this->post_type . ', Criado: ' . $check_post->post_type);
+            pap_log('duplicate_product() - AVISO: Post criado com tipo incorreto. Esperado: ' . $this->post_type . ', Criado: ' . $check_post->post_type);
             return new WP_Error('wrong_post_type', 'Post criado com tipo incorreto.');
         }
 
         // Log de sucesso na criação
-        affiliate_pro_log('duplicate_product() - Post criado e VERIFICADO com sucesso. ID original: ' . $original_id . ', Novo ID: ' . $new_post_id . ', Tipo: ' . $check_post->post_type . ', Status: ' . $check_post->post_status);
+        pap_log('duplicate_product() - Post criado e VERIFICADO com sucesso. ID original: ' . $original_id . ', Novo ID: ' . $new_post_id . ', Tipo: ' . $check_post->post_type . ', Status: ' . $check_post->post_status);
 
         // Copiar meta fields
         $meta_fields = array('_affiliate_price', '_affiliate_link', '_affiliate_image_url');
@@ -625,7 +612,7 @@ class PAP_Products {
             $meta_value = get_post_meta($original_id, $meta_key, true);
             if ($meta_value !== '' && $meta_value !== false) {
                 $result = update_post_meta($new_post_id, $meta_key, $meta_value);
-                affiliate_pro_log('Copiando meta ' . $meta_key . ' = ' . $meta_value . ' (resultado: ' . ($result ? 'OK' : 'FALHOU') . ')');
+                pap_log('Copiando meta ' . $meta_key . ' = ' . $meta_value . ' (resultado: ' . ($result ? 'OK' : 'FALHOU') . ')');
             }
         }
 
@@ -637,9 +624,9 @@ class PAP_Products {
                 if (!is_wp_error($terms) && !empty($terms)) {
                     $result = wp_set_post_terms($new_post_id, $terms, $taxonomy);
                     if (is_wp_error($result)) {
-                        affiliate_pro_log('Erro ao copiar termos da taxonomia ' . $taxonomy . ': ' . $result->get_error_message());
+                        pap_log('Erro ao copiar termos da taxonomia ' . $taxonomy . ': ' . $result->get_error_message());
                     } else {
-                        affiliate_pro_log('Copiando termos da taxonomia ' . $taxonomy . ': ' . implode(', ', $terms));
+                        pap_log('Copiando termos da taxonomia ' . $taxonomy . ': ' . implode(', ', $terms));
                     }
                 }
             }
@@ -649,10 +636,10 @@ class PAP_Products {
         $thumbnail_id = get_post_thumbnail_id($original_id);
         if ($thumbnail_id) {
             $result = set_post_thumbnail($new_post_id, $thumbnail_id);
-            affiliate_pro_log('Copiando thumbnail ID ' . $thumbnail_id . ' (resultado: ' . ($result ? 'OK' : 'FALHOU') . ')');
+            pap_log('Copiando thumbnail ID ' . $thumbnail_id . ' (resultado: ' . ($result ? 'OK' : 'FALHOU') . ')');
         }
 
-        affiliate_pro_log('duplicate_product() - Duplicação concluída com sucesso. Novo produto ID: ' . $new_post_id);
+        pap_log('duplicate_product() - Duplicação concluída com sucesso. Novo produto ID: ' . $new_post_id);
 
         return $new_post_id;
     }
@@ -674,24 +661,4 @@ class PAP_Products {
     public function get_taxonomy() {
         return $this->taxonomy;
     }
-}
-
-/**
- * Classe de compatibilidade com prefixo legado (v1.7.1)
- * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Products
- *
- * AVISO DE DEPRECAÇÃO (v1.7.3):
- * Esta classe está obsoleta e será removida em versões futuras.
- * Use PAP_Products::get_instance() ao invés de Affiliate_Pro_Products::get_instance()
- *
- * @package Affiliate_Pro
- * @since 1.0
- * @deprecated 1.7.3 Use PAP_Products ao invés. Será removida na v2.0.0
- */
-class Affiliate_Pro_Products extends PAP_Products {
-    /**
-     * Herança completa para compatibilidade com código legado
-     *
-     * @deprecated 1.7.3
-     */
 }

@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Plugin Afiliados Pro
+ * Plugin Name: PAP – Plugin Afiliados Pro
  * Plugin URI: https://fernandopimenta.blog.br
- * Description: Gerencie e exiba produtos afiliados com importação CSV, shortcodes personalizáveis e painel visual.
- * Version: 1.7.3
+ * Description: Sistema PAP de exibição de produtos afiliados com Template Builder e Presets.
+ * Version: 1.7.4
  * Author: Fernando Pimenta
  * Author URI: https://fernandopimenta.blog.br
  * License: GPLv2 or later
@@ -20,26 +20,17 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// v1.7.3: Constantes padronizadas com prefixo PAP (Plugin Afiliados Pro)
-// PAP_* são as constantes principais a partir da v1.7.3
-define('PAP_VERSION', '1.7.3');
+// Constantes do plugin
+define('PAP_VERSION', '1.7.4');
 define('PAP_DIR', plugin_dir_path(__FILE__));
 define('PAP_URL', plugin_dir_url(__FILE__));
 define('PAP_BASENAME', plugin_basename(__FILE__));
 
-// Constantes de compatibilidade legada (aliases de PAP_*)
-// @deprecated 1.7.3 Use as constantes PAP_* ao invés. Serão removidas na v2.0.0
-define('AFFILIATE_PRO_VERSION', PAP_VERSION);
-define('AFFILIATE_PRO_PLUGIN_DIR', PAP_DIR);
-define('AFFILIATE_PRO_PLUGIN_URL', PAP_URL);
-define('AFFILIATE_PRO_PLUGIN_BASENAME', PAP_BASENAME);
-
 // Modo debug (descomente a linha abaixo para ativar logs detalhados)
 // define('PAP_DEBUG', true);
-// define('AFFILIATE_PRO_DEBUG', true); // v1.7.3: Alias para compatibilidade (deprecated)
 
 /**
- * Função helper para logs condicionais (v1.7.3: prefixo padronizado)
+ * Função helper para logs condicionais
  *
  * @param string $message Mensagem para log
  * @since 1.7.3
@@ -51,36 +42,24 @@ function pap_log($message) {
 }
 
 /**
- * Função helper para logs condicionais (compatibilidade legada)
+ * Classe principal do PAP - Plugin Afiliados Pro
  *
- * AVISO DE DEPRECAÇÃO (v1.7.3):
- * Esta função está obsoleta. Use pap_log() ao invés.
- *
- * @param string $message Mensagem para log
- * @deprecated 1.7.3 Use pap_log() ao invés. Será removida na v2.0.0
- */
-function affiliate_pro_log($message) {
-    pap_log($message);
-}
-
-/**
- * Classe principal do Plugin Afiliados Pro
- *
+ * @package PAP
  * @since 1.0
  */
-class Affiliate_Pro_Plugin {
+class PAP_Plugin {
 
     /**
      * Instância única do plugin (Singleton)
      *
-     * @var Affiliate_Pro_Plugin
+     * @var PAP_Plugin
      */
     private static $instance = null;
 
     /**
      * Obtém a instância única do plugin
      *
-     * @return Affiliate_Pro_Plugin
+     * @return PAP_Plugin
      */
     public static function get_instance() {
         if (null === self::$instance) {
@@ -103,13 +82,13 @@ class Affiliate_Pro_Plugin {
      */
     private function load_dependencies() {
         // Core classes (v1.7.2: renomeadas para prefixo pap_)
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-pap-products.php';
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-pap-settings.php';
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-pap-template-builder.php';
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-affiliate-preview-handler.php'; // v1.4.0
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-affiliate-tracker.php'; // v1.4.7
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/csv-import.php';
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'includes/class-pap-shortcodes.php'; // v1.7.2: renomeado de shortcodes.php
+        require_once PAP_DIR . 'includes/class-pap-products.php';
+        require_once PAP_DIR . 'includes/class-pap-settings.php';
+        require_once PAP_DIR . 'includes/class-pap-template-builder.php';
+        require_once PAP_DIR . 'includes/class-affiliate-preview-handler.php'; // v1.4.0
+        require_once PAP_DIR . 'includes/class-affiliate-tracker.php'; // v1.4.7
+        require_once PAP_DIR . 'includes/csv-import.php';
+        require_once PAP_DIR . 'includes/class-pap-shortcodes.php'; // v1.7.2: renomeado de shortcodes.php
     }
 
     /**
@@ -136,7 +115,7 @@ class Affiliate_Pro_Plugin {
         load_plugin_textdomain(
             'afiliados-pro',
             false,
-            dirname(AFFILIATE_PRO_PLUGIN_BASENAME) . '/languages'
+            dirname(PAP_BASENAME) . '/languages'
         );
     }
 
@@ -146,16 +125,16 @@ class Affiliate_Pro_Plugin {
     public function init() {
         // IMPORTANTE: Registrar CPT e Taxonomia ANTES de tudo
         // Isso garante que estarão disponíveis quando admin_menu for chamado
-        $products = Affiliate_Pro_Products::get_instance();
+        $products = PAP_Products::get_instance();
         $products->register_post_type();
         $products->register_taxonomy();
 
         // Agora inicializar outras classes
-        Affiliate_Pro_Settings::get_instance();
-        Affiliate_Template_Builder::get_instance();
-        Affiliate_Pro_CSV_Import::get_instance();
-        Affiliate_Pro_Shortcodes::get_instance();
-        Affiliate_Pro_Tracker::get_instance(); // v1.4.7 - Click tracking
+        PAP_Settings::get_instance();
+        PAP_Template_Builder::get_instance();
+        PAP_CSV_Import::get_instance();
+        PAP_Shortcodes::get_instance();
+        PAP_Tracker::get_instance(); // v1.4.7 - Click tracking
     }
 
     /**
@@ -163,20 +142,20 @@ class Affiliate_Pro_Plugin {
      */
     public function activate() {
         // Registrar post type e taxonomia
-        Affiliate_Pro_Products::get_instance()->register_post_type();
-        Affiliate_Pro_Products::get_instance()->register_taxonomy();
+        PAP_Products::get_instance()->register_post_type();
+        PAP_Products::get_instance()->register_taxonomy();
 
         // Criar opções padrão
-        $default_settings = Affiliate_Pro_Settings::get_default_settings();
+        $default_settings = PAP_Settings::get_default_settings();
         if (!get_option('affiliate_pro_settings')) {
             add_option('affiliate_pro_settings', $default_settings);
         }
 
         // Register preview endpoint rules (v1.4.4)
-        Affiliate_Preview_Handler::register_preview_endpoint();
+        PAP_Preview_Handler::register_preview_endpoint();
 
         // Create click tracking table (v1.4.7)
-        Affiliate_Pro_Tracker::create_table();
+        PAP_Tracker::create_table();
 
         // Flush rewrite rules to activate preview endpoint
         flush_rewrite_rules();
@@ -200,8 +179,9 @@ class Affiliate_Pro_Plugin {
         $load_assets = false;
 
         if (is_a($post, 'WP_Post')) {
-            if (has_shortcode($post->post_content, 'affiliate_product') ||
-                has_shortcode($post->post_content, 'affiliate_products')) {
+            if (has_shortcode($post->post_content, 'pap_product') ||
+                has_shortcode($post->post_content, 'pap_products') ||
+                has_shortcode($post->post_content, 'pap_preset')) {
                 $load_assets = true;
             }
         }
@@ -216,21 +196,21 @@ class Affiliate_Pro_Plugin {
             // CSS principal
             wp_enqueue_style(
                 'affiliate-pro-style',
-                AFFILIATE_PRO_PLUGIN_URL . 'public/affiliate-pro.css',
+                PAP_URL . 'public/affiliate-pro.css',
                 array(),
-                AFFILIATE_PRO_VERSION
+                PAP_VERSION
             );
 
             // Adicionar CSS dinâmico baseado nas configurações
-            $dynamic_css = Affiliate_Pro_Settings::get_dynamic_css();
+            $dynamic_css = PAP_Settings::get_dynamic_css();
             wp_add_inline_style('affiliate-pro-style', $dynamic_css);
 
             // JavaScript (se necessário)
             wp_enqueue_script(
                 'affiliate-pro-script',
-                AFFILIATE_PRO_PLUGIN_URL . 'public/affiliate-pro.js',
+                PAP_URL . 'public/affiliate-pro.js',
                 array('jquery'),
-                AFFILIATE_PRO_VERSION,
+                PAP_VERSION,
                 true
             );
         }
@@ -248,17 +228,17 @@ class Affiliate_Pro_Plugin {
         // CSS do admin
         wp_enqueue_style(
             'affiliate-pro-admin-style',
-            AFFILIATE_PRO_PLUGIN_URL . 'admin/admin-style.css',
+            PAP_URL . 'admin/admin-style.css',
             array('wp-color-picker'),
-            AFFILIATE_PRO_VERSION
+            PAP_VERSION
         );
 
         // JavaScript do admin
         wp_enqueue_script(
             'affiliate-pro-admin-script',
-            AFFILIATE_PRO_PLUGIN_URL . 'admin/admin-script.js',
+            PAP_URL . 'admin/admin-script.js',
             array('jquery', 'wp-color-picker'),
-            AFFILIATE_PRO_VERSION,
+            PAP_VERSION,
             true
         );
 
@@ -277,46 +257,14 @@ class Affiliate_Pro_Plugin {
 }
 
 /**
- * Inicializa o plugin (compatibilidade legada)
+ * Função de inicialização do plugin
  *
- * AVISO DE DEPRECAÇÃO (v1.7.3):
- * Esta função está obsoleta. Use pap() ao invés.
- *
- * @return Affiliate_Pro_Plugin
- * @deprecated 1.7.3 Use pap() ao invés. Será removida na v2.0.0
+ * @return PAP_Plugin
+ * @since 1.7.4
  */
-function affiliate_pro() {
-    return Affiliate_Pro_Plugin::get_instance();
+function pap() {
+    return PAP_Plugin::get_instance();
 }
 
 // Inicializar o plugin
-affiliate_pro();
-
-/**
- * Classe de compatibilidade com prefixo PAP (v1.7.0)
- * Herda Affiliate_Pro_Plugin para compatibilidade
- *
- * NOTA (v1.7.3):
- * PAP_Plugin será promovida a classe principal em versão futura.
- * Por enquanto, mantém herança de Affiliate_Pro_Plugin.
- *
- * @package PAP
- * @since 1.7.0
- */
-class PAP_Plugin extends Affiliate_Pro_Plugin {
-    /**
-     * Herança completa - mantém todos os métodos e comportamentos
-     *
-     * @since 1.7.0
-     */
-}
-
-/**
- * Função de inicialização com prefixo padronizado (v1.7.3)
- *
- * @return Affiliate_Pro_Plugin
- * @since 1.7.0
- */
-function pap() {
-    return affiliate_pro();
-}
+PAP_Plugin::get_instance();

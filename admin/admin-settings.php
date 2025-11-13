@@ -2,7 +2,7 @@
 /**
  * Template da página de Aparência e Configurações
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.2
  */
 
@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$settings = Affiliate_Pro_Settings::get_settings();
+$settings = PAP_Settings::get_settings();
 
 // Mensagens de feedback
 if (isset($_GET['settings-updated'])) {

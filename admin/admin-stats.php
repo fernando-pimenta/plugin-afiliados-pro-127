@@ -1,8 +1,8 @@
 <?php
 /**
- * Afiliados Pro - Estatísticas de Cliques
+ * PAP - Estatísticas de Cliques
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @version 1.5.0
  */
 

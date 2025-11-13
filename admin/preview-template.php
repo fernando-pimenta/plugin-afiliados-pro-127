@@ -1,10 +1,10 @@
 <?php
 /**
- * Afiliados Pro - Preview Template
+ * PAP - Preview Template
  *
  * Completely standalone preview template with v1.5.8 unified color system
  *
- * @package AfiliadorsPro
+ * @package PAP
  * @version 1.5.8.1
  */
 
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 
 // Get settings (should be passed from parent handler)
 if (!isset($settings)) {
-    $settings = Affiliate_Template_Builder::get_template_settings();
+    $settings = PAP_Template_Builder::get_template_settings();
 }
 
 // v1.5.3: Fallbacks para compatibilidade com chaves antigas
@@ -65,7 +65,7 @@ $link_target = $open_in_new_tab ? ' target="_blank" rel="noopener noreferrer"' :
 $important = '';
 
 // Local placeholder image
-$placeholder_img = AFFILIATE_PRO_PLUGIN_URL . 'assets/img/placeholder.svg';
+$placeholder_img = PAP_URL . 'assets/img/placeholder.svg';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

@@ -1,8 +1,8 @@
 <?php
 /**
- * Afiliados Pro - Rastreamento de Cliques
+ * PAP - Rastreamento de Cliques
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @version 1.4.7
  */
 
@@ -10,19 +10,19 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Affiliate_Pro_Tracker {
+class PAP_Tracker {
 
     /**
      * Instância única (Singleton)
      *
-     * @var Affiliate_Pro_Tracker
+     * @var PAP_Tracker
      */
     private static $instance = null;
 
     /**
      * Obtém a instância única
      *
-     * @return Affiliate_Pro_Tracker
+     * @return PAP_Tracker
      */
     public static function get_instance() {
         if (null === self::$instance) {
@@ -69,7 +69,7 @@ class Affiliate_Pro_Tracker {
         // Migração: adicionar coluna source_page se não existir
         self::upgrade_table();
 
-        affiliate_pro_log('Affiliate Tracker: Table created successfully');
+        pap_log('Affiliate Tracker: Table created successfully');
     }
 
     /**
@@ -88,7 +88,7 @@ class Affiliate_Pro_Tracker {
         // Se não existir, adicionar
         if (empty($column_exists)) {
             $wpdb->query("ALTER TABLE `{$table}` ADD COLUMN source_page VARCHAR(255) DEFAULT NULL AFTER source");
-            affiliate_pro_log('Affiliate Tracker: Column source_page added to table');
+            pap_log('Affiliate Tracker: Column source_page added to table');
         }
     }
 
@@ -103,9 +103,9 @@ class Affiliate_Pro_Tracker {
 
         wp_enqueue_script(
             'affiliate-tracker',
-            AFFILIATE_PRO_PLUGIN_URL . 'assets/js/affiliate-tracker.js',
+            PAP_URL . 'assets/js/affiliate-tracker.js',
             array('jquery'),
-            AFFILIATE_PRO_VERSION,
+            PAP_VERSION,
             true
         );
 
@@ -114,7 +114,7 @@ class Affiliate_Pro_Tracker {
             'nonce'   => wp_create_nonce('wp_rest')
         ));
 
-        affiliate_pro_log('Affiliate Tracker: Scripts enqueued');
+        pap_log('Affiliate Tracker: Scripts enqueued');
     }
 
     /**
@@ -146,7 +146,7 @@ class Affiliate_Pro_Tracker {
             ),
         ));
 
-        affiliate_pro_log('Affiliate Tracker: REST routes registered');
+        pap_log('Affiliate Tracker: REST routes registered');
     }
 
     /**
@@ -159,7 +159,7 @@ class Affiliate_Pro_Tracker {
         // Verificar nonce do WordPress REST API
         $nonce = $request->get_header('X-WP-Nonce');
         if (!$nonce || !wp_verify_nonce($nonce, 'wp_rest')) {
-            affiliate_pro_log('Affiliate Tracker: Nonce verification failed');
+            pap_log('Affiliate Tracker: Nonce verification failed');
             return false;
         }
 
@@ -169,7 +169,7 @@ class Affiliate_Pro_Tracker {
         $request_count = get_transient($transient_key);
 
         if ($request_count !== false && $request_count >= 10) {
-            affiliate_pro_log('Affiliate Tracker: Rate limit exceeded for IP ' . $ip);
+            pap_log('Affiliate Tracker: Rate limit exceeded for IP ' . $ip);
             return false;
         }
 
@@ -231,14 +231,14 @@ class Affiliate_Pro_Tracker {
         $result = $wpdb->insert($table, $data);
 
         if ($result === false) {
-            affiliate_pro_log('Affiliate Tracker: Failed to record click - ' . $wpdb->last_error);
+            pap_log('Affiliate Tracker: Failed to record click - ' . $wpdb->last_error);
             return rest_ensure_response(array(
                 'success' => false,
                 'message' => 'Failed to record click'
             ));
         }
 
-        affiliate_pro_log(sprintf(
+        pap_log(sprintf(
             'Affiliate Tracker: Click recorded - Product: %s, Source: %s, Page: %s',
             $data['product_id'],
             $data['source'],
@@ -263,7 +263,7 @@ class Affiliate_Pro_Tracker {
         );
 
         if ($deleted !== false) {
-            affiliate_pro_log(sprintf('Affiliate Tracker: Cleaned up %d old clicks', $deleted));
+            pap_log(sprintf('Affiliate Tracker: Cleaned up %d old clicks', $deleted));
         }
     }
 

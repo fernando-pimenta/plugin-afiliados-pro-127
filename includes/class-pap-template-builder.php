@@ -65,7 +65,7 @@ class PAP_Template_Builder {
             $settings['shadow_card'] = $settings['shadow'];
             unset($settings['shadow']);
             update_option($this->option_name, $settings);
-            affiliate_pro_log('Template Builder: Migrated legacy shadow to shadow_card');
+            pap_log('Template Builder: Migrated legacy shadow to shadow_card');
         }
     }
 
@@ -75,7 +75,7 @@ class PAP_Template_Builder {
     private function init_hooks() {
         add_action('admin_menu', array($this, 'register_template_builder_menu'));
         add_action('admin_post_affiliate_template_save', array($this, 'save_template_settings'));
-        // v1.5.2: Removido apply_template_styles - agora usa Affiliate_Pro_Settings::get_dynamic_css()
+        // v1.5.2: Removido apply_template_styles - agora usa PAP_Settings::get_dynamic_css()
         // add_action('wp_head', array($this, 'apply_template_styles'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
         // v1.6.0: Sistema de Presets
@@ -115,7 +115,7 @@ class PAP_Template_Builder {
             wp_die(__('Você não tem permissão para acessar esta página.', 'afiliados-pro'));
         }
 
-        require_once AFFILIATE_PRO_PLUGIN_DIR . 'admin/admin-stats.php';
+        require_once PAP_DIR . 'admin/admin-stats.php';
     }
 
     /**
@@ -185,7 +185,7 @@ class PAP_Template_Builder {
                         <h3>🖼️ <?php _e('Pré-visualização', 'afiliados-pro'); ?></h3>
                         <iframe id="affiliate-preview-frame"
                             src="about:blank"
-                            data-preview-url="<?php echo esc_url(Affiliate_Preview_Handler::get_preview_url()); ?>"
+                            data-preview-url="<?php echo esc_url(PAP_Preview_Handler::get_preview_url()); ?>"
                             style="width:100%;height:500px;border:1px solid #ccc;border-radius:8px;background:#fff;">
                         </iframe>
                         <button id="generate-preview" class="button button-primary" type="button" style="margin-top:10px;">
@@ -635,9 +635,9 @@ class PAP_Template_Builder {
         $current_tab = isset($_POST['current_tab']) ? sanitize_text_field($_POST['current_tab']) : '';
 
         // v1.5.2: Obter configurações atuais do sistema unificado
-        $current_settings = Affiliate_Pro_Settings::get_settings();
+        $current_settings = PAP_Settings::get_settings();
 
-        // Mapear campos do Template Builder para Affiliate_Pro_Settings
+        // Mapear campos do Template Builder para PAP_Settings
         $settings = $current_settings;
 
         // Mapear cores
@@ -755,7 +755,7 @@ class PAP_Template_Builder {
         update_option('affiliate_pro_settings', $settings);
 
         // Registrar log (se debug ativo)
-        affiliate_pro_log('Template Builder: Configurações salvas com sucesso em affiliate_pro_settings');
+        pap_log('Template Builder: Configurações salvas com sucesso em affiliate_pro_settings');
 
         // Redirecionar com mensagem de sucesso
         wp_redirect(add_query_arg(
@@ -767,15 +767,15 @@ class PAP_Template_Builder {
 
     /**
      * Retorna as configurações do template (mescladas com defaults)
-     * v1.5.2: Sincronizado com Affiliate_Pro_Settings para persistência correta
+     * v1.5.2: Sincronizado com PAP_Settings para persistência correta
      * v1.5.3: Adiciona mapeamento reverso para compatibilidade com formulários antigos
      *
      * @return array
      */
     public static function get_template_settings() {
-        // v1.5.2: Agora usa as configurações unificadas do Affiliate_Pro_Settings
+        // v1.5.2: Agora usa as configurações unificadas do PAP_Settings
         // Isso garante que o front-end e o admin sempre estejam sincronizados
-        $settings = Affiliate_Pro_Settings::get_settings();
+        $settings = PAP_Settings::get_settings();
 
         // v1.5.3: Mapear chaves unificadas de volta para chaves antigas do Template Builder
         // Isso previne "Undefined array key" warnings nos formulários antigos
@@ -876,22 +876,22 @@ class PAP_Template_Builder {
         // Enqueue CSS
         wp_enqueue_style(
             'affiliate-template-css',
-            AFFILIATE_PRO_PLUGIN_URL . 'assets/css/affiliate-template.css',
+            PAP_URL . 'assets/css/affiliate-template.css',
             array(),
-            AFFILIATE_PRO_VERSION
+            PAP_VERSION
         );
 
         // Enqueue JS with jQuery dependency
         wp_enqueue_script(
             'affiliate-preview-js',
-            AFFILIATE_PRO_PLUGIN_URL . 'assets/js/template-preview.js',
+            PAP_URL . 'assets/js/template-preview.js',
             array('jquery'),
-            AFFILIATE_PRO_VERSION,
+            PAP_VERSION,
             true
         );
 
         // Log asset loading
-        affiliate_pro_log('Template Builder: Assets enqueued for page ' . $hook);
+        pap_log('Template Builder: Assets enqueued for page ' . $hook);
     }
 
     /**
@@ -1125,7 +1125,7 @@ class PAP_Template_Builder {
         }
 
         // Obter configurações atuais
-        $current_settings = Affiliate_Pro_Settings::get_settings();
+        $current_settings = PAP_Settings::get_settings();
 
         // Obter presets existentes
         $presets = self::get_presets();
@@ -1147,7 +1147,7 @@ class PAP_Template_Builder {
         update_option('affiliate_pro_presets', $presets);
 
         // Log
-        affiliate_pro_log('Preset criado com sucesso. ID: ' . $new_id . ', Nome: ' . $preset_name);
+        pap_log('Preset criado com sucesso. ID: ' . $new_id . ', Nome: ' . $preset_name);
 
         // Redirecionar com sucesso
         wp_redirect(add_query_arg(
@@ -1200,7 +1200,7 @@ class PAP_Template_Builder {
         update_option('affiliate_pro_presets', $presets);
 
         // Log
-        affiliate_pro_log('Preset excluído com sucesso. ID: ' . $preset_id);
+        pap_log('Preset excluído com sucesso. ID: ' . $preset_id);
 
         // Redirecionar com sucesso
         wp_redirect(add_query_arg(
@@ -1228,24 +1228,4 @@ class PAP_Template_Builder {
 
         return true;
     }
-}
-
-/**
- * Classe de compatibilidade com prefixo legado (v1.7.2)
- * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Template_Builder
- *
- * AVISO DE DEPRECAÇÃO (v1.7.3):
- * Esta classe está obsoleta e será removida em versões futuras.
- * Use PAP_Template_Builder::get_instance() ao invés de Affiliate_Template_Builder::get_instance()
- *
- * @package Affiliate_Pro
- * @since 1.4.0
- * @deprecated 1.7.3 Use PAP_Template_Builder ao invés. Será removida na v2.0.0
- */
-class Affiliate_Template_Builder extends PAP_Template_Builder {
-    /**
-     * Herança completa para compatibilidade com código legado
-     *
-     * @deprecated 1.7.3
-     */
 }

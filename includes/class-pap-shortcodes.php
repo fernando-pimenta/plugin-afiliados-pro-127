@@ -48,15 +48,10 @@ class PAP_Shortcodes {
 
     /**
      * Inicializa os hooks
-     * v1.7.0: Adicionados shortcodes com prefixo pap_ (compatibilidade total mantida)
+     * v1.7.4: Apenas shortcodes padronizados PAP (legados removidos)
      */
     private function init_hooks() {
-        // Shortcodes originais (mantidos para compatibilidade)
-        add_shortcode('affiliate_product', array($this, 'single_product_shortcode'));
-        add_shortcode('affiliate_products', array($this, 'products_grid_shortcode'));
-        add_shortcode('afiliados_pro', array($this, 'preset_shortcode')); // v1.6.0
-
-        // v1.7.0: Novos shortcodes com prefixo padronizado pap_ (Plugin Afiliados Pro)
+        // Shortcodes padronizados PAP (Plugin Afiliados Pro)
         add_shortcode('pap_product', array($this, 'single_product_shortcode'));
         add_shortcode('pap_products', array($this, 'products_grid_shortcode'));
         add_shortcode('pap_preset', array($this, 'preset_shortcode'));
@@ -93,10 +88,10 @@ class PAP_Shortcodes {
      * @return string
      */
     public function products_grid_shortcode($atts) {
-        $settings = Affiliate_Pro_Settings::get_settings();
+        $settings = PAP_Settings::get_settings();
 
         // Obter configurações do Template Builder para fallback
-        $builder_settings = Affiliate_Template_Builder::get_template_settings();
+        $builder_settings = PAP_Template_Builder::get_template_settings();
 
         $atts = shortcode_atts(array(
             'limit' => 6,
@@ -211,7 +206,7 @@ class PAP_Shortcodes {
             return '<p>' . __('ID do preset não informado. Use: [pap_preset id="1"]', 'afiliados-pro') . '</p>';
         }
 
-        $preset = Affiliate_Template_Builder::get_preset_by_id($preset_id);
+        $preset = PAP_Template_Builder::get_preset_by_id($preset_id);
 
         if (!$preset || !isset($preset['settings'])) {
             return '<p>' . sprintf(__('Preset #%d não encontrado.', 'afiliados-pro'), $preset_id) . '</p>';
@@ -262,7 +257,7 @@ class PAP_Shortcodes {
      * @return string
      */
     private function render_product_card($post) {
-        $settings = Affiliate_Pro_Settings::get_settings();
+        $settings = PAP_Settings::get_settings();
 
         $price = get_post_meta($post->ID, '_affiliate_price', true);
         $link = get_post_meta($post->ID, '_affiliate_link', true);
@@ -410,24 +405,4 @@ class PAP_Shortcodes {
 
         return false;
     }
-}
-
-/**
- * Classe de compatibilidade com prefixo legado (v1.7.1)
- * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Shortcodes
- *
- * AVISO DE DEPRECAÇÃO (v1.7.3):
- * Esta classe está obsoleta e será removida em versões futuras.
- * Use PAP_Shortcodes::get_instance() ao invés de Affiliate_Pro_Shortcodes::get_instance()
- *
- * @package Affiliate_Pro
- * @since 1.0
- * @deprecated 1.7.3 Use PAP_Shortcodes ao invés. Será removida na v2.0.0
- */
-class Affiliate_Pro_Shortcodes extends PAP_Shortcodes {
-    /**
-     * Herança completa para compatibilidade com código legado
-     *
-     * @deprecated 1.7.3
-     */
 }

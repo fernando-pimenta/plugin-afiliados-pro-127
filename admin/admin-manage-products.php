@@ -2,7 +2,7 @@
 /**
  * Template da página de Gerenciar Produtos
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.0
  */
 
@@ -53,7 +53,7 @@ if (isset($_POST['bulk_action']) && isset($_POST['product_ids']) && wp_verify_no
             break;
 
         case 'duplicate':
-            $products_instance = Affiliate_Pro_Products::get_instance();
+            $products_instance = PAP_Products::get_instance();
             foreach ($product_ids as $product_id) {
                 if ($products_instance->duplicate_product($product_id)) {
                     $count++;
@@ -438,7 +438,7 @@ function affiliate_pro_check_link_status($url) {
                         $price = get_post_meta($product_id, '_affiliate_price', true);
                         $link = get_post_meta($product_id, '_affiliate_link', true);
                         $link_status = affiliate_pro_check_link_status($link);
-                        $shortcode = '[affiliate_product id="' . $product_id . '"]';
+                        $shortcode = '[pap_product id="' . $product_id . '"]';
                         ?>
                         <tr>
                             <th scope="row" class="check-column">

@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.7.3
+Stable tag: 1.7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,18 +35,24 @@ O **Plugin Afiliados Pro** é uma solução completa para WordPress que permite 
 * Sites de afiliados Shopee, Amazon, Magazine Luiza, etc.
 * Catálogos de produtos afiliados
 
-= Shortcodes Disponíveis =
+= Shortcodes Disponíveis – Padrão PAP =
 
 **Produto único:**
-`[affiliate_product id="123"]` ou `[pap_product id="123"]`
+`[pap_product id="123"]`
 
 **Grade de produtos:**
-`[affiliate_products limit="6" category="eletronicos" columns="3"]` ou `[pap_products limit="6" category="eletronicos" columns="3"]`
+`[pap_products limit="12" columns="4"]`
 
-**Preset personalizado (v1.6.0+):**
-`[afiliados_pro id="1"]` ou `[pap_preset id="1"]`
+**Preset personalizado:**
+`[pap_preset id="1"]`
 
-**Nota:** A partir da v1.7.0, os shortcodes com prefixo `pap_` são os oficiais. Os shortcodes antigos continuam funcionando para total compatibilidade.
+**Categorias e aleatoriedade:**
+`[pap_products category="eletronicos,games" orderby="rand" limit="10"]`
+
+**Layout em lista:**
+`[pap_products layout="list" columns="3" limit="9"]`
+
+**Nota:** A partir da v1.7.4, apenas os shortcodes com prefixo `pap_` são suportados. Shortcodes legados foram removidos.
 
 = Suporte e Documentação =
 
@@ -126,6 +132,20 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.7.4 (2025-11-13) =
+* 🚀 **LIMPEZA TOTAL**: Código e shortcodes legados removidos
+* 🗑️ **REMOVIDO**: Shortcodes [affiliate_product], [affiliate_products], [afiliados_pro]
+* 🗑️ **REMOVIDO**: Classes wrapper Affiliate_* (Affiliate_Pro_Shortcodes, Affiliate_Pro_Products, Affiliate_Pro_Settings, Affiliate_Template_Builder)
+* 🗑️ **REMOVIDO**: Funções legadas affiliate_pro_log() e affiliate_pro()
+* 🗑️ **REMOVIDO**: Constantes AFFILIATE_PRO_VERSION, AFFILIATE_PRO_PLUGIN_DIR, AFFILIATE_PRO_PLUGIN_URL, AFFILIATE_PRO_PLUGIN_BASENAME
+* ♻️ **REFATORAÇÃO**: Classe Affiliate_Pro_Plugin renomeada para PAP_Plugin
+* ♻️ **REFATORAÇÃO**: Todas as classes auxiliares renomeadas (PAP_CSV_Import, PAP_Tracker, PAP_Preview_Handler)
+* 🧩 **DASHBOARD**: Atualizado para exibir apenas shortcodes [pap_*] com botões de copiar
+* ⚙️ **FRAMEWORK**: 100% PAP nativo - código limpo e funcional
+* 🎯 **PLUGIN NAME**: Atualizado para "PAP – Plugin Afiliados Pro"
+* 🧠 **PREPARAÇÃO**: Base otimizada para testes e melhorias v1.8.x
+* ⚠️ **BREAKING CHANGE**: Shortcodes legados não funcionam mais - use apenas [pap_*]
 
 = 1.7.3 (2025-11-13) =
 * 🧹 **LIMPEZA**: Adicionados @deprecated em todas as classes e funções legadas

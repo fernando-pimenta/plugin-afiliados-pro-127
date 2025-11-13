@@ -2,7 +2,7 @@
 /**
  * Template da página de Importar CSV
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.0
  */
 
