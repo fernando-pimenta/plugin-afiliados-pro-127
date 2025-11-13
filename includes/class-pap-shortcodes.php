@@ -416,10 +416,18 @@ class PAP_Shortcodes {
  * Classe de compatibilidade com prefixo legado (v1.7.1)
  * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Shortcodes
  *
+ * AVISO DE DEPRECAÇÃO (v1.7.3):
+ * Esta classe está obsoleta e será removida em versões futuras.
+ * Use PAP_Shortcodes::get_instance() ao invés de Affiliate_Pro_Shortcodes::get_instance()
+ *
  * @package Affiliate_Pro
  * @since 1.0
- * @deprecated 1.7.1 Use PAP_Shortcodes ao invés
+ * @deprecated 1.7.3 Use PAP_Shortcodes ao invés. Será removida na v2.0.0
  */
 class Affiliate_Pro_Shortcodes extends PAP_Shortcodes {
-    // Herança completa para compatibilidade com código legado
+    /**
+     * Herança completa para compatibilidade com código legado
+     *
+     * @deprecated 1.7.3
+     */
 }

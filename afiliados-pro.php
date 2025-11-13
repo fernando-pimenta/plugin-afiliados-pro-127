@@ -3,7 +3,7 @@
  * Plugin Name: Plugin Afiliados Pro
  * Plugin URI: https://fernandopimenta.blog.br
  * Description: Gerencie e exiba produtos afiliados com importação CSV, shortcodes personalizáveis e painel visual.
- * Version: 1.7.2
+ * Version: 1.7.3
  * Author: Fernando Pimenta
  * Author URI: https://fernandopimenta.blog.br
  * License: GPLv2 or later
@@ -20,43 +20,47 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Definir constantes do plugin
-define('AFFILIATE_PRO_VERSION', '1.7.2');
-define('AFFILIATE_PRO_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('AFFILIATE_PRO_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('AFFILIATE_PRO_PLUGIN_BASENAME', plugin_basename(__FILE__));
+// v1.7.3: Constantes padronizadas com prefixo PAP (Plugin Afiliados Pro)
+// PAP_* são as constantes principais a partir da v1.7.3
+define('PAP_VERSION', '1.7.3');
+define('PAP_DIR', plugin_dir_path(__FILE__));
+define('PAP_URL', plugin_dir_url(__FILE__));
+define('PAP_BASENAME', plugin_basename(__FILE__));
 
-// v1.7.0: Constantes com prefixo padronizado PAP (Plugin Afiliados Pro)
-// Compatibilidade total: aliases das constantes originais
-define('PAP_VERSION', AFFILIATE_PRO_VERSION);
-define('PAP_DIR', AFFILIATE_PRO_PLUGIN_DIR);
-define('PAP_URL', AFFILIATE_PRO_PLUGIN_URL);
-define('PAP_BASENAME', AFFILIATE_PRO_PLUGIN_BASENAME);
+// Constantes de compatibilidade legada (aliases de PAP_*)
+// @deprecated 1.7.3 Use as constantes PAP_* ao invés. Serão removidas na v2.0.0
+define('AFFILIATE_PRO_VERSION', PAP_VERSION);
+define('AFFILIATE_PRO_PLUGIN_DIR', PAP_DIR);
+define('AFFILIATE_PRO_PLUGIN_URL', PAP_URL);
+define('AFFILIATE_PRO_PLUGIN_BASENAME', PAP_BASENAME);
 
 // Modo debug (descomente a linha abaixo para ativar logs detalhados)
-// define('AFFILIATE_PRO_DEBUG', true);
-// define('PAP_DEBUG', true); // v1.7.0: Alias para compatibilidade
+// define('PAP_DEBUG', true);
+// define('AFFILIATE_PRO_DEBUG', true); // v1.7.3: Alias para compatibilidade (deprecated)
 
 /**
- * Função helper para logs condicionais
+ * Função helper para logs condicionais (v1.7.3: prefixo padronizado)
  *
  * @param string $message Mensagem para log
+ * @since 1.7.3
  */
-function affiliate_pro_log($message) {
-    if (defined('AFFILIATE_PRO_DEBUG') && AFFILIATE_PRO_DEBUG) {
-        error_log('Affiliate Pro: ' . $message);
+function pap_log($message) {
+    if (defined('PAP_DEBUG') && PAP_DEBUG) {
+        error_log('[PAP] ' . $message);
     }
 }
 
 /**
- * Função helper para logs condicionais (v1.7.0: prefixo padronizado)
- * Compatibilidade total: alias de affiliate_pro_log()
+ * Função helper para logs condicionais (compatibilidade legada)
+ *
+ * AVISO DE DEPRECAÇÃO (v1.7.3):
+ * Esta função está obsoleta. Use pap_log() ao invés.
  *
  * @param string $message Mensagem para log
- * @since 1.7.0
+ * @deprecated 1.7.3 Use pap_log() ao invés. Será removida na v2.0.0
  */
-function pap_log($message) {
-    affiliate_pro_log($message);
+function affiliate_pro_log($message) {
+    pap_log($message);
 }
 
 /**
@@ -273,9 +277,13 @@ class Affiliate_Pro_Plugin {
 }
 
 /**
- * Inicializa o plugin
+ * Inicializa o plugin (compatibilidade legada)
+ *
+ * AVISO DE DEPRECAÇÃO (v1.7.3):
+ * Esta função está obsoleta. Use pap() ao invés.
  *
  * @return Affiliate_Pro_Plugin
+ * @deprecated 1.7.3 Use pap() ao invés. Será removida na v2.0.0
  */
 function affiliate_pro() {
     return Affiliate_Pro_Plugin::get_instance();
@@ -285,19 +293,26 @@ function affiliate_pro() {
 affiliate_pro();
 
 /**
- * Classe espelho com prefixo padronizado PAP (v1.7.0)
- * Compatibilidade total: herda todos os métodos de Affiliate_Pro_Plugin
+ * Classe de compatibilidade com prefixo PAP (v1.7.0)
+ * Herda Affiliate_Pro_Plugin para compatibilidade
+ *
+ * NOTA (v1.7.3):
+ * PAP_Plugin será promovida a classe principal em versão futura.
+ * Por enquanto, mantém herança de Affiliate_Pro_Plugin.
  *
  * @package PAP
  * @since 1.7.0
  */
 class PAP_Plugin extends Affiliate_Pro_Plugin {
-    // Herança completa - mantém todos os métodos e comportamentos
+    /**
+     * Herança completa - mantém todos os métodos e comportamentos
+     *
+     * @since 1.7.0
+     */
 }
 
 /**
- * Função de inicialização com prefixo padronizado (v1.7.0)
- * Compatibilidade total: alias de affiliate_pro()
+ * Função de inicialização com prefixo padronizado (v1.7.3)
  *
  * @return Affiliate_Pro_Plugin
  * @since 1.7.0

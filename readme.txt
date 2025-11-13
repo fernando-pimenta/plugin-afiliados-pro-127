@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.7.2
+Stable tag: 1.7.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -126,6 +126,14 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.7.3 (2025-11-13) =
+* 🧹 **LIMPEZA**: Adicionados @deprecated em todas as classes e funções legadas
+* 🔧 **CONSTANTES**: PAP_* promovidas a principais, AFFILIATE_PRO_* são aliases (deprecated)
+* 📚 **DOCBLOCKS**: Atualizados com avisos de deprecação e versão de remoção (v2.0.0)
+* 🔄 **FUNÇÕES**: pap_log() promovida a principal, affiliate_pro_log() é alias (deprecated)
+* 🧠 **COMPATIBILIDADE**: 100% mantida - elementos legados funcionam perfeitamente
+* ✅ **FINAL**: Refatoração PAP concluída (Etapa 3/3)
 
 = 1.7.2 (2025-11-13) =
 * 📁 **ARQUIVOS**: Renomeados para padrão class-pap-* (class-pap-products.php, class-pap-settings.php, etc.)

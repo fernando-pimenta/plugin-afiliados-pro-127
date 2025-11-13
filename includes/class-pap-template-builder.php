@@ -1234,10 +1234,18 @@ class PAP_Template_Builder {
  * Classe de compatibilidade com prefixo legado (v1.7.2)
  * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Template_Builder
  *
+ * AVISO DE DEPRECAÇÃO (v1.7.3):
+ * Esta classe está obsoleta e será removida em versões futuras.
+ * Use PAP_Template_Builder::get_instance() ao invés de Affiliate_Template_Builder::get_instance()
+ *
  * @package Affiliate_Pro
  * @since 1.4.0
- * @deprecated 1.7.2 Use PAP_Template_Builder ao invés
+ * @deprecated 1.7.3 Use PAP_Template_Builder ao invés. Será removida na v2.0.0
  */
 class Affiliate_Template_Builder extends PAP_Template_Builder {
-    // Herança completa para compatibilidade com código legado
+    /**
+     * Herança completa para compatibilidade com código legado
+     *
+     * @deprecated 1.7.3
+     */
 }
