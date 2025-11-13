@@ -1,8 +1,9 @@
 <?php
 /**
  * Classe responsável pelos shortcodes do plugin
+ * v1.7.1: Refatoração gradual - PAP_Shortcodes é agora a classe principal
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.0
  */
 
@@ -10,19 +11,26 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Affiliate_Pro_Shortcodes {
+/**
+ * Classe principal de Shortcodes com prefixo padronizado PAP
+ * v1.7.1: Promovida de espelho para classe principal
+ *
+ * @package PAP
+ * @since 1.7.1
+ */
+class PAP_Shortcodes {
 
     /**
      * Instância única (Singleton)
      *
-     * @var Affiliate_Pro_Shortcodes
+     * @var PAP_Shortcodes
      */
     private static $instance = null;
 
     /**
      * Obtém a instância única
      *
-     * @return Affiliate_Pro_Shortcodes
+     * @return PAP_Shortcodes
      */
     public static function get_instance() {
         if (null === self::$instance) {
@@ -40,10 +48,18 @@ class Affiliate_Pro_Shortcodes {
 
     /**
      * Inicializa os hooks
+     * v1.7.0: Adicionados shortcodes com prefixo pap_ (compatibilidade total mantida)
      */
     private function init_hooks() {
+        // Shortcodes originais (mantidos para compatibilidade)
         add_shortcode('affiliate_product', array($this, 'single_product_shortcode'));
         add_shortcode('affiliate_products', array($this, 'products_grid_shortcode'));
+        add_shortcode('afiliados_pro', array($this, 'preset_shortcode')); // v1.6.0
+
+        // v1.7.0: Novos shortcodes com prefixo padronizado pap_ (Plugin Afiliados Pro)
+        add_shortcode('pap_product', array($this, 'single_product_shortcode'));
+        add_shortcode('pap_products', array($this, 'products_grid_shortcode'));
+        add_shortcode('pap_preset', array($this, 'preset_shortcode'));
     }
 
     /**
@@ -165,6 +181,76 @@ class Affiliate_Pro_Shortcodes {
         } else {
             $output = '<p>' . __('Nenhum produto encontrado.', 'afiliados-pro') . '</p>';
         }
+
+        return $output;
+    }
+
+    /**
+     * Shortcode para exibir produtos com preset personalizado (v1.6.0)
+     * v1.6.5: Corrigido filtro e passagem de parâmetros
+     * v1.6.6: Corrigida prioridade de layout/columns (preset > Template Builder)
+     *
+     * @param array $atts
+     * @return string
+     */
+    public function preset_shortcode($atts) {
+        $atts = shortcode_atts(array(
+            'id' => 0,
+            'limit' => 6,
+            'category' => '',
+            'layout' => '',
+            'columns' => '',
+            'orderby' => 'date',
+            'order' => 'DESC'
+        ), $atts);
+
+        $preset_id = intval($atts['id']);
+
+        // Verificar se o preset existe
+        if ($preset_id <= 0) {
+            return '<p>' . __('ID do preset não informado. Use: [pap_preset id="1"]', 'afiliados-pro') . '</p>';
+        }
+
+        $preset = Affiliate_Template_Builder::get_preset_by_id($preset_id);
+
+        if (!$preset || !isset($preset['settings'])) {
+            return '<p>' . sprintf(__('Preset #%d não encontrado.', 'afiliados-pro'), $preset_id) . '</p>';
+        }
+
+        // Criar callback específico para este preset
+        $filter_callback = function($value) use ($preset) {
+            return $preset['settings'];
+        };
+
+        // Aplicar configurações do preset temporariamente
+        add_filter('option_affiliate_pro_settings', $filter_callback, 99);
+
+        // Renderizar produtos com as configurações do preset
+        // Passar atts como string formatada para o shortcode interno
+        $shortcode_atts = array(
+            'limit' => $atts['limit'],
+            'category' => $atts['category'],
+            'orderby' => $atts['orderby'],
+            'order' => $atts['order']
+        );
+
+        // Adicionar layout e columns (prioridade: shortcode > preset > fallback)
+        if (!empty($atts['layout'])) {
+            $shortcode_atts['layout'] = $atts['layout'];
+        } elseif (!empty($preset['settings']['default_layout'])) {
+            $shortcode_atts['layout'] = $preset['settings']['default_layout'];
+        }
+
+        if (!empty($atts['columns'])) {
+            $shortcode_atts['columns'] = $atts['columns'];
+        } elseif (!empty($preset['settings']['default_columns'])) {
+            $shortcode_atts['columns'] = $preset['settings']['default_columns'];
+        }
+
+        $output = $this->products_grid_shortcode($shortcode_atts);
+
+        // Remover APENAS o filtro que adicionamos
+        remove_filter('option_affiliate_pro_settings', $filter_callback, 99);
 
         return $output;
     }
@@ -324,4 +410,24 @@ class Affiliate_Pro_Shortcodes {
 
         return false;
     }
+}
+
+/**
+ * Classe de compatibilidade com prefixo legado (v1.7.1)
+ * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Shortcodes
+ *
+ * AVISO DE DEPRECAÇÃO (v1.7.3):
+ * Esta classe está obsoleta e será removida em versões futuras.
+ * Use PAP_Shortcodes::get_instance() ao invés de Affiliate_Pro_Shortcodes::get_instance()
+ *
+ * @package Affiliate_Pro
+ * @since 1.0
+ * @deprecated 1.7.3 Use PAP_Shortcodes ao invés. Será removida na v2.0.0
+ */
+class Affiliate_Pro_Shortcodes extends PAP_Shortcodes {
+    /**
+     * Herança completa para compatibilidade com código legado
+     *
+     * @deprecated 1.7.3
+     */
 }

@@ -1,8 +1,9 @@
 <?php
 /**
  * Classe responsável pelo Custom Post Type e Taxonomia
+ * v1.7.1: Refatoração gradual - PAP_Products é agora a classe principal
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.0
  */
 
@@ -10,12 +11,19 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Affiliate_Pro_Products {
+/**
+ * Classe principal de Products com prefixo padronizado PAP
+ * v1.7.1: Promovida de espelho para classe principal
+ *
+ * @package PAP
+ * @since 1.7.1
+ */
+class PAP_Products {
 
     /**
      * Instância única (Singleton)
      *
-     * @var Affiliate_Pro_Products
+     * @var PAP_Products
      */
     private static $instance = null;
 
@@ -36,7 +44,7 @@ class Affiliate_Pro_Products {
     /**
      * Obtém a instância única
      *
-     * @return Affiliate_Pro_Products
+     * @return PAP_Products
      */
     public static function get_instance() {
         if (null === self::$instance) {
@@ -238,6 +246,12 @@ class Affiliate_Pro_Products {
 
             <h2><?php _e('Como usar os Shortcodes', 'afiliados-pro'); ?></h2>
             <div style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px;">
+                <div style="margin-bottom: 20px; background: #f0f6fc; padding: 15px; border-left: 4px solid #0073aa;">
+                    <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Preset Personalizado (NOVO v1.6.0)', 'afiliados-pro'); ?></h3>
+                    <code style="display: block; padding: 10px; background: #fff; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_preset id="1"]</code>
+                    <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe produtos com as configurações salvas no preset #1. Crie seus presets em Aparência e Configurações > Presets', 'afiliados-pro'); ?></p>
+                </div>
+
                 <div style="margin-bottom: 20px;">
                     <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Produto Único', 'afiliados-pro'); ?></h3>
                     <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[affiliate_product id="123"]</code>
@@ -660,4 +674,24 @@ class Affiliate_Pro_Products {
     public function get_taxonomy() {
         return $this->taxonomy;
     }
+}
+
+/**
+ * Classe de compatibilidade com prefixo legado (v1.7.1)
+ * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Products
+ *
+ * AVISO DE DEPRECAÇÃO (v1.7.3):
+ * Esta classe está obsoleta e será removida em versões futuras.
+ * Use PAP_Products::get_instance() ao invés de Affiliate_Pro_Products::get_instance()
+ *
+ * @package Affiliate_Pro
+ * @since 1.0
+ * @deprecated 1.7.3 Use PAP_Products ao invés. Será removida na v2.0.0
+ */
+class Affiliate_Pro_Products extends PAP_Products {
+    /**
+     * Herança completa para compatibilidade com código legado
+     *
+     * @deprecated 1.7.3
+     */
 }

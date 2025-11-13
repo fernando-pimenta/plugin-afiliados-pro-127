@@ -1,8 +1,9 @@
 <?php
 /**
  * Classe responsável pelo Template Builder
+ * v1.7.2: Refatoração gradual - PAP_Template_Builder é agora a classe principal
  *
- * @package Affiliate_Pro
+ * @package PAP
  * @since 1.4.0
  */
 
@@ -10,12 +11,19 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Affiliate_Template_Builder {
+/**
+ * Classe principal de Template Builder com prefixo padronizado PAP
+ * v1.7.2: Promovida de espelho para classe principal
+ *
+ * @package PAP
+ * @since 1.7.2
+ */
+class PAP_Template_Builder {
 
     /**
      * Instância única (Singleton)
      *
-     * @var Affiliate_Template_Builder
+     * @var PAP_Template_Builder
      */
     private static $instance = null;
 
@@ -29,7 +37,7 @@ class Affiliate_Template_Builder {
     /**
      * Obtém a instância única
      *
-     * @return Affiliate_Template_Builder
+     * @return PAP_Template_Builder
      */
     public static function get_instance() {
         if (null === self::$instance) {
@@ -70,6 +78,9 @@ class Affiliate_Template_Builder {
         // v1.5.2: Removido apply_template_styles - agora usa Affiliate_Pro_Settings::get_dynamic_css()
         // add_action('wp_head', array($this, 'apply_template_styles'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
+        // v1.6.0: Sistema de Presets
+        add_action('admin_post_affiliate_preset_save', array($this, 'save_preset'));
+        add_action('admin_post_affiliate_preset_delete', array($this, 'delete_preset'));
     }
 
     /**
@@ -126,7 +137,7 @@ class Affiliate_Template_Builder {
         <div class="wrap">
             <h1><?php _e('Afiliados Pro - Aparência e Configurações', 'afiliados-pro'); ?></h1>
 
-            <!-- Tab Navigation (v1.4.4) -->
+            <!-- Tab Navigation (v1.6.0 - Adicionado Presets) -->
             <h2 class="nav-tab-wrapper">
                 <a href="?page=affiliate-template-builder&tab=appearance" class="nav-tab <?php echo $active_tab === 'appearance' ? 'nav-tab-active' : ''; ?>">
                     <?php _e('Aparência', 'afiliados-pro'); ?>
@@ -134,12 +145,17 @@ class Affiliate_Template_Builder {
                 <a href="?page=affiliate-template-builder&tab=settings" class="nav-tab <?php echo $active_tab === 'settings' ? 'nav-tab-active' : ''; ?>">
                     <?php _e('Configurações', 'afiliados-pro'); ?>
                 </a>
+                <a href="?page=affiliate-template-builder&tab=presets" class="nav-tab <?php echo $active_tab === 'presets' ? 'nav-tab-active' : ''; ?>">
+                    <?php _e('Presets', 'afiliados-pro'); ?>
+                </a>
             </h2>
 
             <?php
             // Render active tab
             if ($active_tab === 'appearance') {
                 $this->render_appearance_tab();
+            } elseif ($active_tab === 'presets') {
+                $this->render_presets_tab();
             } else {
                 $this->render_settings_tab();
             }
@@ -160,6 +176,7 @@ class Affiliate_Template_Builder {
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                 <?php wp_nonce_field('affiliate_template_save', 'affiliate_template_nonce'); ?>
                 <input type="hidden" name="action" value="affiliate_template_save">
+                <input type="hidden" name="current_tab" value="appearance">
 
                 <!-- v1.4.6: Split Layout Container -->
                 <div class="affiliate-builder-container">
@@ -180,18 +197,11 @@ class Affiliate_Template_Builder {
                     <div class="affiliate-controls-pane">
                         <h3>🎨 <?php _e('Personalização dos Cards', 'afiliados-pro'); ?></h3>
 
-                        <!-- Group 1: Visual Identity Colors -->
+                        <!-- Group 1: Visual Identity Colors (v1.6.2: Reordenado conforme hierarquia visual) -->
                         <fieldset>
                             <legend><strong><?php _e('Identidade Visual', 'afiliados-pro'); ?></strong></legend>
 
-                            <div class="color-field-compact">
-                                <input type="color" id="card_background_color" name="card_background_color" value="<?php echo esc_attr($settings['card_background_color']); ?>">
-                                <div class="color-field-labels">
-                                    <label for="card_background_color"><?php _e('Fundo do Card', 'afiliados-pro'); ?></label>
-                                    <span class="description"><?php _e('Cor de fundo dos cards', 'afiliados-pro'); ?></span>
-                                </div>
-                            </div>
-
+                            <!-- 1. Fundo da Área da Imagem -->
                             <div class="color-field-compact">
                                 <input type="color" id="card_image_background" name="card_image_background" value="<?php echo esc_attr($settings['card_image_background']); ?>">
                                 <div class="color-field-labels">
@@ -200,22 +210,16 @@ class Affiliate_Template_Builder {
                                 </div>
                             </div>
 
+                            <!-- 2. Fundo do Card -->
                             <div class="color-field-compact">
-                                <input type="color" id="text_color" name="text_color" value="<?php echo esc_attr($settings['text_color']); ?>">
+                                <input type="color" id="card_background_color" name="card_background_color" value="<?php echo esc_attr($settings['card_background_color']); ?>">
                                 <div class="color-field-labels">
-                                    <label for="text_color"><?php _e('Cor do Texto', 'afiliados-pro'); ?></label>
-                                    <span class="description"><?php _e('Texto nos cards', 'afiliados-pro'); ?></span>
+                                    <label for="card_background_color"><?php _e('Fundo do Card', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Cor de fundo dos cards', 'afiliados-pro'); ?></span>
                                 </div>
                             </div>
 
-                            <div class="color-field-compact">
-                                <input type="color" id="price_color" name="price_color" value="<?php echo esc_attr($settings['price_color']); ?>">
-                                <div class="color-field-labels">
-                                    <label for="price_color"><?php _e('Cor do Preço', 'afiliados-pro'); ?></label>
-                                    <span class="description"><?php _e('Cor do valor do produto', 'afiliados-pro'); ?></span>
-                                </div>
-                            </div>
-
+                            <!-- 3. Cor Primária -->
                             <div class="color-field-compact">
                                 <input type="color" id="primary_color" name="primary_color" value="<?php echo esc_attr($settings['primary_color']); ?>">
                                 <div class="color-field-labels">
@@ -224,6 +228,25 @@ class Affiliate_Template_Builder {
                                 </div>
                             </div>
 
+                            <!-- 4. Cor do Texto -->
+                            <div class="color-field-compact">
+                                <input type="color" id="text_color" name="text_color" value="<?php echo esc_attr($settings['text_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="text_color"><?php _e('Cor do Texto', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Texto nos cards', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
+
+                            <!-- 5. Cor do Preço -->
+                            <div class="color-field-compact">
+                                <input type="color" id="price_color" name="price_color" value="<?php echo esc_attr($settings['price_color']); ?>">
+                                <div class="color-field-labels">
+                                    <label for="price_color"><?php _e('Cor do Preço', 'afiliados-pro'); ?></label>
+                                    <span class="description"><?php _e('Cor do valor do produto', 'afiliados-pro'); ?></span>
+                                </div>
+                            </div>
+
+                            <!-- 6. Cor do Botão -->
                             <div class="color-field-compact">
                                 <input type="color" id="button_color" name="button_color" value="<?php echo esc_attr($settings['button_color']); ?>">
                                 <div class="color-field-labels">
@@ -232,6 +255,7 @@ class Affiliate_Template_Builder {
                                 </div>
                             </div>
 
+                            <!-- 7. Cor Secundária (Gradiente) -->
                             <div class="color-field-compact">
                                 <input type="color" id="gradient_color" name="gradient_color" value="<?php echo esc_attr($settings['gradient_color']); ?>">
                                 <div class="color-field-labels">
@@ -240,6 +264,7 @@ class Affiliate_Template_Builder {
                                 </div>
                             </div>
 
+                            <!-- 8. Cor de Destaque (Badge) -->
                             <div class="color-field-compact">
                                 <input type="color" id="accent_color" name="accent_color" value="<?php echo esc_attr($settings['accent_color']); ?>">
                                 <div class="color-field-labels">
@@ -268,8 +293,8 @@ class Affiliate_Template_Builder {
                                 <select id="border_radius" name="border_radius" class="regular-text">
                                     <option value="none" <?php selected($settings['border_radius'], 'none'); ?>><?php _e('Nenhum (0px)', 'afiliados-pro'); ?></option>
                                     <option value="small" <?php selected($settings['border_radius'], 'small'); ?>><?php _e('Pequeno (4px)', 'afiliados-pro'); ?></option>
-                                    <option value="medium" <?php selected($settings['border_radius'], 'medium'); ?>><?php _e('Médio (8px)', 'afiliados-pro'); ?></option>
-                                    <option value="large" <?php selected($settings['border_radius'], 'large'); ?>><?php _e('Grande (16px)', 'afiliados-pro'); ?></option>
+                                    <option value="medium" <?php selected($settings['border_radius'], 'medium'); ?>><?php _e('Médio (12px)', 'afiliados-pro'); ?></option>
+                                    <option value="large" <?php selected($settings['border_radius'], 'large'); ?>><?php _e('Grande (20px)', 'afiliados-pro'); ?></option>
                                 </select>
                             </p>
 
@@ -352,6 +377,7 @@ class Affiliate_Template_Builder {
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                 <?php wp_nonce_field('affiliate_template_save', 'affiliate_template_nonce'); ?>
                 <input type="hidden" name="action" value="affiliate_template_save">
+                <input type="hidden" name="current_tab" value="settings">
 
                 <table class="form-table" role="presentation">
                     <tbody>
@@ -475,8 +501,124 @@ class Affiliate_Template_Builder {
     }
 
     /**
+     * Render Presets Tab (v1.6.0)
+     */
+    private function render_presets_tab() {
+        $presets = self::get_presets();
+
+        // Mensagens
+        if (isset($_GET['preset-saved']) && $_GET['preset-saved'] === 'true') {
+            $preset_id = isset($_GET['preset-id']) ? intval($_GET['preset-id']) : 0;
+            echo '<div class="notice notice-success is-dismissible"><p>' . sprintf(__('Preset salvo com sucesso! Use o shortcode: %s', 'afiliados-pro'), '<code>[pap_preset id="' . $preset_id . '"]</code>') . '</p></div>';
+        }
+
+        if (isset($_GET['preset-deleted']) && $_GET['preset-deleted'] === 'true') {
+            echo '<div class="notice notice-success is-dismissible"><p>' . __('Preset excluído com sucesso!', 'afiliados-pro') . '</p></div>';
+        }
+
+        if (isset($_GET['error'])) {
+            $error = sanitize_text_field($_GET['error']);
+            $error_messages = array(
+                'empty_name' => __('Por favor, insira um nome para o preset.', 'afiliados-pro'),
+                'invalid_id' => __('ID do preset inválido.', 'afiliados-pro'),
+                'not_found' => __('Preset não encontrado.', 'afiliados-pro'),
+            );
+            $message = isset($error_messages[$error]) ? $error_messages[$error] : __('Ocorreu um erro.', 'afiliados-pro');
+            echo '<div class="notice notice-error is-dismissible"><p>' . esc_html($message) . '</p></div>';
+        }
+        ?>
+        <div class="tab-content">
+            <p><?php _e('Salve múltiplas personalizações de aparência e use cada uma com seu próprio shortcode.', 'afiliados-pro'); ?></p>
+
+            <!-- Formulário para salvar novo preset -->
+            <div style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px; margin-bottom: 20px;">
+                <h3 style="margin-top: 0;"><?php _e('Salvar Configuração Atual como Preset', 'afiliados-pro'); ?></h3>
+                <p class="description"><?php _e('As configurações de aparência e funcionalidades atuais serão salvas neste preset.', 'afiliados-pro'); ?></p>
+
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-top: 15px;">
+                    <?php wp_nonce_field('affiliate_preset_save', 'affiliate_preset_nonce'); ?>
+                    <input type="hidden" name="action" value="affiliate_preset_save">
+
+                    <table class="form-table" role="presentation">
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                    <label for="preset_name"><?php _e('Nome do Preset', 'afiliados-pro'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="text" id="preset_name" name="preset_name" class="regular-text" placeholder="<?php _e('Ex: Layout Azul Moderno', 'afiliados-pro'); ?>" required>
+                                    <p class="description"><?php _e('Dê um nome descritivo para identificar este preset facilmente.', 'afiliados-pro'); ?></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <?php submit_button(__('Salvar Preset', 'afiliados-pro'), 'primary', 'submit', false); ?>
+                </form>
+            </div>
+
+            <!-- Lista de presets salvos -->
+            <div style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px;">
+                <h3 style="margin-top: 0;"><?php _e('Presets Salvos', 'afiliados-pro'); ?></h3>
+
+                <?php if (empty($presets)) : ?>
+                    <p><?php _e('Nenhum preset salvo ainda. Salve suas primeiras configurações acima!', 'afiliados-pro'); ?></p>
+                <?php else : ?>
+                    <table class="wp-list-table widefat fixed striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;"><?php _e('ID', 'afiliados-pro'); ?></th>
+                                <th><?php _e('Nome', 'afiliados-pro'); ?></th>
+                                <th><?php _e('Shortcode', 'afiliados-pro'); ?></th>
+                                <th><?php _e('Criado em', 'afiliados-pro'); ?></th>
+                                <th style="width: 150px;"><?php _e('Ações', 'afiliados-pro'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($presets as $preset_id => $preset) : ?>
+                                <tr>
+                                    <td><strong><?php echo esc_html($preset_id); ?></strong></td>
+                                    <td><?php echo esc_html($preset['name']); ?></td>
+                                    <td>
+                                        <code style="background: #f0f0f1; padding: 4px 8px; border-radius: 3px;">[pap_preset id="<?php echo esc_attr($preset_id); ?>"]</code>
+                                        <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_preset id=&quot;<?php echo esc_attr($preset_id); ?>&quot;]'); alert('Shortcode copiado!');" style="margin-left: 5px;">
+                                            <?php _e('Copiar', 'afiliados-pro'); ?>
+                                        </button>
+                                    </td>
+                                    <td><?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($preset['timestamp']))); ?></td>
+                                    <td>
+                                        <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=affiliate_preset_delete&preset_id=' . $preset_id), 'delete_preset_' . $preset_id)); ?>"
+                                           class="button button-small"
+                                           onclick="return confirm('<?php _e('Tem certeza que deseja excluir este preset?', 'afiliados-pro'); ?>');"
+                                           style="color: #b32d2e;">
+                                            <?php _e('Excluir', 'afiliados-pro'); ?>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            </div>
+
+            <!-- Instruções de uso -->
+            <div style="background: #f0f6fc; border-left: 4px solid #0073aa; padding: 15px; margin-top: 20px;">
+                <h4 style="margin-top: 0; color: #0073aa;"><?php _e('Como usar os Presets', 'afiliados-pro'); ?></h4>
+                <ol style="margin-bottom: 0;">
+                    <li><?php _e('Configure a aparência e funcionalidades nas abas "Aparência" e "Configurações"', 'afiliados-pro'); ?></li>
+                    <li><?php _e('Volte para esta aba e salve um novo preset com um nome descritivo', 'afiliados-pro'); ?></li>
+                    <li><?php _e('Use o shortcode gerado em qualquer página ou post para exibir produtos com aquele preset', 'afiliados-pro'); ?></li>
+                    <li><?php _e('Você pode ter quantos presets quiser e usar diferentes em páginas diferentes!', 'afiliados-pro'); ?></li>
+                </ol>
+            </div>
+        </div>
+        <?php
+    }
+
+    /**
      * Salva as configurações do template
      * v1.5.2: Migrado para usar affiliate_pro_settings para persistência correta
+     * v1.6.4: Corrigido reset de checkboxes entre abas - só atualiza campos presentes no POST
      */
     public function save_template_settings() {
         // Verificar permissões
@@ -488,6 +630,9 @@ class Affiliate_Template_Builder {
         if (!isset($_POST['affiliate_template_nonce']) || !wp_verify_nonce($_POST['affiliate_template_nonce'], 'affiliate_template_save')) {
             wp_die(__('Erro de segurança. Tente novamente.', 'afiliados-pro'));
         }
+
+        // v1.6.4: Identificar qual aba está sendo salva
+        $current_tab = isset($_POST['current_tab']) ? sanitize_text_field($_POST['current_tab']) : '';
 
         // v1.5.2: Obter configurações atuais do sistema unificado
         $current_settings = Affiliate_Pro_Settings::get_settings();
@@ -539,22 +684,17 @@ class Affiliate_Template_Builder {
             }
         }
 
-        // Mapear sombra
-        if (isset($_POST['shadow_card'])) {
-            $settings['card_shadow'] = boolval($_POST['shadow_card']);
-        } else {
-            $settings['card_shadow'] = false;
+        // Mapear sombra (v1.6.4: checkboxes da aba Aparência)
+        if ($current_tab === 'appearance' || empty($current_tab)) {
+            // Salvando da aba Aparência OU sem identificação de aba (compatibilidade)
+            // Só atualiza se os campos estiverem presentes no POST
+            if (isset($_POST['shadow_card']) || isset($_POST['shadow_button']) || isset($_POST['force_css'])) {
+                $settings['card_shadow'] = isset($_POST['shadow_card']) ? boolval($_POST['shadow_card']) : false;
+                $settings['shadow_button'] = isset($_POST['shadow_button']) ? boolval($_POST['shadow_button']) : false;
+                $settings['force_css'] = isset($_POST['force_css']) ? boolval($_POST['force_css']) : false;
+            }
         }
-        if (isset($_POST['shadow_button'])) {
-            $settings['shadow_button'] = boolval($_POST['shadow_button']);
-        } else {
-            $settings['shadow_button'] = false;
-        }
-        if (isset($_POST['force_css'])) {
-            $settings['force_css'] = boolval($_POST['force_css']);
-        } else {
-            $settings['force_css'] = false;
-        }
+        // Se salvando APENAS da aba Configurações, manter valores atuais (já estão em $settings)
 
         // Mapear layout
         if (isset($_POST['layout_default'])) {
@@ -577,40 +717,38 @@ class Affiliate_Template_Builder {
             $settings['card_gap'] = max(0, min(100, $card_gap));
         }
 
-        // Mapear configurações funcionais
-        if (isset($_POST['button_text'])) {
-            $settings['button_text'] = sanitize_text_field($_POST['button_text']);
-        }
-        if (isset($_POST['clickable_title'])) {
-            $settings['title_clickable'] = boolval($_POST['clickable_title']);
-        } else {
-            $settings['title_clickable'] = false;
-        }
-        if (isset($_POST['open_in_new_tab'])) {
-            $settings['open_in_new_tab'] = boolval($_POST['open_in_new_tab']);
-        } else {
-            $settings['open_in_new_tab'] = false;
-        }
-        if (isset($_POST['show_store_badge'])) {
-            $settings['show_store_badge'] = boolval($_POST['show_store_badge']);
-        } else {
-            $settings['show_store_badge'] = false;
-        }
-        if (isset($_POST['show_price'])) {
-            $settings['show_price'] = boolval($_POST['show_price']);
-        } else {
-            $settings['show_price'] = false;
-        }
-        if (isset($_POST['custom_css'])) {
-            $settings['custom_css'] = wp_strip_all_tags($_POST['custom_css']);
-        }
+        // Mapear configurações funcionais (v1.6.4: checkboxes da aba Configurações)
+        if ($current_tab === 'settings' || empty($current_tab)) {
+            // Salvando da aba Configurações OU sem identificação de aba (compatibilidade)
+            // Só atualiza se os campos estiverem presentes no POST
+            if (isset($_POST['button_text']) || isset($_POST['clickable_title']) || isset($_POST['open_in_new_tab']) ||
+                isset($_POST['show_store_badge']) || isset($_POST['show_price']) || isset($_POST['custom_css'])) {
 
-        // Mapear formato de preço
-        if (isset($_POST['price_format'])) {
-            $settings['price_format'] = sanitize_text_field($_POST['price_format']);
+                if (isset($_POST['button_text'])) {
+                    $settings['button_text'] = sanitize_text_field($_POST['button_text']);
+                }
+
+                // Checkboxes: aplicar lógica padrão (ausente = false)
+                $settings['title_clickable'] = isset($_POST['clickable_title']) ? boolval($_POST['clickable_title']) : false;
+                $settings['open_in_new_tab'] = isset($_POST['open_in_new_tab']) ? boolval($_POST['open_in_new_tab']) : false;
+                $settings['show_store_badge'] = isset($_POST['show_store_badge']) ? boolval($_POST['show_store_badge']) : false;
+                $settings['show_price'] = isset($_POST['show_price']) ? boolval($_POST['show_price']) : false;
+
+                if (isset($_POST['custom_css'])) {
+                    $settings['custom_css'] = wp_strip_all_tags($_POST['custom_css']);
+                }
+            }
         }
-        if (isset($_POST['price_text_empty'])) {
-            $settings['price_placeholder'] = sanitize_text_field($_POST['price_text_empty']);
+        // Se salvando APENAS da aba Aparência, manter valores atuais (já estão em $settings)
+
+        // Mapear formato de preço (campos da aba Configurações)
+        if ($current_tab === 'settings' || empty($current_tab)) {
+            if (isset($_POST['price_format'])) {
+                $settings['price_format'] = sanitize_text_field($_POST['price_format']);
+            }
+            if (isset($_POST['price_text_empty'])) {
+                $settings['price_placeholder'] = sanitize_text_field($_POST['price_text_empty']);
+            }
         }
 
         // v1.5.2: Salvar no sistema unificado affiliate_pro_settings
@@ -715,8 +853,12 @@ class Affiliate_Template_Builder {
             'card_style' => 'modern',
             'button_style' => 'gradient',
             'shadow_button' => false,
+            'shadow_card' => false,
             'force_css' => false,
             'show_price' => true,
+            'clickable_title' => false,
+            'open_in_new_tab' => true,
+            'show_store_badge' => false,
         ));
 
         return $settings;
@@ -937,4 +1079,173 @@ class Affiliate_Template_Builder {
             'large' => '16px',
         );
     }
+
+    /**
+     * Obtém todos os presets salvos (v1.6.0)
+     *
+     * @return array
+     */
+    public static function get_presets() {
+        return get_option('affiliate_pro_presets', array());
+    }
+
+    /**
+     * Obtém um preset específico por ID (v1.6.0)
+     *
+     * @param int $preset_id
+     * @return array|false
+     */
+    public static function get_preset_by_id($preset_id) {
+        $presets = self::get_presets();
+        return isset($presets[$preset_id]) ? $presets[$preset_id] : false;
+    }
+
+    /**
+     * Salva um novo preset (v1.6.0)
+     */
+    public function save_preset() {
+        // Verificar permissões
+        if (!current_user_can('manage_options')) {
+            wp_die(__('Você não tem permissão para executar esta ação.', 'afiliados-pro'));
+        }
+
+        // Verificar nonce
+        if (!isset($_POST['affiliate_preset_nonce']) || !wp_verify_nonce($_POST['affiliate_preset_nonce'], 'affiliate_preset_save')) {
+            wp_die(__('Erro de segurança. Tente novamente.', 'afiliados-pro'));
+        }
+
+        // Nome do preset
+        $preset_name = isset($_POST['preset_name']) ? sanitize_text_field($_POST['preset_name']) : '';
+        if (empty($preset_name)) {
+            wp_redirect(add_query_arg(
+                array('page' => 'affiliate-template-builder', 'tab' => 'presets', 'error' => 'empty_name'),
+                admin_url('admin.php')
+            ));
+            exit;
+        }
+
+        // Obter configurações atuais
+        $current_settings = Affiliate_Pro_Settings::get_settings();
+
+        // Obter presets existentes
+        $presets = self::get_presets();
+
+        // Gerar novo ID (incremental)
+        $new_id = 1;
+        if (!empty($presets)) {
+            $new_id = max(array_keys($presets)) + 1;
+        }
+
+        // Criar novo preset
+        $presets[$new_id] = array(
+            'name' => $preset_name,
+            'settings' => $current_settings,
+            'timestamp' => current_time('mysql')
+        );
+
+        // Salvar no banco
+        update_option('affiliate_pro_presets', $presets);
+
+        // Log
+        affiliate_pro_log('Preset criado com sucesso. ID: ' . $new_id . ', Nome: ' . $preset_name);
+
+        // Redirecionar com sucesso
+        wp_redirect(add_query_arg(
+            array('page' => 'affiliate-template-builder', 'tab' => 'presets', 'preset-saved' => 'true', 'preset-id' => $new_id),
+            admin_url('admin.php')
+        ));
+        exit;
+    }
+
+    /**
+     * Exclui um preset (v1.6.0)
+     */
+    public function delete_preset() {
+        // Verificar permissões
+        if (!current_user_can('manage_options')) {
+            wp_die(__('Você não tem permissão para executar esta ação.', 'afiliados-pro'));
+        }
+
+        // Verificar nonce
+        if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'delete_preset_' . $_GET['preset_id'])) {
+            wp_die(__('Erro de segurança. Tente novamente.', 'afiliados-pro'));
+        }
+
+        $preset_id = isset($_GET['preset_id']) ? intval($_GET['preset_id']) : 0;
+
+        if ($preset_id <= 0) {
+            wp_redirect(add_query_arg(
+                array('page' => 'affiliate-template-builder', 'tab' => 'presets', 'error' => 'invalid_id'),
+                admin_url('admin.php')
+            ));
+            exit;
+        }
+
+        // Obter presets
+        $presets = self::get_presets();
+
+        // Verificar se existe
+        if (!isset($presets[$preset_id])) {
+            wp_redirect(add_query_arg(
+                array('page' => 'affiliate-template-builder', 'tab' => 'presets', 'error' => 'not_found'),
+                admin_url('admin.php')
+            ));
+            exit;
+        }
+
+        // Remover preset
+        unset($presets[$preset_id]);
+
+        // Salvar no banco
+        update_option('affiliate_pro_presets', $presets);
+
+        // Log
+        affiliate_pro_log('Preset excluído com sucesso. ID: ' . $preset_id);
+
+        // Redirecionar com sucesso
+        wp_redirect(add_query_arg(
+            array('page' => 'affiliate-template-builder', 'tab' => 'presets', 'preset-deleted' => 'true'),
+            admin_url('admin.php')
+        ));
+        exit;
+    }
+
+    /**
+     * Carrega as configurações de um preset (v1.6.0)
+     *
+     * @param int $preset_id
+     * @return bool
+     */
+    public static function load_preset($preset_id) {
+        $preset = self::get_preset_by_id($preset_id);
+
+        if (!$preset || !isset($preset['settings'])) {
+            return false;
+        }
+
+        // Atualizar configurações atuais com as do preset
+        update_option('affiliate_pro_settings', $preset['settings']);
+
+        return true;
+    }
+}
+
+/**
+ * Classe de compatibilidade com prefixo legado (v1.7.2)
+ * Mantida para retrocompatibilidade: herda todos os métodos de PAP_Template_Builder
+ *
+ * AVISO DE DEPRECAÇÃO (v1.7.3):
+ * Esta classe está obsoleta e será removida em versões futuras.
+ * Use PAP_Template_Builder::get_instance() ao invés de Affiliate_Template_Builder::get_instance()
+ *
+ * @package Affiliate_Pro
+ * @since 1.4.0
+ * @deprecated 1.7.3 Use PAP_Template_Builder ao invés. Será removida na v2.0.0
+ */
+class Affiliate_Template_Builder extends PAP_Template_Builder {
+    /**
+     * Herança completa para compatibilidade com código legado
+     *
+     * @deprecated 1.7.3
+     */
 }

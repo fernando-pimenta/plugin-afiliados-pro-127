@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, products, csv-import, catalog, ecommerce, shopee, a
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.5.9.7
+Stable tag: 1.7.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,10 +38,15 @@ O **Plugin Afiliados Pro** é uma solução completa para WordPress que permite 
 = Shortcodes Disponíveis =
 
 **Produto único:**
-`[affiliate_product id="123"]`
+`[affiliate_product id="123"]` ou `[pap_product id="123"]`
 
 **Grade de produtos:**
-`[affiliate_products limit="6" category="eletronicos" columns="3"]`
+`[affiliate_products limit="6" category="eletronicos" columns="3"]` ou `[pap_products limit="6" category="eletronicos" columns="3"]`
+
+**Preset personalizado (v1.6.0+):**
+`[afiliados_pro id="1"]` ou `[pap_preset id="1"]`
+
+**Nota:** A partir da v1.7.0, os shortcodes com prefixo `pap_` são os oficiais. Os shortcodes antigos continuam funcionando para total compatibilidade.
 
 = Suporte e Documentação =
 
@@ -121,6 +126,45 @@ Não! O CSS e JavaScript são carregados apenas nas páginas que usam os shortco
 8. Layout lista (alternativo ao grid)
 
 == Changelog ==
+
+= 1.7.3 (2025-11-13) =
+* 🧹 **LIMPEZA**: Adicionados @deprecated em todas as classes e funções legadas
+* 🔧 **CONSTANTES**: PAP_* promovidas a principais, AFFILIATE_PRO_* são aliases (deprecated)
+* 📚 **DOCBLOCKS**: Atualizados com avisos de deprecação e versão de remoção (v2.0.0)
+* 🔄 **FUNÇÕES**: pap_log() promovida a principal, affiliate_pro_log() é alias (deprecated)
+* 🧠 **COMPATIBILIDADE**: 100% mantida - elementos legados funcionam perfeitamente
+* ✅ **FINAL**: Refatoração PAP concluída (Etapa 3/3)
+
+= 1.7.2 (2025-11-13) =
+* 📁 **ARQUIVOS**: Renomeados para padrão class-pap-* (class-pap-products.php, class-pap-settings.php, etc.)
+* 🧩 **TEMPLATE BUILDER**: PAP_Template_Builder promovida a classe principal
+* 🔗 **REQUIRES**: Atualizados todos os require_once() no arquivo principal
+* 🪶 **LEGADO**: Classes Affiliate_Template_Builder mantida via herança
+* 🧠 **ZERO QUEBRA**: Nenhuma alteração funcional ou visual
+* 🚀 **ETAPA 2/3**: Renomeação completa de arquivos concluída
+
+= 1.7.1 (2025-11-13) =
+* ⚙️ **REFACTOR**: Código interno migrado para padrão PAP nativo
+* 🧩 **CLASSES**: PAP_Shortcodes, PAP_Products, PAP_Settings promovidas a principais
+* 🪶 **LEGADO**: Classes Affiliate_* mantidas via herança de PAP_* (compatibilidade total)
+* 🎨 **CSS**: Adicionados seletores .pap- paralelos aos .affiliate-
+* 🧠 **ZERO QUEBRA**: Nenhuma alteração funcional ou visual
+* 🚀 **ETAPA 1/3**: Refatoração gradual e segura do plugin
+
+= 1.7.0 (2025-11-13) =
+* 🧱 **BASE**: Introdução do padrão pap_ (Plugin Afiliados Pro)
+* 🧩 **NOVOS SHORTCODES**: [pap_product], [pap_products], [pap_preset]
+* ⚙️ **CLASSES**: PAP_Plugin, PAP_Products, PAP_Settings, PAP_Template_Builder, PAP_Shortcodes
+* 🔧 **CONSTANTES**: PAP_VERSION, PAP_DIR, PAP_URL, PAP_BASENAME
+* 🔄 **FUNÇÕES**: pap(), pap_log() como aliases compatíveis
+* 🧠 **COMPATIBILIDADE**: Total retroatividade com shortcodes e funções antigas
+* 🚀 **PREPARAÇÃO**: Base para refatoração completa nas próximas versões
+
+= 1.6.7 (2025-11-13) =
+* 🎨 **VISUAL**: Centralização global dos cards renderizados por shortcodes
+* ⚙️ **CSS**: Ajustado para alinhar os cards ao centro no front-end
+* 🧩 **COMPATÍVEL**: Funciona com todos os shortcodes ([affiliate_product], [affiliate_products], [afiliados_pro])
+* ✅ **MANTIDO**: Nenhuma alteração estrutural, lógica ou funcional
 
 = 1.5.9.7 (2025-11-28) =
 * 🎨 **UX MELHORADA**: Layout compacto dos campos de cor na seção Identidade Visual
