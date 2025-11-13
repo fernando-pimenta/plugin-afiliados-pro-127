@@ -208,7 +208,7 @@ class PAP_Shortcodes {
 
         // Verificar se o preset existe
         if ($preset_id <= 0) {
-            return '<p>' . __('ID do preset não informado. Use: [afiliados_pro id="1"]', 'afiliados-pro') . '</p>';
+            return '<p>' . __('ID do preset não informado. Use: [pap_preset id="1"]', 'afiliados-pro') . '</p>';
         }
 
         $preset = Affiliate_Template_Builder::get_preset_by_id($preset_id);

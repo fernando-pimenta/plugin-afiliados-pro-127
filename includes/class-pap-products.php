@@ -248,7 +248,7 @@ class PAP_Products {
             <div style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px;">
                 <div style="margin-bottom: 20px; background: #f0f6fc; padding: 15px; border-left: 4px solid #0073aa;">
                     <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Preset Personalizado (NOVO v1.6.0)', 'afiliados-pro'); ?></h3>
-                    <code style="display: block; padding: 10px; background: #fff; border-left: 3px solid #0073aa; margin: 8px 0;">[afiliados_pro id="1"]</code>
+                    <code style="display: block; padding: 10px; background: #fff; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_preset id="1"]</code>
                     <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe produtos com as configurações salvas no preset #1. Crie seus presets em Aparência e Configurações > Presets', 'afiliados-pro'); ?></p>
                 </div>
 
