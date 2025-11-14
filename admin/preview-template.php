@@ -2,10 +2,10 @@
 /**
  * PAP - Preview Template
  *
- * Completely standalone preview template with unified structure (v1.8.1)
+ * Completely standalone preview template with unified structure (v1.8.4)
  *
  * @package PAP
- * @version 1.8.1
+ * @version 1.8.4
  */
 
 if (!defined('ABSPATH')) {
@@ -72,7 +72,7 @@ $placeholder_img = PAP_URL . 'assets/img/placeholder.svg';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preview - Afiliados Pro v1.8.1</title>
+<title>Preview - Afiliados Pro v1.8.4</title>
 <style>
 /* Reset básico */
 * {
@@ -219,14 +219,6 @@ body {
     margin-bottom: 12px;
 }
 
-/* Price Empty Text */
-.price-empty {
-    font-size: 0.95em;
-    font-style: italic;
-    color: #888;
-    margin-bottom: 12px;
-}
-
 /* Product Button - Base (v1.5.5) */
 .product-button {
     display: inline-block;
@@ -299,7 +291,7 @@ body {
 </head>
 <body>
     <div class="preview-header">
-        📱 Pré-visualização ao Vivo - v1.8.1 (Estrutura unificada com front-end)
+        📱 Pré-visualização ao Vivo - v1.8.4 (Polimento final)
     </div>
 
     <div class="preview-products-container">
