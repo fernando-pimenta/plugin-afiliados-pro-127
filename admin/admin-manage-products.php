@@ -10,6 +10,55 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// Processar ações individuais (trash, restore, delete)
+if (isset($_GET['action']) && isset($_GET['product_id'])) {
+    $action = sanitize_text_field($_GET['action']);
+    $product_id = intval($_GET['product_id']);
+
+    // Verificar nonce específico para cada ação
+    $nonce_action = $action . '_product_' . $product_id;
+    if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], $nonce_action)) {
+        wp_die(__('Erro de verificação de segurança.', 'afiliados-pro'));
+    }
+
+    switch ($action) {
+        case 'trash':
+            if (wp_trash_post($product_id)) {
+                $redirect = add_query_arg('message', 'trashed', remove_query_arg(array('action', 'product_id', '_wpnonce')));
+                wp_redirect($redirect);
+                exit;
+            } else {
+                wp_die(__('Erro ao mover o produto para a lixeira.', 'afiliados-pro'));
+            }
+            break;
+
+        case 'restore':
+            if (wp_untrash_post($product_id)) {
+                $redirect = add_query_arg('message', 'restored', remove_query_arg(array('action', 'product_id', '_wpnonce')));
+                wp_redirect($redirect);
+                exit;
+            } else {
+                wp_die(__('Erro ao restaurar o produto.', 'afiliados-pro'));
+            }
+            break;
+
+        case 'delete':
+            // Só permite exclusão permanente se estiver na lixeira
+            if (get_post_status($product_id) === 'trash') {
+                if (wp_delete_post($product_id, true)) {
+                    $redirect = add_query_arg('message', 'deleted', remove_query_arg(array('action', 'product_id', '_wpnonce')));
+                    wp_redirect($redirect);
+                    exit;
+                } else {
+                    wp_die(__('Erro ao excluir permanentemente o produto.', 'afiliados-pro'));
+                }
+            } else {
+                wp_die(__('Apenas produtos na lixeira podem ser excluídos permanentemente.', 'afiliados-pro'));
+            }
+            break;
+    }
+}
+
 // Processar ações em lote
 if (isset($_POST['bulk_action']) && isset($_POST['product_ids']) && wp_verify_nonce($_POST['bulk_nonce'], 'bulk_action_nonce')) {
     $action = sanitize_text_field($_POST['bulk_action']);
@@ -265,6 +314,24 @@ function affiliate_pro_check_link_status($url) {
         </a>
     </h1>
 
+    <?php
+    // Exibir mensagens de sucesso das ações individuais
+    if (isset($_GET['message'])) {
+        $message = sanitize_text_field($_GET['message']);
+        switch ($message) {
+            case 'trashed':
+                echo '<div class="notice notice-success is-dismissible"><p>' . __('Produto movido para a lixeira!', 'afiliados-pro') . '</p></div>';
+                break;
+            case 'restored':
+                echo '<div class="notice notice-success is-dismissible"><p>' . __('Produto restaurado da lixeira!', 'afiliados-pro') . '</p></div>';
+                break;
+            case 'deleted':
+                echo '<div class="notice notice-success is-dismissible"><p>' . __('Produto excluído permanentemente!', 'afiliados-pro') . '</p></div>';
+                break;
+        }
+    }
+    ?>
+
     <!-- Estatísticas Rápidas -->
     <div class="affiliate-stats" style="display: flex; gap: 15px; margin: 20px 0;">
         <div class="stat-card" style="background: #fff; padding: 15px; border: 1px solid #ccd0d4; border-radius: 4px; min-width: 150px;">
@@ -445,8 +512,15 @@ function affiliate_pro_check_link_status($url) {
                                 <input type="checkbox" name="product_ids[]" value="<?php echo $product_id; ?>">
                             </th>
                             <td>
-                                <?php if (has_post_thumbnail()) : ?>
+                                <?php
+                                $image_url = get_post_meta($product_id, '_affiliate_image_url', true);
+                                if (has_post_thumbnail()) :
+                                ?>
                                     <img src="<?php echo esc_url(get_the_post_thumbnail_url($product_id, 'thumbnail')); ?>"
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"
+                                         alt="<?php echo esc_attr(get_the_title()); ?>">
+                                <?php elseif (!empty($image_url)) : ?>
+                                    <img src="<?php echo esc_url($image_url); ?>"
                                          style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"
                                          alt="<?php echo esc_attr(get_the_title()); ?>">
                                 <?php else : ?>
@@ -519,13 +593,26 @@ function affiliate_pro_check_link_status($url) {
                             </td>
                             <td>
                                 <a href="<?php echo esc_url(get_edit_post_link()); ?>" class="button button-small"><?php _e('Editar', 'afiliados-pro'); ?></a>
-                                <a href="#" class="button button-small duplicate-product" data-id="<?php echo $product_id; ?>"><?php _e('Duplicar', 'afiliados-pro'); ?></a>
-                                <a href="<?php echo esc_url(get_delete_post_link($product_id)); ?>"
-                                   class="button button-small"
-                                   style="color: #a00;"
-                                   onclick="return confirm('<?php esc_attr_e('Tem certeza que deseja excluir este produto?', 'afiliados-pro'); ?>')">
-                                    <?php _e('Excluir', 'afiliados-pro'); ?>
-                                </a>
+                                <?php if (get_post_status() !== 'trash') : ?>
+                                    <a href="#" class="button button-small duplicate-product" data-id="<?php echo $product_id; ?>"><?php _e('Duplicar', 'afiliados-pro'); ?></a>
+                                    <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=affiliate-manage-products&action=trash&product_id=' . $product_id), 'trash_product_' . $product_id)); ?>"
+                                       class="button button-small"
+                                       style="color: #a00;"
+                                       onclick="return confirm('<?php esc_attr_e('Tem certeza que deseja mover este produto para a lixeira?', 'afiliados-pro'); ?>')">
+                                        <?php _e('Lixeira', 'afiliados-pro'); ?>
+                                    </a>
+                                <?php else : ?>
+                                    <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=affiliate-manage-products&action=restore&product_id=' . $product_id), 'restore_product_' . $product_id)); ?>"
+                                       class="button button-small">
+                                        <?php _e('Restaurar', 'afiliados-pro'); ?>
+                                    </a>
+                                    <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=affiliate-manage-products&action=delete&product_id=' . $product_id), 'delete_product_' . $product_id)); ?>"
+                                       class="button button-small"
+                                       style="color: #a00;"
+                                       onclick="return confirm('<?php esc_attr_e('Tem certeza que deseja excluir PERMANENTEMENTE este produto? Esta ação não pode ser desfeita.', 'afiliados-pro'); ?>')">
+                                        <?php _e('Excluir Permanentemente', 'afiliados-pro'); ?>
+                                    </a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endwhile; ?>
