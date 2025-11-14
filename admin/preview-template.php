@@ -2,10 +2,10 @@
 /**
  * PAP - Preview Template
  *
- * Completely standalone preview template with v1.5.8 unified color system
+ * Completely standalone preview template with unified structure (v1.8.1)
  *
  * @package PAP
- * @version 1.5.8.1
+ * @version 1.8.1
  */
 
 if (!defined('ABSPATH')) {
@@ -72,7 +72,7 @@ $placeholder_img = PAP_URL . 'assets/img/placeholder.svg';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preview - Afiliados Pro v1.5.8.1</title>
+<title>Preview - Afiliados Pro v1.8.1</title>
 <style>
 /* Reset básico */
 * {
@@ -116,9 +116,12 @@ body {
     color: <?php echo esc_attr($text_color); ?>;
     border: 1px solid #e0e0e0;
     border-radius: <?php echo esc_attr($border_radius); ?>;
-    padding: 16px;
+    padding: 0;
+    overflow: hidden;
     transition: all 0.3s ease;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     <?php if ($card_shadow): ?>
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     <?php else: ?>
@@ -133,36 +136,57 @@ body {
     <?php endif; ?>
 }
 
+/* Product Image - v1.5.6 */
+.affiliate-product-card .product-image {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: <?php echo esc_attr($card_image_background); ?>;
+    position: relative;
+}
+
 /* Store Badge */
-.store-badge {
+.affiliate-product-card .store-badge {
     position: absolute;
     top: 10px;
     right: 10px;
     background: <?php echo esc_attr($accent_color); ?>;
     color: #fff;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 0.75em;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* Product Image - v1.5.6 */
-.affiliate-product-card .product-image {
-    background: <?php echo esc_attr($card_image_background); ?>;
-    border-radius: <?php echo esc_attr($border_radius); ?>;
-    padding: 10px;
-    margin-bottom: 12px;
-}
-
-.affiliate-product-card img {
-    width: 100%;
+.affiliate-product-card .product-image img {
+    max-height: 220px;
+    width: auto;
     height: auto;
-    border-radius: <?php echo esc_attr($border_radius); ?>;
+    object-fit: contain;
+    margin: 0 auto;
     display: block;
+    transition: transform 0.3s ease;
+}
+
+.affiliate-product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+/* Product Content Wrapper */
+.product-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 /* Product Title */
-.affiliate-title {
+.product-title {
     color: <?php echo esc_attr($primary_color); ?>;
     font-size: 1.2em;
     font-weight: 600;
@@ -170,17 +194,17 @@ body {
     line-height: 1.4;
 }
 
-.affiliate-title a {
+.product-title a {
     color: <?php echo esc_attr($primary_color); ?>;
     text-decoration: none;
 }
 
-.affiliate-title a:hover {
+.product-title a:hover {
     text-decoration: underline;
 }
 
 /* Product Description */
-.affiliate-description {
+.product-excerpt {
     color: <?php echo esc_attr($text_color); ?>;
     font-size: 0.9em;
     line-height: 1.5;
@@ -188,7 +212,7 @@ body {
 }
 
 /* Product Price - v1.5.8.1 */
-.affiliate-price {
+.product-price {
     font-size: 1.4em;
     font-weight: 700;
     color: <?php echo esc_attr($price_color); ?>;
@@ -204,7 +228,7 @@ body {
 }
 
 /* Product Button - Base (v1.5.5) */
-.affiliate-btn {
+.product-button {
     display: inline-block;
     margin-top: 10px;
     padding: 10px 18px;
@@ -275,59 +299,55 @@ body {
 </head>
 <body>
     <div class="preview-header">
-        📱 Pré-visualização ao Vivo - v1.5.8.1 (Cor do preço corrigida)
+        📱 Pré-visualização ao Vivo - v1.8.1 (Estrutura unificada com front-end)
     </div>
 
     <div class="preview-products-container">
         <?php for ($i = 1; $i <= 2; $i++): ?>
-            <div class="affiliate-product-card">
-                <?php if ($show_store_badge): ?>
-                    <div class="store-badge">
-                        <?php echo ($i === 1) ? 'Amazon' : 'Mercado Livre'; ?>
-                    </div>
-                <?php endif; ?>
-
+            <div class="affiliate-product-card" style="--affiliate-card-bg: <?php echo esc_attr($card_bg_color); ?>; --affiliate-image-bg: <?php echo esc_attr($card_image_background); ?>; --affiliate-price-color: <?php echo esc_attr($price_color); ?>;">
                 <div class="product-image">
                     <img src="<?php echo esc_url($placeholder_img); ?>" alt="Produto Exemplo <?php echo $i; ?>">
+                    <?php if ($show_store_badge): ?>
+                        <span class="store-badge">
+                            <?php echo ($i === 1) ? 'Amazon' : 'Mercado Livre'; ?>
+                        </span>
+                    <?php endif; ?>
                 </div>
+                <div class="product-content">
+                    <?php if ($title_clickable): ?>
+                        <h3 class="product-title">
+                            <a href="#"<?php echo $link_target; ?>
+                               data-aff-id="preview-<?php echo $i; ?>"
+                               data-source="title">Produto Exemplo <?php echo $i; ?></a>
+                        </h3>
+                    <?php else: ?>
+                        <h3 class="product-title"
+                            data-aff-id="preview-<?php echo $i; ?>"
+                            data-source="title">
+                            Produto Exemplo <?php echo $i; ?>
+                        </h3>
+                    <?php endif; ?>
 
-                <?php if ($title_clickable): ?>
-                    <h3 class="affiliate-title">
-                        <a href="#"<?php echo $link_target; ?>
-                           data-aff-id="preview-<?php echo $i; ?>"
-                           data-source="title">Produto Exemplo <?php echo $i; ?></a>
-                    </h3>
-                <?php else: ?>
-                    <h3 class="affiliate-title"
-                        data-aff-id="preview-<?php echo $i; ?>"
-                        data-source="title">
-                        Produto Exemplo <?php echo $i; ?>
-                    </h3>
-                <?php endif; ?>
-
-                <p class="affiliate-description">
-                    Esta é uma descrição breve do produto <?php echo $i; ?>. Aqui você pode ver como o card ficará com as configurações atuais do Template Builder.
-                </p>
-
-                <?php if ($show_price): ?>
-                    <p class="affiliate-price">
-                        <?php
-                        $price_value = ($i === 1) ? '199,90' : '349,90';
-                        echo str_replace('{valor}', $price_value, esc_html($price_format));
-                        ?>
+                    <p class="product-excerpt">
+                        Esta é uma descrição breve do produto <?php echo $i; ?>. Aqui você pode ver como o card ficará com as configurações atuais do Template Builder.
                     </p>
-                <?php else: ?>
-                    <p class="price-empty">
-                        <?php echo esc_html($price_placeholder); ?>
-                    </p>
-                <?php endif; ?>
 
-                <button class="affiliate-btn affiliate-btn-<?php echo esc_attr($button_style); ?>"
-                        style="--button-color-start: <?php echo esc_attr($button_color); ?>; --button-color-end: <?php echo esc_attr($gradient_color); ?>; --button-text-color: <?php echo esc_attr($button_text_color); ?>;"
-                        data-aff-id="preview-<?php echo $i; ?>"
-                        data-source="button">
-                    <?php echo esc_html($button_text); ?>
-                </button>
+                    <?php if ($show_price): ?>
+                        <p class="product-price">
+                            <?php
+                            $price_value = ($i === 1) ? '199,90' : '349,90';
+                            echo str_replace('{valor}', $price_value, esc_html($price_format));
+                            ?>
+                        </p>
+                    <?php endif; ?>
+
+                    <a href="#" class="product-button affiliate-btn-<?php echo esc_attr($button_style); ?>"<?php echo $link_target; ?>
+                       style="--button-color-start: <?php echo esc_attr($button_color); ?>; --button-color-end: <?php echo esc_attr($gradient_color); ?>; --button-text-color: <?php echo esc_attr($button_text_color); ?>;"
+                       data-aff-id="preview-<?php echo $i; ?>"
+                       data-source="button">
+                        <?php echo esc_html($button_text); ?>
+                    </a>
+                </div>
             </div>
         <?php endfor; ?>
     </div>
