@@ -77,12 +77,17 @@ Smartphone XYZ,"Smartphone com 128GB",899.99,https://link.com,https://img.jpg,el
 
 **Produto único:**
 ```
-[affiliate_product id="123"]
+[pap_product id="123"]
 ```
 
 **Grade de produtos:**
 ```
-[affiliate_products limit="6" category="eletronicos" columns="3"]
+[pap_products limit="6" category="eletronicos" columns="3"]
+```
+
+**Preset personalizado:**
+```
+[pap_preset id="1"]
 ```
 
 ### 4. Personalizar Aparência
@@ -111,9 +116,9 @@ Acesse **Afiliados → Aparência e Configurações** para personalizar:
 
 ## 📖 Documentação Completa
 
-### Shortcodes Disponíveis
+### Shortcodes Disponíveis – Padrão PAP
 
-#### `[affiliate_product]`
+#### `[pap_product]`
 
 Exibe um único produto.
 
@@ -122,10 +127,10 @@ Exibe um único produto.
 
 **Exemplo:**
 ```
-[affiliate_product id="42"]
+[pap_product id="42"]
 ```
 
-#### `[affiliate_products]`
+#### `[pap_products]`
 
 Exibe uma grade de produtos.
 
@@ -134,12 +139,31 @@ Exibe uma grade de produtos.
 - `category` (opcional) - Slug da categoria
 - `layout` (opcional: grid|list) - Tipo de layout
 - `columns` (opcional: 2-4) - Número de colunas
+- `orderby` (opcional) - Ordenação: date, title, rand, menu_order, ID, modified
+- `order` (opcional) - Direção: ASC ou DESC
 
 **Exemplos:**
 ```
-[affiliate_products limit="9" columns="3"]
-[affiliate_products category="smartphones" limit="6"]
-[affiliate_products layout="list" limit="5"]
+[pap_products limit="9" columns="3"]
+[pap_products category="smartphones" limit="6"]
+[pap_products layout="list" limit="5"]
+[pap_products orderby="rand" limit="10"]
+```
+
+#### `[pap_preset]`
+
+Exibe produtos com preset de aparência personalizado.
+
+**Atributos:**
+- `id` (obrigatório) - ID do preset
+- `limit` (opcional) - Número de produtos
+- `category` (opcional) - Slug da categoria
+- Aceita os mesmos parâmetros de `[pap_products]`
+
+**Exemplos:**
+```
+[pap_preset id="1"]
+[pap_preset id="2" limit="8" category="eletronicos"]
 ```
 
 ---
