@@ -23,6 +23,10 @@ if (isset($_POST['bulk_action']) && isset($_POST['product_ids']) && wp_verify_no
                     $count++;
                 }
             }
+            if ($count > 0) {
+                // Limpar cache de preço médio após mover para lixeira
+                delete_transient('affiliate_pro_avg_price');
+            }
             echo '<div class="notice notice-success"><p>' . sprintf(__('%d produto(s) movido(s) para a lixeira!', 'afiliados-pro'), $count) . '</p></div>';
             break;
 
@@ -37,6 +41,8 @@ if (isset($_POST['bulk_action']) && isset($_POST['product_ids']) && wp_verify_no
                 }
             }
             if ($count > 0) {
+                // Limpar cache de preço médio após exclusão permanente
+                delete_transient('affiliate_pro_avg_price');
                 echo '<div class="notice notice-success"><p>' . sprintf(__('%d produto(s) excluído(s) permanentemente!', 'afiliados-pro'), $count) . '</p></div>';
             } else {
                 echo '<div class="notice notice-warning"><p>' . __('Apenas produtos na lixeira podem ser excluídos permanentemente.', 'afiliados-pro') . '</p></div>';
@@ -48,6 +54,10 @@ if (isset($_POST['bulk_action']) && isset($_POST['product_ids']) && wp_verify_no
                 if (wp_untrash_post($product_id)) {
                     $count++;
                 }
+            }
+            if ($count > 0) {
+                // Limpar cache de preço médio após restaurar da lixeira
+                delete_transient('affiliate_pro_avg_price');
             }
             echo '<div class="notice notice-success"><p>' . sprintf(__('%d produto(s) restaurado(s) da lixeira!', 'afiliados-pro'), $count) . '</p></div>';
             break;
@@ -170,39 +180,52 @@ global $wpdb;
 $products_count_obj = wp_count_posts('affiliate_product');
 $total_products = (is_object($products_count_obj) && isset($products_count_obj->publish)) ? $products_count_obj->publish : 0;
 
-// Tentar obter preço médio do cache
-$avg_price = get_transient('affiliate_pro_avg_price');
+// Calcular preço médio
+if ($total_products === 0) {
+    // Se não há produtos, média é zero e cache deve ser limpo
+    $avg_price = 0;
+    delete_transient('affiliate_pro_avg_price');
+} else {
+    // Tentar obter preço médio do cache
+    $avg_price = get_transient('affiliate_pro_avg_price');
 
-if (false === $avg_price) {
-    // Cache não existe, calcular e armazenar
-    $avg_price_result = $wpdb->get_var($wpdb->prepare("
-        SELECT AVG(CAST(meta_value AS DECIMAL(10,2)))
-        FROM {$wpdb->postmeta} pm
-        INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
-        WHERE pm.meta_key = %s
-        AND p.post_type = %s
-        AND p.post_status = %s
-        AND pm.meta_value != ''
-    ", '_affiliate_price', 'affiliate_product', 'publish'));
+    if (false === $avg_price) {
+        // Cache não existe, calcular e armazenar
+        $avg_price_result = $wpdb->get_var($wpdb->prepare("
+            SELECT AVG(CAST(meta_value AS DECIMAL(10,2)))
+            FROM {$wpdb->postmeta} pm
+            INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+            WHERE pm.meta_key = %s
+            AND p.post_type = %s
+            AND p.post_status = %s
+            AND pm.meta_value != ''
+        ", '_affiliate_price', 'affiliate_product', 'publish'));
 
-    $avg_price = $avg_price_result ? floatval($avg_price_result) : 0;
+        $avg_price = $avg_price_result ? floatval($avg_price_result) : 0;
 
-    // Armazenar no cache por 1 hora
-    set_transient('affiliate_pro_avg_price', $avg_price, HOUR_IN_SECONDS);
+        // Armazenar no cache por 1 hora
+        set_transient('affiliate_pro_avg_price', $avg_price, HOUR_IN_SECONDS);
+    }
 }
 
-$top_categories_result = get_terms(array(
-    'taxonomy' => 'affiliate_category',
-    'hide_empty' => true,
-    'orderby' => 'count',
-    'order' => 'DESC',
-    'number' => 1
-));
-
-if (!is_wp_error($top_categories_result) && !empty($top_categories_result)) {
-    $top_category = $top_categories_result[0]->name;
-} else {
+// Calcular categoria principal
+if ($total_products === 0) {
+    // Se não há produtos, categoria é N/A
     $top_category = 'N/A';
+} else {
+    $top_categories_result = get_terms(array(
+        'taxonomy' => 'affiliate_category',
+        'hide_empty' => true,
+        'orderby' => 'count',
+        'order' => 'DESC',
+        'number' => 1
+    ));
+
+    if (!is_wp_error($top_categories_result) && !empty($top_categories_result)) {
+        $top_category = $top_categories_result[0]->name;
+    } else {
+        $top_category = 'N/A';
+    }
 }
 
 /**
