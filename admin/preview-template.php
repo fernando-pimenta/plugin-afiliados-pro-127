@@ -2,10 +2,10 @@
 /**
  * PAP - Preview Template
  *
- * Completely standalone preview template with unified structure (v1.8.4)
+ * Completely standalone preview template with unified structure (v1.8.5)
  *
  * @package PAP
- * @version 1.8.4
+ * @version 1.8.5
  */
 
 if (!defined('ABSPATH')) {
@@ -61,9 +61,6 @@ $border_radius = $card_border_radius . 'px';
 // Link target
 $link_target = $open_in_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
 
-// Important flag (legacy)
-$important = '';
-
 // Local placeholder image
 $placeholder_img = PAP_URL . 'assets/img/placeholder.svg';
 ?>
@@ -72,7 +69,7 @@ $placeholder_img = PAP_URL . 'assets/img/placeholder.svg';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preview - Afiliados Pro v1.8.4</title>
+<title>Preview - Afiliados Pro v1.8.5</title>
 <style>
 /* Reset básico */
 * {
@@ -291,7 +288,7 @@ body {
 </head>
 <body>
     <div class="preview-header">
-        📱 Pré-visualização ao Vivo - v1.8.4 (Polimento final)
+        📱 Pré-visualização ao Vivo - v1.8.5 (Pre-Release Candidate)
     </div>
 
     <div class="preview-products-container">

@@ -300,15 +300,6 @@ class PAP_Products {
     }
 
     /**
-     * Renderiza a página de Configurações
-     */
-    // REMOVED (v1.4.5.1): Legacy settings page method
-    // Now handled by PAP_Template_Builder::render_template_builder_page()
-    // public function render_settings_page() {
-    //     require_once PAP_DIR . 'admin/admin-settings.php';
-    // }
-
-    /**
      * Adiciona Meta Boxes
      */
     public function add_meta_boxes() {

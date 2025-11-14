@@ -75,8 +75,6 @@ class PAP_Template_Builder {
     private function init_hooks() {
         add_action('admin_menu', array($this, 'register_template_builder_menu'));
         add_action('admin_post_affiliate_template_save', array($this, 'save_template_settings'));
-        // v1.5.2: Removido apply_template_styles - agora usa PAP_Settings::get_dynamic_css()
-        // add_action('wp_head', array($this, 'apply_template_styles'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
         // v1.6.0: Sistema de Presets
         add_action('admin_post_affiliate_preset_save', array($this, 'save_preset'));
@@ -890,20 +888,6 @@ class PAP_Template_Builder {
 
         // Log asset loading
         pap_log('Template Builder: Assets enqueued for page ' . $hook);
-    }
-
-    /**
-     * Retorna o mapa de raio de borda
-     *
-     * @return array
-     */
-    public static function get_border_radius_map() {
-        return array(
-            'none' => '0px',
-            'small' => '4px',
-            'medium' => '8px',
-            'large' => '16px',
-        );
     }
 
     /**
