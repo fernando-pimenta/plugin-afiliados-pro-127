@@ -248,7 +248,7 @@ class PAP_Settings {
             background: var(--affiliate-card-bg);
             border-radius: var(--affiliate-card-radius);
             color: var(--affiliate-text-color);
-            margin: 12px;
+            margin: 0;
             padding: 0;
         }
 
