@@ -76,6 +76,9 @@ class PAP_Products {
         add_action('before_delete_post', array($this, 'clear_stats_cache'));
         add_action('trashed_post', array($this, 'clear_stats_cache'));
         add_action('untrashed_post', array($this, 'clear_stats_cache'));
+
+        // v1.9.1: Remover botão "Ver produto" (CPT não é público)
+        add_filter('post_row_actions', array($this, 'remove_view_action'), 10, 2);
     }
 
     /**
@@ -150,6 +153,8 @@ class PAP_Products {
 
     /**
      * Registra o Custom Post Type
+     *
+     * @since 1.9.1 Tornado não público no front-end (Opção A)
      */
     public function register_post_type() {
         $labels = array(
@@ -168,14 +173,16 @@ class PAP_Products {
 
         $args = array(
             'labels' => $labels,
-            'public' => true,
-            'publicly_queryable' => true,
+            'public' => false,                    // v1.9.1: CPT não é público
+            'publicly_queryable' => false,        // v1.9.1: Não acessível por URL
+            'exclude_from_search' => true,        // v1.9.1: Excluir da busca
+            'show_in_nav_menus' => false,         // v1.9.1: Não mostrar em menus
             'show_ui' => true,
             'show_in_menu' => false, // Controlamos o menu manualmente
             'query_var' => true,
-            'rewrite' => array('slug' => 'produto-afiliado'),
+            'rewrite' => false,                   // v1.9.1: Sem rewrite (sem permalink)
             'capability_type' => 'post',
-            'has_archive' => true,
+            'has_archive' => false,               // v1.9.1: Sem arquivo público
             'hierarchical' => false,
             'menu_position' => null,
             'supports' => array('title', 'editor', 'thumbnail'),
@@ -745,5 +752,22 @@ class PAP_Products {
         delete_transient('affiliate_pro_avg_price');
 
         pap_log('clear_stats_cache() - Cache de estatísticas limpo para produto ID: ' . $post_id);
+    }
+
+    /**
+     * Remove o botão "Ver produto" das row actions
+     * CPT não é público, então não há página para visualizar
+     *
+     * @param array $actions Array de ações
+     * @param WP_Post $post Post atual
+     * @return array Array de ações modificado
+     * @since 1.9.1
+     */
+    public function remove_view_action($actions, $post) {
+        // Remover apenas para nosso CPT
+        if ($post->post_type === $this->post_type) {
+            unset($actions['view']);
+        }
+        return $actions;
     }
 }
