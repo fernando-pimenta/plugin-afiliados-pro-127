@@ -49,12 +49,42 @@ class PAP_Shortcodes {
     /**
      * Inicializa os hooks
      * v1.7.4: Apenas shortcodes padronizados PAP (legados removidos)
+     * v1.7.5: Adicionado cache invalidation hooks
      */
     private function init_hooks() {
         // Shortcodes padronizados PAP (Plugin Afiliados Pro)
         add_shortcode('pap_product', array($this, 'single_product_shortcode'));
         add_shortcode('pap_products', array($this, 'products_grid_shortcode'));
         add_shortcode('pap_preset', array($this, 'preset_shortcode'));
+
+        // PERFORMANCE: Invalidar cache quando produtos são modificados (v1.7.5)
+        add_action('save_post_affiliate_product', array($this, 'clear_query_cache'));
+        add_action('delete_post', array($this, 'clear_query_cache'));
+        add_action('created_affiliate_category', array($this, 'clear_query_cache'));
+        add_action('edited_affiliate_category', array($this, 'clear_query_cache'));
+        add_action('deleted_affiliate_category', array($this, 'clear_query_cache'));
+    }
+
+    /**
+     * Limpa todo o cache de queries de produtos
+     * Chamado quando produtos ou categorias são modificados
+     *
+     * @since 1.7.5
+     */
+    public function clear_query_cache() {
+        global $wpdb;
+
+        // Deletar todos os transients de queries (pap_query_*)
+        $wpdb->query("
+            DELETE FROM {$wpdb->options}
+            WHERE option_name LIKE '_transient_pap_query_%'
+            OR option_name LIKE '_transient_timeout_pap_query_%'
+        ");
+
+        // Também limpar cache de preço médio
+        delete_transient('affiliate_pro_avg_price');
+
+        pap_log('Performance: Cache de queries limpo');
     }
 
     /**
@@ -174,10 +204,33 @@ class PAP_Shortcodes {
             }
         }
 
-        $query = new WP_Query($args);
+        // PERFORMANCE: Cache de query (v1.7.5)
+        $cache_key = 'pap_query_' . md5(serialize($args));
+        $query_results = get_transient($cache_key);
+
+        if (false === $query_results) {
+            $query = new WP_Query($args);
+            // Cachear IDs e post data por 30 minutos
+            if ($query->have_posts()) {
+                $query_results = array(
+                    'posts' => $query->posts,
+                    'post_count' => $query->post_count
+                );
+                set_transient($cache_key, $query_results, 30 * MINUTE_IN_SECONDS);
+            } else {
+                $query_results = array('posts' => array(), 'post_count' => 0);
+                set_transient($cache_key, $query_results, 30 * MINUTE_IN_SECONDS);
+            }
+        } else {
+            // Reconstruir WP_Query a partir do cache
+            $query = new WP_Query();
+            $query->posts = $query_results['posts'];
+            $query->post_count = $query_results['post_count'];
+        }
+
         $output = '';
 
-        if ($query->have_posts()) {
+        if (!empty($query->posts)) {
             $grid_class = 'affiliate-products-grid';
             if ($atts['layout'] === 'list') {
                 $grid_class .= ' layout-list';

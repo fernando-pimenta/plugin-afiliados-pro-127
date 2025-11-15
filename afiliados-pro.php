@@ -157,8 +157,66 @@ class PAP_Plugin {
         // Create click tracking table (v1.4.7)
         PAP_Tracker::create_table();
 
+        // PERFORMANCE: Adicionar índices otimizados (v1.7.5)
+        $this->add_database_indexes();
+
         // Flush rewrite rules to activate preview endpoint
         flush_rewrite_rules();
+    }
+
+    /**
+     * Adiciona índices de performance no banco de dados
+     * Melhora significativamente a velocidade de queries com meta_key e meta_value
+     *
+     * @since 1.7.5
+     */
+    private function add_database_indexes() {
+        global $wpdb;
+
+        // Verificar se já foi executado nesta versão
+        $indexes_version = get_option('pap_indexes_version', '0');
+        if (version_compare($indexes_version, PAP_VERSION, '>=')) {
+            return; // Já executado nesta versão
+        }
+
+        // Índice para meta_key _affiliate_price (usado em ordenação e filtros)
+        $index_name = 'idx_pap_price';
+        $index_exists = $wpdb->get_var("
+            SELECT COUNT(*)
+            FROM information_schema.statistics
+            WHERE table_schema = DATABASE()
+            AND table_name = '{$wpdb->postmeta}'
+            AND index_name = '{$index_name}'
+        ");
+
+        if (!$index_exists) {
+            $wpdb->query("
+                CREATE INDEX {$index_name}
+                ON {$wpdb->postmeta}(meta_key(20), meta_value(10))
+            ");
+            pap_log('Performance: Índice idx_pap_price criado com sucesso');
+        }
+
+        // Índice composto para post_id + meta_key (queries de produto específico)
+        $index_name_2 = 'idx_pap_post_meta';
+        $index_exists_2 = $wpdb->get_var("
+            SELECT COUNT(*)
+            FROM information_schema.statistics
+            WHERE table_schema = DATABASE()
+            AND table_name = '{$wpdb->postmeta}'
+            AND index_name = '{$index_name_2}'
+        ");
+
+        if (!$index_exists_2) {
+            $wpdb->query("
+                CREATE INDEX {$index_name_2}
+                ON {$wpdb->postmeta}(post_id, meta_key(20))
+            ");
+            pap_log('Performance: Índice idx_pap_post_meta criado com sucesso');
+        }
+
+        // Salvar versão dos índices
+        update_option('pap_indexes_version', PAP_VERSION);
     }
 
     /**
