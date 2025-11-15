@@ -169,7 +169,7 @@ class PAP_Tracker {
         $request_count = get_transient($transient_key);
 
         if ($request_count !== false && $request_count >= 10) {
-            pap_log('Affiliate Tracker: Rate limit exceeded for IP ' . $ip);
+            pap_log('Affiliate Tracker: Rate limit exceeded');
             return false;
         }
 

@@ -402,7 +402,6 @@ class PAP_Products {
      */
     public function ajax_duplicate_product() {
         pap_log('ajax_duplicate_product() - Iniciando duplicação via AJAX');
-        pap_log('POST data: ' . print_r($_POST, true));
 
         // Verificar permissões
         if (!current_user_can('edit_posts')) {
@@ -461,7 +460,7 @@ class PAP_Products {
         $product_id = intval($_POST['product_id']);
 
         if ($product_id <= 0) {
-            pap_log('ajax_duplicate_product() - product_id inválido: ' . $_POST['product_id']);
+            pap_log('ajax_duplicate_product() - product_id inválido');
             wp_send_json_error(array(
                 'message' => __('ID do produto inválido', 'afiliados-pro')
             ));

@@ -102,27 +102,44 @@ class PAP_Shortcodes {
             'order' => 'DESC'
         ), $atts);
 
+        // SEGURANÇA: Validar e limitar valores numéricos
+        $atts['limit'] = absint($atts['limit']);
+        $atts['limit'] = max(1, min(100, $atts['limit'])); // Entre 1 e 100
+
         // Aplicar fallback do Template Builder se não especificado
         if (empty($atts['layout'])) {
             $atts['layout'] = !empty($builder_settings['layout_default']) ? $builder_settings['layout_default'] : $settings['default_layout'];
+        }
+
+        // SEGURANÇA: Validar layout
+        $allowed_layouts = array('grid', 'list');
+        if (!in_array($atts['layout'], $allowed_layouts, true)) {
+            $atts['layout'] = 'grid';
         }
 
         if (empty($atts['columns'])) {
             $atts['columns'] = !empty($builder_settings['columns']) ? $builder_settings['columns'] : $settings['default_columns'];
         }
 
+        // SEGURANÇA: Validar columns
+        $atts['columns'] = absint($atts['columns']);
+        $atts['columns'] = max(1, min(4, $atts['columns'])); // Entre 1 e 4
+
         // Whitelist para orderby (prevenir SQL injection)
         $allowed_orderby = array('date', 'title', 'rand', 'menu_order', 'ID', 'modified');
-        if (!in_array($atts['orderby'], $allowed_orderby)) {
+        if (!in_array($atts['orderby'], $allowed_orderby, true)) {
             $atts['orderby'] = 'date';
         }
 
         // Whitelist para order
         $allowed_order = array('ASC', 'DESC');
         $atts['order'] = strtoupper($atts['order']);
-        if (!in_array($atts['order'], $allowed_order)) {
+        if (!in_array($atts['order'], $allowed_order, true)) {
             $atts['order'] = 'DESC';
         }
+
+        // SEGURANÇA: Sanitizar categoria
+        $atts['category'] = sanitize_text_field($atts['category']);
 
         $args = array(
             'post_type' => 'affiliate_product',
@@ -199,17 +216,30 @@ class PAP_Shortcodes {
             'order' => 'DESC'
         ), $atts);
 
-        $preset_id = intval($atts['id']);
+        // SEGURANÇA: Validar parâmetros numéricos
+        $preset_id = absint($atts['id']);
+        $atts['limit'] = absint($atts['limit']);
+        $atts['limit'] = max(1, min(100, $atts['limit'])); // Entre 1 e 100
+
+        if (!empty($atts['columns'])) {
+            $atts['columns'] = absint($atts['columns']);
+            $atts['columns'] = max(1, min(4, $atts['columns'])); // Entre 1 e 4
+        }
+
+        // SEGURANÇA: Sanitizar textos
+        $atts['category'] = sanitize_text_field($atts['category']);
+        $atts['orderby'] = sanitize_key($atts['orderby']);
+        $atts['order'] = sanitize_key($atts['order']);
 
         // Verificar se o preset existe
         if ($preset_id <= 0) {
-            return '<p>' . __('ID do preset não informado. Use: [pap_preset id="1"]', 'afiliados-pro') . '</p>';
+            return '<p>' . esc_html__('ID do preset não informado. Use: [pap_preset id="1"]', 'afiliados-pro') . '</p>';
         }
 
         $preset = PAP_Template_Builder::get_preset_by_id($preset_id);
 
         if (!$preset || !isset($preset['settings'])) {
-            return '<p>' . sprintf(__('Preset #%d não encontrado.', 'afiliados-pro'), $preset_id) . '</p>';
+            return '<p>' . esc_html(sprintf(__('Preset #%d não encontrado.', 'afiliados-pro'), $preset_id)) . '</p>';
         }
 
         // Criar callback específico para este preset
