@@ -77,12 +77,15 @@ class PAP_Products {
         add_action('trashed_post', array($this, 'clear_stats_cache'));
         add_action('untrashed_post', array($this, 'clear_stats_cache'));
 
-        // v1.9.1: Remover botão "Ver produto" (CPT não é público)
+        // v1.9.1+: Remover COMPLETAMENTE qualquer link "Ver página" ou "View" (CPT não é público)
+        // v1.9.3: Aplicação agressiva de TODOS os filtros para remover "Ver página"
         add_filter('post_row_actions', array($this, 'remove_view_action'), 10, 2);
-
-        // v1.9.2: Remover permalink e link "Ver página" do admin
+        add_filter('page_row_actions', array($this, 'remove_view_action'), 10, 2);
         add_filter('post_type_link', array($this, 'remove_permalink'), 10, 2);
         add_filter('get_sample_permalink_html', array($this, 'remove_view_link'), 10, 5);
+        add_filter('get_permalink', array($this, 'disable_permalink'), 10, 2);
+        add_filter('get_the_permalink', array($this, 'disable_permalink'), 10, 2);
+        add_filter('_get_page_link', array($this, 'disable_page_link'), 10, 2);
     }
 
     /**
@@ -759,18 +762,24 @@ class PAP_Products {
     }
 
     /**
-     * Remove o botão "Ver produto" das row actions
+     * Remove QUALQUER ação "view" das row actions
      * CPT não é público, então não há página para visualizar
      *
      * @param array $actions Array de ações
      * @param WP_Post $post Post atual
      * @return array Array de ações modificado
      * @since 1.9.1
+     * @since 1.9.3 Remoção agressiva de QUALQUER índice contendo "view"
      */
     public function remove_view_action($actions, $post) {
-        // Remover apenas para nosso CPT
+        // Aplicar apenas para nosso CPT
         if ($post->post_type === $this->post_type) {
-            unset($actions['view']);
+            // Remover índice 'view' e qualquer índice que contenha 'view'
+            foreach ($actions as $key => $value) {
+                if ($key === 'view' || stripos($key, 'view') !== false) {
+                    unset($actions[$key]);
+                }
+            }
         }
         return $actions;
     }
@@ -794,7 +803,7 @@ class PAP_Products {
 
     /**
      * Remove o link "Ver página" que aparece abaixo do título no admin
-     * Retorna apenas o ID do post, sem nenhum link de visualização
+     * Retorna apenas o ID do post, sem nenhum link de visualização ou HTML adicional
      *
      * @param string $return HTML do sample permalink
      * @param int $post_id ID do post
@@ -803,12 +812,50 @@ class PAP_Products {
      * @param WP_Post $post Post atual
      * @return string HTML modificado
      * @since 1.9.2
+     * @since 1.9.3 Simplificado para retornar apenas ID sem links ou tags adicionais
      */
     public function remove_view_link($return, $post_id, $new_title, $new_slug, $post) {
-        // Retornar apenas ID para nosso CPT, sem link de visualização
+        // Retornar apenas ID para nosso CPT, sem qualquer link ou HTML de visualização
         if ($post->post_type === $this->post_type) {
-            return '<strong>' . __('ID:', 'afiliados-pro') . '</strong> ' . $post_id;
+            return '<strong>ID: ' . $post_id . '</strong>';
         }
         return $return;
+    }
+
+    /**
+     * Desabilita get_permalink() e get_the_permalink() para produtos afiliados
+     * Retorna false para evitar geração de permalinks em qualquer contexto
+     *
+     * @param string|false $permalink O permalink gerado
+     * @param int|WP_Post $post Post ID ou objeto
+     * @return string|false Sempre false para nosso CPT
+     * @since 1.9.3
+     */
+    public function disable_permalink($permalink, $post) {
+        // Normalizar $post para objeto WP_Post
+        $post = get_post($post);
+
+        if ($post && $post->post_type === $this->post_type) {
+            return false;
+        }
+        return $permalink;
+    }
+
+    /**
+     * Desabilita _get_page_link() para produtos afiliados
+     * Previne geração de links via rotas internas do WordPress
+     *
+     * @param string $link O link da página
+     * @param int $post_id ID do post
+     * @return string|false Sempre false para nosso CPT
+     * @since 1.9.3
+     */
+    public function disable_page_link($link, $post_id) {
+        $post = get_post($post_id);
+
+        if ($post && $post->post_type === $this->post_type) {
+            return false;
+        }
+        return $link;
     }
 }
