@@ -3,9 +3,11 @@
  * PAP - Preview Handler
  *
  * Handles preview rendering via public endpoint
+ * v1.9.4: Fixed cache clearing hook to monitor correct option (affiliate_pro_settings)
+ * v1.9.5: Polimento final e validação
  *
  * @package PAP
- * @version 1.4.5
+ * @version 1.9.5
  */
 
 if (!defined('ABSPATH')) {
@@ -29,8 +31,8 @@ class PAP_Preview_Handler {
         // Handle template redirect for preview
         add_action('template_redirect', [__CLASS__, 'handle_preview_request']);
 
-        // Clear cache when settings are saved (v1.4.5)
-        add_action('update_option_affiliate_template_settings', [__CLASS__, 'clear_preview_cache']);
+        // Clear cache when settings are saved (v1.9.4 - Fixed: now monitors correct option)
+        add_action('update_option_affiliate_pro_settings', [__CLASS__, 'clear_preview_cache']);
 
         // Log initialization if debug is enabled
         pap_log('Preview Handler: Initialized (v1.4.5 - Public Endpoint with Cache)');

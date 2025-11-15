@@ -2,6 +2,9 @@
 /**
  * Classe responsável pelo Template Builder
  * v1.7.2: Refatoração gradual - PAP_Template_Builder é agora a classe principal
+ * v1.9.4: Migração legacy removida do construtor, movida para ativação do plugin
+ * v1.9.5: Polimento final e validação
+ * v1.9.6: Sincronização pré-teste - card_gap range ajustado para 0-40
  *
  * @package PAP
  * @since 1.4.0
@@ -28,13 +31,6 @@ class PAP_Template_Builder {
     private static $instance = null;
 
     /**
-     * Nome da opção no banco de dados
-     *
-     * @var string
-     */
-    private $option_name = 'affiliate_template_settings';
-
-    /**
      * Obtém a instância única
      *
      * @return PAP_Template_Builder
@@ -48,25 +44,10 @@ class PAP_Template_Builder {
 
     /**
      * Construtor
+     * v1.9.4: Removed legacy migration (now runs only on activation)
      */
     private function __construct() {
         $this->init_hooks();
-        $this->migrate_legacy_settings(); // v1.4.2
-    }
-
-    /**
-     * Migra configurações legacy para novos campos (v1.4.2)
-     */
-    private function migrate_legacy_settings() {
-        $settings = get_option($this->option_name, array());
-
-        // Migrar campo 'shadow' legado para 'shadow_card'
-        if (isset($settings['shadow']) && !isset($settings['shadow_card'])) {
-            $settings['shadow_card'] = $settings['shadow'];
-            unset($settings['shadow']);
-            update_option($this->option_name, $settings);
-            pap_log('Template Builder: Migrated legacy shadow to shadow_card');
-        }
     }
 
     /**
@@ -707,10 +688,10 @@ class PAP_Template_Builder {
             $settings['default_columns'] = max(2, min(4, $columns));
         }
 
-        // Mapear gap
+        // Mapear gap (v1.9.6: range 0-40 to match UI constraint)
         if (isset($_POST['card_gap'])) {
             $card_gap = absint($_POST['card_gap']);
-            $settings['card_gap'] = max(0, min(100, $card_gap));
+            $settings['card_gap'] = max(0, min(40, $card_gap));
         }
 
         // Mapear configurações funcionais (v1.6.4: checkboxes da aba Configurações)
