@@ -1,6 +1,6 @@
 /**
  * Admin Scripts - Plugin Afiliados Pro
- * @version 1.2
+ * @version 1.8.9
  */
 
 (function($) {
@@ -241,12 +241,16 @@
         // Confirmação antes de excluir
         // =============================================================================
 
-        $('a[href*="action=trash"]').on('click', function(e) {
-            if (!confirm(affiliateProAdmin.strings.confirm_delete)) {
-                e.preventDefault();
-                return false;
-            }
-        });
+        // REMOVIDO v1.8.9: Confirmação duplicada
+        // A confirmação já está no onclick dos botões HTML em admin-manage-products.php
+        // Manter esse código aqui causava dupla confirmação ao excluir/mover para lixeira
+
+        // $('a[href*="action=trash"]').on('click', function(e) {
+        //     if (!confirm(affiliateProAdmin.strings.confirm_delete)) {
+        //         e.preventDefault();
+        //         return false;
+        //     }
+        // });
 
         // =============================================================================
         // Preview das cores em tempo real (opcional)
