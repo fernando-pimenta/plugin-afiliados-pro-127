@@ -79,6 +79,10 @@ class PAP_Products {
 
         // v1.9.1: Remover botão "Ver produto" (CPT não é público)
         add_filter('post_row_actions', array($this, 'remove_view_action'), 10, 2);
+
+        // v1.9.2: Remover permalink e link "Ver página" do admin
+        add_filter('post_type_link', array($this, 'remove_permalink'), 10, 2);
+        add_filter('get_sample_permalink_html', array($this, 'remove_view_link'), 10, 5);
     }
 
     /**
@@ -769,5 +773,42 @@ class PAP_Products {
             unset($actions['view']);
         }
         return $actions;
+    }
+
+    /**
+     * Remove o permalink para produtos afiliados
+     * Retorna false para evitar que o WordPress gere links de visualização
+     *
+     * @param string $permalink O permalink gerado
+     * @param WP_Post $post Post atual
+     * @return string|false Permalink ou false
+     * @since 1.9.2
+     */
+    public function remove_permalink($permalink, $post) {
+        // Retornar false para nosso CPT desabilita o permalink
+        if ($post->post_type === $this->post_type) {
+            return false;
+        }
+        return $permalink;
+    }
+
+    /**
+     * Remove o link "Ver página" que aparece abaixo do título no admin
+     * Retorna apenas o ID do post, sem nenhum link de visualização
+     *
+     * @param string $return HTML do sample permalink
+     * @param int $post_id ID do post
+     * @param string $new_title Novo título
+     * @param string $new_slug Novo slug
+     * @param WP_Post $post Post atual
+     * @return string HTML modificado
+     * @since 1.9.2
+     */
+    public function remove_view_link($return, $post_id, $new_title, $new_slug, $post) {
+        // Retornar apenas ID para nosso CPT, sem link de visualização
+        if ($post->post_type === $this->post_type) {
+            return '<strong>' . __('ID:', 'afiliados-pro') . '</strong> ' . $post_id;
+        }
+        return $return;
     }
 }
