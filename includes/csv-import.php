@@ -66,6 +66,16 @@ class PAP_CSV_Import {
             exit;
         }
 
+        // SEGURANÇA: Validar tamanho do arquivo (máximo 2MB)
+        $max_size = 2 * 1024 * 1024; // 2MB em bytes
+        if ($_FILES['csv_file']['size'] > $max_size) {
+            wp_redirect(add_query_arg(
+                array('page' => 'affiliate-import-csv', 'error' => 'file_too_large'),
+                admin_url('admin.php')
+            ));
+            exit;
+        }
+
         // Validar extensão do arquivo
         $file_name = sanitize_file_name($_FILES['csv_file']['name']);
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
@@ -112,7 +122,15 @@ class PAP_CSV_Import {
         }
 
         // Detectar e corrigir codificação do arquivo
-        $content = file_get_contents($file);
+        // SEGURANÇA: Limitar leitura para evitar consumo excessivo de memória
+        $content = file_get_contents($file, false, null, 0, $max_size);
+        if ($content === false) {
+            wp_redirect(add_query_arg(
+                array('page' => 'affiliate-import-csv', 'error' => 'read_error'),
+                admin_url('admin.php')
+            ));
+            exit;
+        }
         $content = $this->fix_encoding($content);
         file_put_contents($file, $content);
 
