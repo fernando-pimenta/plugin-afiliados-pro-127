@@ -70,6 +70,11 @@ class PAP_Products {
         add_action('add_meta_boxes', array($this, 'add_meta_boxes'));
         add_action('save_post', array($this, 'save_meta_boxes'));
         add_action('wp_ajax_duplicate_affiliate_product', array($this, 'ajax_duplicate_product'));
+
+        // Limpar transients quando produtos são modificados/excluídos
+        add_action('before_delete_post', array($this, 'clear_stats_cache'));
+        add_action('trashed_post', array($this, 'clear_stats_cache'));
+        add_action('untrashed_post', array($this, 'clear_stats_cache'));
     }
 
     /**
@@ -651,5 +656,23 @@ class PAP_Products {
      */
     public function get_taxonomy() {
         return $this->taxonomy;
+    }
+
+    /**
+     * Limpa o cache de estatísticas quando produtos são modificados/excluídos
+     *
+     * @param int $post_id ID do post
+     * @since 1.8.7
+     */
+    public function clear_stats_cache($post_id) {
+        // Verificar se é um produto afiliado
+        if (get_post_type($post_id) !== $this->post_type) {
+            return;
+        }
+
+        // Limpar transient de preço médio
+        delete_transient('affiliate_pro_avg_price');
+
+        pap_log('clear_stats_cache() - Cache de estatísticas limpo para produto ID: ' . $post_id);
     }
 }
