@@ -253,13 +253,19 @@ class PAP_Tracker {
 
     /**
      * Limpeza automática de cliques antigos (90 dias)
+     *
+     * @since 1.9.0 Adicionado prepared statement (hardening)
      */
     public function cleanup_old_clicks() {
         global $wpdb;
         $table = $wpdb->prefix . 'affiliate_clicks';
 
+        // CRÍTICO v1.9.0: Usar prepared statement para maior segurança
         $deleted = $wpdb->query(
-            "DELETE FROM $table WHERE clicked_at < DATE_SUB(NOW(), INTERVAL 90 DAY)"
+            $wpdb->prepare(
+                "DELETE FROM {$wpdb->prefix}affiliate_clicks WHERE clicked_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+                90
+            )
         );
 
         if ($deleted !== false) {

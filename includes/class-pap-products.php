@@ -83,6 +83,7 @@ class PAP_Products {
      * Executa em admin_init, ANTES dos headers serem enviados
      *
      * @since 1.8.8
+     * @since 1.9.0 Adicionada verificação de capability (hardening)
      */
     public function process_product_actions() {
         // Verificar se estamos na página correta e se há uma ação
@@ -92,6 +93,11 @@ class PAP_Products {
 
         if (!isset($_GET['action']) || !isset($_GET['product_id'])) {
             return;
+        }
+
+        // CRÍTICO v1.9.0: Verificar permissões do usuário antes de processar ações
+        if (!current_user_can('manage_options')) {
+            wp_die(__('Você não tem permissão para realizar esta ação.', 'afiliados-pro'));
         }
 
         $action = sanitize_text_field($_GET['action']);
