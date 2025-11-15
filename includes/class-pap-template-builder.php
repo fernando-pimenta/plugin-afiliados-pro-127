@@ -28,13 +28,6 @@ class PAP_Template_Builder {
     private static $instance = null;
 
     /**
-     * Nome da opção no banco de dados
-     *
-     * @var string
-     */
-    private $option_name = 'affiliate_template_settings';
-
-    /**
      * Obtém a instância única
      *
      * @return PAP_Template_Builder
@@ -48,25 +41,10 @@ class PAP_Template_Builder {
 
     /**
      * Construtor
+     * v1.9.4: Removed legacy migration (now runs only on activation)
      */
     private function __construct() {
         $this->init_hooks();
-        $this->migrate_legacy_settings(); // v1.4.2
-    }
-
-    /**
-     * Migra configurações legacy para novos campos (v1.4.2)
-     */
-    private function migrate_legacy_settings() {
-        $settings = get_option($this->option_name, array());
-
-        // Migrar campo 'shadow' legado para 'shadow_card'
-        if (isset($settings['shadow']) && !isset($settings['shadow_card'])) {
-            $settings['shadow_card'] = $settings['shadow'];
-            unset($settings['shadow']);
-            update_option($this->option_name, $settings);
-            pap_log('Template Builder: Migrated legacy shadow to shadow_card');
-        }
     }
 
     /**

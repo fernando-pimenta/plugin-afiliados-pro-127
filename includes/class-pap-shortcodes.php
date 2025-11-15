@@ -118,10 +118,8 @@ class PAP_Shortcodes {
      * @return string
      */
     public function products_grid_shortcode($atts) {
+        // v1.9.4: Removed duplicate settings read - using only PAP_Settings::get_settings()
         $settings = PAP_Settings::get_settings();
-
-        // Obter configurações do Template Builder para fallback
-        $builder_settings = PAP_Template_Builder::get_template_settings();
 
         $atts = shortcode_atts(array(
             'limit' => 6,
@@ -136,9 +134,9 @@ class PAP_Shortcodes {
         $atts['limit'] = absint($atts['limit']);
         $atts['limit'] = max(1, min(100, $atts['limit'])); // Entre 1 e 100
 
-        // Aplicar fallback do Template Builder se não especificado
+        // Aplicar fallback das configurações se não especificado
         if (empty($atts['layout'])) {
-            $atts['layout'] = !empty($builder_settings['layout_default']) ? $builder_settings['layout_default'] : $settings['default_layout'];
+            $atts['layout'] = $settings['default_layout'];
         }
 
         // SEGURANÇA: Validar layout
@@ -148,7 +146,7 @@ class PAP_Shortcodes {
         }
 
         if (empty($atts['columns'])) {
-            $atts['columns'] = !empty($builder_settings['columns']) ? $builder_settings['columns'] : $settings['default_columns'];
+            $atts['columns'] = $settings['default_columns'];
         }
 
         // SEGURANÇA: Validar columns

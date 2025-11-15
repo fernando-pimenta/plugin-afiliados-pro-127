@@ -3,7 +3,7 @@
  * Plugin Name: PAP – Plugin Afiliados Pro
  * Plugin URI: https://fernandopimenta.blog.br
  * Description: Sistema PAP de exibição de produtos afiliados com Template Builder e Presets.
- * Version: 1.9.3
+ * Version: 1.9.4
  * Author: Fernando Pimenta
  * Author URI: https://fernandopimenta.blog.br
  * License: GPLv2 or later
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Constantes do plugin
-define('PAP_VERSION', '1.9.3');
+define('PAP_VERSION', '1.9.4');
 define('PAP_DIR', plugin_dir_path(__FILE__));
 define('PAP_URL', plugin_dir_url(__FILE__));
 define('PAP_BASENAME', plugin_basename(__FILE__));
@@ -79,11 +79,13 @@ class PAP_Plugin {
     /**
      * Carrega as dependências do plugin
      * v1.7.2: Arquivos de classes renomeados para padrão class-pap-*
+     * v1.9.4: Added PAP_Template_CSS class
      */
     private function load_dependencies() {
         // Core classes (v1.7.2: renomeadas para prefixo pap_)
         require_once PAP_DIR . 'includes/class-pap-products.php';
         require_once PAP_DIR . 'includes/class-pap-settings.php';
+        require_once PAP_DIR . 'includes/class-pap-template-css.php'; // v1.9.4
         require_once PAP_DIR . 'includes/class-pap-template-builder.php';
         require_once PAP_DIR . 'includes/class-affiliate-preview-handler.php'; // v1.4.0
         require_once PAP_DIR . 'includes/class-affiliate-tracker.php'; // v1.4.7
@@ -151,6 +153,9 @@ class PAP_Plugin {
             add_option('affiliate_pro_settings', $default_settings);
         }
 
+        // v1.9.4: Migração única de configurações legacy
+        $this->migrate_legacy_settings();
+
         // Register preview endpoint rules (v1.4.4)
         PAP_Preview_Handler::register_preview_endpoint();
 
@@ -217,6 +222,45 @@ class PAP_Plugin {
 
         // Salvar versão dos índices
         update_option('pap_indexes_version', PAP_VERSION);
+    }
+
+    /**
+     * Migra configurações legacy para sistema unificado (v1.9.4)
+     * Executado apenas na ativação do plugin
+     *
+     * @since 1.9.4
+     */
+    private function migrate_legacy_settings() {
+        // Verificar se já foi executada (evitar re-executar)
+        if (get_option('pap_legacy_migrated')) {
+            return;
+        }
+
+        // Migrar de affiliate_template_settings para affiliate_pro_settings
+        $legacy_settings = get_option('affiliate_template_settings', array());
+
+        if (!empty($legacy_settings)) {
+            $current_settings = get_option('affiliate_pro_settings', array());
+
+            // Migrar campo 'shadow' legado para 'shadow_card'
+            if (isset($legacy_settings['shadow']) && !isset($current_settings['shadow_card'])) {
+                $current_settings['shadow_card'] = $legacy_settings['shadow'];
+                pap_log('Migration: Migrated shadow to shadow_card');
+            }
+
+            // Mesclar outras configurações se necessário
+            $merged_settings = array_merge($legacy_settings, $current_settings);
+            update_option('affiliate_pro_settings', $merged_settings);
+
+            pap_log('Migration: Legacy settings migrated to affiliate_pro_settings');
+
+            // Deletar opção legacy após migração bem-sucedida
+            delete_option('affiliate_template_settings');
+            pap_log('Migration: Legacy option affiliate_template_settings deleted');
+        }
+
+        // Marcar migração como concluída
+        update_option('pap_legacy_migrated', true);
     }
 
     /**
