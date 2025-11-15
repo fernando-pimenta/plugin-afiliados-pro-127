@@ -66,6 +66,7 @@ class PAP_Products {
     private function init_hooks() {
         // Nota: register_post_type e register_taxonomy são chamados diretamente
         // no arquivo principal antes de admin_menu para garantir ordem correta
+        add_action('admin_init', array($this, 'process_product_actions'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('add_meta_boxes', array($this, 'add_meta_boxes'));
         add_action('save_post', array($this, 'save_meta_boxes'));
@@ -75,6 +76,70 @@ class PAP_Products {
         add_action('before_delete_post', array($this, 'clear_stats_cache'));
         add_action('trashed_post', array($this, 'clear_stats_cache'));
         add_action('untrashed_post', array($this, 'clear_stats_cache'));
+    }
+
+    /**
+     * Processa ações individuais de produtos (trash, restore, delete)
+     * Executa em admin_init, ANTES dos headers serem enviados
+     *
+     * @since 1.8.8
+     */
+    public function process_product_actions() {
+        // Verificar se estamos na página correta e se há uma ação
+        if (!isset($_GET['page']) || $_GET['page'] !== 'affiliate-manage-products') {
+            return;
+        }
+
+        if (!isset($_GET['action']) || !isset($_GET['product_id'])) {
+            return;
+        }
+
+        $action = sanitize_text_field($_GET['action']);
+        $product_id = intval($_GET['product_id']);
+
+        // Verificar nonce específico para cada ação
+        $nonce_action = $action . '_product_' . $product_id;
+        if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], $nonce_action)) {
+            wp_die(__('Erro de verificação de segurança.', 'afiliados-pro'));
+        }
+
+        // Processar a ação
+        switch ($action) {
+            case 'trash':
+                if (wp_trash_post($product_id)) {
+                    $redirect = add_query_arg('message', 'trashed', remove_query_arg(array('action', 'product_id', '_wpnonce')));
+                    wp_redirect($redirect);
+                    exit;
+                } else {
+                    wp_die(__('Erro ao mover o produto para a lixeira.', 'afiliados-pro'));
+                }
+                break;
+
+            case 'restore':
+                if (wp_untrash_post($product_id)) {
+                    $redirect = add_query_arg('message', 'restored', remove_query_arg(array('action', 'product_id', '_wpnonce')));
+                    wp_redirect($redirect);
+                    exit;
+                } else {
+                    wp_die(__('Erro ao restaurar o produto.', 'afiliados-pro'));
+                }
+                break;
+
+            case 'delete':
+                // Só permite exclusão permanente se estiver na lixeira
+                if (get_post_status($product_id) === 'trash') {
+                    if (wp_delete_post($product_id, true)) {
+                        $redirect = add_query_arg('message', 'deleted', remove_query_arg(array('action', 'product_id', '_wpnonce')));
+                        wp_redirect($redirect);
+                        exit;
+                    } else {
+                        wp_die(__('Erro ao excluir permanentemente o produto.', 'afiliados-pro'));
+                    }
+                } else {
+                    wp_die(__('Apenas produtos na lixeira podem ser excluídos permanentemente.', 'afiliados-pro'));
+                }
+                break;
+        }
     }
 
     /**
