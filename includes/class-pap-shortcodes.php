@@ -2,6 +2,8 @@
 /**
  * Classe responsável pelos shortcodes do plugin
  * v1.7.1: Refatoração gradual - PAP_Shortcodes é agora a classe principal
+ * v1.9.4: Removida dupla leitura de configurações (apenas PAP_Settings::get_settings())
+ * v1.9.5: Polimento final e validação
  *
  * @package PAP
  * @since 1.0

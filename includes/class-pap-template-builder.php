@@ -2,6 +2,8 @@
 /**
  * Classe responsável pelo Template Builder
  * v1.7.2: Refatoração gradual - PAP_Template_Builder é agora a classe principal
+ * v1.9.4: Migração legacy removida do construtor, movida para ativação do plugin
+ * v1.9.5: Polimento final e validação
  *
  * @package PAP
  * @since 1.4.0

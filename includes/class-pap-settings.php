@@ -2,6 +2,8 @@
 /**
  * Classe responsável pelas configurações do plugin
  * v1.7.1: Refatoração gradual - PAP_Settings é agora a classe principal
+ * v1.9.4: Geração de CSS delegada para PAP_Template_CSS
+ * v1.9.5: Polimento final e validação
  *
  * @package PAP
  * @since 1.2

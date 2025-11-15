@@ -3,9 +3,11 @@
  * PAP - Preview Handler
  *
  * Handles preview rendering via public endpoint
+ * v1.9.4: Fixed cache clearing hook to monitor correct option (affiliate_pro_settings)
+ * v1.9.5: Polimento final e validação
  *
  * @package PAP
- * @version 1.4.5
+ * @version 1.9.5
  */
 
 if (!defined('ABSPATH')) {
