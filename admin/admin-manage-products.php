@@ -10,54 +10,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Processar ações individuais (trash, restore, delete)
-if (isset($_GET['action']) && isset($_GET['product_id'])) {
-    $action = sanitize_text_field($_GET['action']);
-    $product_id = intval($_GET['product_id']);
-
-    // Verificar nonce específico para cada ação
-    $nonce_action = $action . '_product_' . $product_id;
-    if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], $nonce_action)) {
-        wp_die(__('Erro de verificação de segurança.', 'afiliados-pro'));
-    }
-
-    switch ($action) {
-        case 'trash':
-            if (wp_trash_post($product_id)) {
-                $redirect = add_query_arg('message', 'trashed', remove_query_arg(array('action', 'product_id', '_wpnonce')));
-                wp_redirect($redirect);
-                exit;
-            } else {
-                wp_die(__('Erro ao mover o produto para a lixeira.', 'afiliados-pro'));
-            }
-            break;
-
-        case 'restore':
-            if (wp_untrash_post($product_id)) {
-                $redirect = add_query_arg('message', 'restored', remove_query_arg(array('action', 'product_id', '_wpnonce')));
-                wp_redirect($redirect);
-                exit;
-            } else {
-                wp_die(__('Erro ao restaurar o produto.', 'afiliados-pro'));
-            }
-            break;
-
-        case 'delete':
-            // Só permite exclusão permanente se estiver na lixeira
-            if (get_post_status($product_id) === 'trash') {
-                if (wp_delete_post($product_id, true)) {
-                    $redirect = add_query_arg('message', 'deleted', remove_query_arg(array('action', 'product_id', '_wpnonce')));
-                    wp_redirect($redirect);
-                    exit;
-                } else {
-                    wp_die(__('Erro ao excluir permanentemente o produto.', 'afiliados-pro'));
-                }
-            } else {
-                wp_die(__('Apenas produtos na lixeira podem ser excluídos permanentemente.', 'afiliados-pro'));
-            }
-            break;
-    }
-}
+// Nota v1.8.8: Ações individuais (trash, restore, delete) agora são processadas
+// em admin_init via PAP_Products::process_product_actions() para evitar
+// erro "headers already sent". Este arquivo agora é apenas template de exibição.
 
 // Processar ações em lote
 if (isset($_POST['bulk_action']) && isset($_POST['product_ids']) && wp_verify_nonce($_POST['bulk_nonce'], 'bulk_action_nonce')) {
