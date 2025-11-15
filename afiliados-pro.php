@@ -3,7 +3,7 @@
  * Plugin Name: PAP – Plugin Afiliados Pro
  * Plugin URI: https://fernandopimenta.blog.br
  * Description: Sistema PAP de exibição de produtos afiliados com Template Builder e Presets.
- * Version: 1.9.5
+ * Version: 1.9.6
  * Author: Fernando Pimenta
  * Author URI: https://fernandopimenta.blog.br
  * License: GPLv2 or later
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Constantes do plugin
-define('PAP_VERSION', '1.9.5');
+define('PAP_VERSION', '1.9.6');
 define('PAP_DIR', plugin_dir_path(__FILE__));
 define('PAP_URL', plugin_dir_url(__FILE__));
 define('PAP_BASENAME', plugin_basename(__FILE__));
@@ -45,6 +45,7 @@ function pap_log($message) {
  * Classe principal do PAP - Plugin Afiliados Pro
  * v1.9.4: Adicionada migração única de configurações legacy na ativação
  * v1.9.5: Polimento final e validação completa
+ * v1.9.6: Sincronização pré-teste - sanitização reforçada com range constraints
  *
  * @package PAP
  * @since 1.0

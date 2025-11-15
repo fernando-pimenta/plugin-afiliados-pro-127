@@ -4,6 +4,7 @@
  * v1.7.1: Refatoração gradual - PAP_Settings é agora a classe principal
  * v1.9.4: Geração de CSS delegada para PAP_Template_CSS
  * v1.9.5: Polimento final e validação
+ * v1.9.6: Sanitização reforçada - range constraints adicionados (border_radius 0-30, columns 2-4, gap 0-40)
  *
  * @package PAP
  * @since 1.2
@@ -91,7 +92,7 @@ class PAP_Settings {
         $sanitized['text_color'] = isset($input['text_color']) ? sanitize_hex_color($input['text_color']) : '#1a1a1a';
         $sanitized['price_color'] = isset($input['price_color']) ? sanitize_hex_color($input['price_color']) : '#111111';
         $sanitized['card_image_background'] = isset($input['card_image_background']) ? sanitize_hex_color($input['card_image_background']) : '#f9f9f9';
-        $sanitized['card_border_radius'] = isset($input['card_border_radius']) ? absint($input['card_border_radius']) : 12;
+        $sanitized['card_border_radius'] = isset($input['card_border_radius']) ? max(0, min(30, absint($input['card_border_radius']))) : 12;
         $sanitized['card_shadow'] = isset($input['card_shadow']) ? (bool) $input['card_shadow'] : true;
         $sanitized['shadow_button'] = isset($input['shadow_button']) ? (bool) $input['shadow_button'] : false;
         $sanitized['force_css'] = isset($input['force_css']) ? (bool) $input['force_css'] : false;
@@ -106,8 +107,8 @@ class PAP_Settings {
 
         // Seção 3 - Layout da Grade
         $sanitized['default_layout'] = isset($input['default_layout']) && in_array($input['default_layout'], array('grid', 'list')) ? $input['default_layout'] : 'grid';
-        $sanitized['default_columns'] = isset($input['default_columns']) ? absint($input['default_columns']) : 3;
-        $sanitized['card_gap'] = isset($input['card_gap']) ? absint($input['card_gap']) : 20;
+        $sanitized['default_columns'] = isset($input['default_columns']) ? max(2, min(4, absint($input['default_columns']))) : 3;
+        $sanitized['card_gap'] = isset($input['card_gap']) ? max(0, min(40, absint($input['card_gap']))) : 20;
 
         // Seção 4 - Exibição de Preços
         $sanitized['price_format'] = isset($input['price_format']) ? sanitize_text_field($input['price_format']) : 'R$ {valor}';
