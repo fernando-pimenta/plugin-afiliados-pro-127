@@ -577,7 +577,7 @@ class PAP_Template_Builder {
                                     <td><?php echo esc_html($preset['name']); ?></td>
                                     <td>
                                         <code style="background: #f0f0f1; padding: 4px 8px; border-radius: 3px;">[pap_preset id="<?php echo esc_attr($preset_id); ?>"]</code>
-                                        <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_preset id=&quot;<?php echo esc_attr($preset_id); ?>&quot;]'); alert('Shortcode copiado!');" style="margin-left: 5px;">
+                                        <button type="button" class="button button-small copy-shortcode" data-shortcode='[pap_preset id="<?php echo esc_attr($preset_id); ?>"]' style="margin-left: 5px;">
                                             <?php _e('Copiar', 'afiliados-pro'); ?>
                                         </button>
                                     </td>

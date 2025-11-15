@@ -339,35 +339,35 @@ class PAP_Products {
                 <div style="margin-bottom: 20px; background: #f0f6fc; padding: 15px; border-left: 4px solid #0073aa;">
                     <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Preset Personalizado', 'afiliados-pro'); ?></h3>
                     <code style="display: block; padding: 10px; background: #fff; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_preset id="1"]</code>
-                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_preset id=&quot;1&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
+                    <button type="button" class="button button-small copy-shortcode" data-shortcode='[pap_preset id="1"]' style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
                     <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe produtos com as configurações salvas no preset #1. Crie seus presets em Aparência e Configurações > Presets', 'afiliados-pro'); ?></p>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Produto Único', 'afiliados-pro'); ?></h3>
                     <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_product id="123"]</code>
-                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_product id=&quot;123&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
+                    <button type="button" class="button button-small copy-shortcode" data-shortcode='[pap_product id="123"]' style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
                     <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe um produto específico pelo seu ID', 'afiliados-pro'); ?></p>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Grade com Limite e Colunas', 'afiliados-pro'); ?></h3>
                     <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_products limit="12" columns="4"]</code>
-                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_products limit=&quot;12&quot; columns=&quot;4&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
+                    <button type="button" class="button button-small copy-shortcode" data-shortcode='[pap_products limit="12" columns="4"]' style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
                     <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe grade com 12 produtos em 4 colunas', 'afiliados-pro'); ?></p>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Categorias e Ordem Aleatória', 'afiliados-pro'); ?></h3>
                     <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_products category="eletronicos,games" orderby="rand" limit="10"]</code>
-                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_products category=&quot;eletronicos,games&quot; orderby=&quot;rand&quot; limit=&quot;10&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
+                    <button type="button" class="button button-small copy-shortcode" data-shortcode='[pap_products category="eletronicos,games" orderby="rand" limit="10"]' style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
                     <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe 10 produtos aleatórios das categorias "eletronicos" e "games"', 'afiliados-pro'); ?></p>
                 </div>
 
                 <div style="margin-bottom: 0;">
                     <h3 style="margin-top: 0; color: #0073aa; font-size: 16px;"><?php _e('Layout em Lista', 'afiliados-pro'); ?></h3>
                     <code style="display: block; padding: 10px; background: #f5f5f5; border-left: 3px solid #0073aa; margin: 8px 0;">[pap_products layout="list" columns="3" limit="9"]</code>
-                    <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('[pap_products layout=&quot;list&quot; columns=&quot;3&quot; limit=&quot;9&quot;]'); alert('Shortcode copiado!');" style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
+                    <button type="button" class="button button-small copy-shortcode" data-shortcode='[pap_products layout="list" columns="3" limit="9"]' style="margin-top: 5px;"><?php _e('Copiar', 'afiliados-pro'); ?></button>
                     <p style="color: #666; font-size: 13px; margin: 5px 0 0 0;"><?php _e('Exibe 9 produtos em formato de lista vertical com 3 colunas', 'afiliados-pro'); ?></p>
                 </div>
             </div>
@@ -509,6 +509,25 @@ class PAP_Products {
                 'message' => __('Erro de segurança: nonce inválido', 'afiliados-pro')
             ));
             return;
+        }
+
+        // SEGURANÇA: Rate limiting - máximo 5 duplicações por minuto por usuário
+        $user_id = get_current_user_id();
+        $rate_key = 'pap_duplicate_rate_' . $user_id;
+        $duplicate_count = get_transient($rate_key);
+
+        if ($duplicate_count === false) {
+            // Primeira duplicação no minuto
+            set_transient($rate_key, 1, 60);
+        } elseif ($duplicate_count >= 5) {
+            pap_log('ajax_duplicate_product() - Rate limit excedido para usuário ' . $user_id);
+            wp_send_json_error(array(
+                'message' => __('Muitas duplicações em sequência. Aguarde um momento e tente novamente.', 'afiliados-pro')
+            ));
+            return;
+        } else {
+            // Incrementar contador
+            set_transient($rate_key, $duplicate_count + 1, 60);
         }
 
         // Verificar se product_id foi enviado e é válido
